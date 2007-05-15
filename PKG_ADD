@@ -1,0 +1,17 @@
+autoload("socket", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("bind", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("connect", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("disconnect", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("accept", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("send", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("recv", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("gethostbyname", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("listen", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("AF_LOCAL", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("AF_UNIX", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("AF_INET", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("SOCK_STREAM", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("SOCK_DGRAM", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("SOCK_SEQPACKET", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("SOCK_RAW", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));
+autoload("SOCK_RDM", fullfile(fileparts(mfilename("fullpath")), "sockets.oct"));

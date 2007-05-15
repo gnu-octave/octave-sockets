@@ -1,0 +1,20 @@
+sockets >> Sockets
+Sockets
+  socket
+  bind
+  connect
+  disconnect
+  accept
+  send
+  recv
+  gethostbyname
+  listen
+Socket constants
+  AF_LOCAL
+  AF_UNIX
+  AF_INET
+  SOCK_STREAM
+  SOCK_DGRAM
+  SOCK_SEQPACKET
+  SOCK_RAW
+  SOCK_RDM
