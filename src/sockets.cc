@@ -192,29 +192,30 @@ void install_socket_ops(void)
 DEFINE_OCTAVE_ALLOCATOR (octave_socket);
 DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_socket");
 
-
-#define DECLARE_SOCKET_CONSTANT( name ) \
-DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, "socket constant" ) \
+// This macro must start with DEFUN_DLD so that the automatic collection
+// of function helps can take place.
+#define DEFUN_DLD_SOCKET_CONSTANT(name, help ) \
+DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, help) \
 { return octave_value( name ); };
 
-DECLARE_SOCKET_CONSTANT( AF_UNIX );
-DECLARE_SOCKET_CONSTANT( AF_LOCAL );
-DECLARE_SOCKET_CONSTANT( AF_INET );
-DECLARE_SOCKET_CONSTANT( AF_APPLETALK );
-//DECLARE_SOCKET_CONSTANT( AF_INET6 );
-//DECLARE_SOCKET_CONSTANT( AF_IPX );
-//DECLARE_SOCKET_CONSTANT( AF_NETLINK );
-//DECLARE_SOCKET_CONSTANT( AF_X25 );
-//DECLARE_SOCKET_CONSTANT( AF_AX25 );
-//DECLARE_SOCKET_CONSTANT( AF_ATMPVC );
-//DECLARE_SOCKET_CONSTANT( AF_PACKET );
+DEFUN_DLD_SOCKET_CONSTANT( AF_UNIX, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( AF_LOCAL, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( AF_INET, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( AF_APPLETALK, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_INET6, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_IPX, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_NETLINK, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_X25, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_AX25, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_ATMPVC, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( AF_PACKET, "socket constant" );
 
-DECLARE_SOCKET_CONSTANT( SOCK_STREAM );
-DECLARE_SOCKET_CONSTANT( SOCK_DGRAM );
-DECLARE_SOCKET_CONSTANT( SOCK_SEQPACKET );
-DECLARE_SOCKET_CONSTANT( SOCK_RAW );
-DECLARE_SOCKET_CONSTANT( SOCK_RDM );
-//DECLARE_SOCKET_CONSTANT( SOCK_PACKET );
+DEFUN_DLD_SOCKET_CONSTANT( SOCK_STREAM, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( SOCK_DGRAM, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( SOCK_SEQPACKET, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( SOCK_RAW, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT( SOCK_RDM, "socket constant" );
+//DEFUN_DLD_SOCKET_CONSTANT( SOCK_PACKET, "socket constant" );
 
 
 std::map< int, octave_socket * > socket_map;

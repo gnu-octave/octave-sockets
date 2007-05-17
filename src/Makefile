@@ -1,9 +1,9 @@
 OCT = sockets.oct
-SRC := $(OCT:.oct=.cpp)
+SRC := $(OCT:.oct=.cc)
 
 make: $(OCT)
 
-%.oct: %.cpp
+%.oct: %.cc
 	mkoctfile -s $<
 
 test: $(OCT)
