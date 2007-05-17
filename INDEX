@@ -13,8 +13,10 @@ Socket constants
   AF_LOCAL
   AF_UNIX
   AF_INET
+  AF_APPLETALK
   SOCK_STREAM
   SOCK_DGRAM
   SOCK_SEQPACKET
   SOCK_RAW
   SOCK_RDM
+  load_socket_constants
