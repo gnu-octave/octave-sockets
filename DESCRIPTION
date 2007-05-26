@@ -7,6 +7,6 @@ Title: Sockets
 Description: Socket functions
 Categories: Sockets
 Depends: octave (>= 2.9.10)
-Autoload: yes
+Autoload: no
 License: GPL version 2 or later
 Url: http://octave.sf.net
