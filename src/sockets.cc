@@ -29,10 +29,14 @@ using namespace std;
 
 // System includes
 #include <sys/types.h>
+#ifndef __WIN32__
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#else
+typedef unsigned int socklen_t;
+#endif
 #include <errno.h>
 
 template <class T>
@@ -199,7 +203,12 @@ DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, help) \
 { return octave_value( name ); };
 
 DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX, "socket constant" );
+#ifndef __WIN32__
 DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL, "socket constant" );
+#else
+DEFUNX_DLD ( "AF_LOCAL", FAFL_OCAL, FSAF_LOCAL, args, nargout, "socket constant" )
+{ error( "AF_LOCAL address family not supported on this platform" ); return octave_value(); };
+#endif
 DEFUN_DLD_SOCKET_CONSTANT(AF_INET, "socket constant" );
 DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_INET6, "socket constant" );
@@ -266,7 +275,11 @@ void octave_socket::print_raw (std::ostream& os, bool pr_as_read_syntax) const
 
 void octave_socket::remove_sock_fd(void)
 {
+#ifndef __WIN32__
 	::close( sock_fd );
+#else
+	::closesocket( sock_fd );
+#endif
 	socket_map.erase( sock_fd );
 	sock_fd = -1;
 }
@@ -285,6 +298,19 @@ DEFUN_DLD(socket,args,nargout,"socket(int,int,int)\nSee the socket() man pages\n
     octave_socket::register_type ();
     install_socket_ops();
     type_loaded = true;
+#ifdef __WIN32__
+    WORD wVersionRequested;
+    WSADATA wsaData;
+    int err;
+
+    wVersionRequested = MAKEWORD( 2, 2 );
+    err = WSAStartup( wVersionRequested, &wsaData );
+    if ( err != 0 )
+    {
+      error( "could not initialize winsock library" );
+      return octave_value();
+    }
+#endif
   }
 
   // Convert the arguments to their #define'd value
@@ -534,7 +560,11 @@ DEFUN_DLD(recv,args,nargout, \
 
   long len = args(1).int_value();
   unsigned char* buf = new unsigned char[ len ];
+#ifndef __WIN32__
   retval = ::recv( s->get_sock_fd(), buf, len, flags );
+#else
+  retval = ::recv( s->get_sock_fd(), ( char* )buf, len, flags );
+#endif
 
   Matrix return_buf(1,retval);
   octave_value_list return_list;
@@ -663,7 +693,11 @@ DEFUN_DLD(accept,args,nargout, \
     return octave_value(-1);
   }
 
+#ifndef __WIN32__
   int fd = ::accept( s->get_sock_fd(), (struct sockaddr *)&clientInfo, &clientLen );
+#else
+  int fd = ::accept( s->get_sock_fd(), (struct sockaddr *)&clientInfo, ( int* )&clientLen );
+#endif
   if ( fd != -1 )
   {
     // create the octave_socket object and set the fd
