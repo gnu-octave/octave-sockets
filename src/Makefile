@@ -1,7 +1,7 @@
 OCT = sockets.oct
 SRC := $(OCT:.oct=.cc)
 
-make: $(OCT)
+all make: $(OCT)
 
 %.oct: %.cc
 	mkoctfile -s $<
