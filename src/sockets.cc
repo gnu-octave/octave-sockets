@@ -205,14 +205,18 @@ DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_soc
 DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, help) \
 { return octave_value( name ); };
 
+// PKG_ADD: autoload ("AF_UNIX", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX, "socket constant" );
 #ifndef __WIN32__
+// PKG_ADD: autoload ("AF_LOCAL", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL, "socket constant" );
 #else
 DEFUNX_DLD ( "AF_LOCAL", FAFL_OCAL, FSAF_LOCAL, args, nargout, "socket constant" )
 { error( "AF_LOCAL address family not supported on this platform" ); return octave_value(); };
 #endif
+// PKG_ADD: autoload ("AF_INET", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_INET, "socket constant" );
+// PKG_ADD: autoload ("AF_APPLETALK", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_INET6, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_IPX, "socket constant" );
@@ -222,10 +226,15 @@ DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_ATMPVC, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_PACKET, "socket constant" );
 
+// PKG_ADD: autoload ("SOCK_STREAM", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_STREAM, "socket constant" );
+// PKG_ADD: autoload ("SOCK_DGRAM", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_DGRAM, "socket constant" );
+// PKG_ADD: autoload ("SOCK_SEQPACKET", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_SEQPACKET, "socket constant" );
+// PKG_ADD: autoload ("SOCK_RAW", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_RAW, "socket constant" );
+// PKG_ADD: autoload ("SOCK_RDM", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(SOCK_PACKET, "socket constant" );
 
@@ -288,7 +297,7 @@ void octave_socket::remove_sock_fd(void)
 }
 
 
-
+// PKG_ADD: autoload ("socket", "sockets.oct");
 // Function to create a socket
 DEFUN_DLD(socket,args,nargout,"socket(int,int,int)\nSee the socket() man pages\n")
 {
@@ -346,6 +355,7 @@ DEFUN_DLD(socket,args,nargout,"socket(int,int,int)\nSee the socket() man pages\n
 
 }
 
+// PKG_ADD: autoload ("connect", "sockets.oct");
 // function to create an outgoing connection
 DEFUN_DLD(connect,args,nargout, \
 	  "connect(octave_socket,struct)\nSee the connect() man pages")
@@ -412,6 +422,7 @@ DEFUN_DLD(connect,args,nargout, \
   return octave_value(retval);
 }
 
+// PKG_ADD: autoload ("disconnect", "sockets.oct");
 // function to disconnect asocket
 DEFUN_DLD(disconnect,args,nargout, \
 	  "disconnect(octave_socket)\nSince we can't call fclose on the fd directly, use this to disconnect")
@@ -440,6 +451,7 @@ DEFUN_DLD(disconnect,args,nargout, \
 
 }
 
+// PKG_ADD: autoload ("gethostbyname", "sockets.oct");
 // function to get a host number from a host name
 DEFUN_DLD(gethostbyname,args,nargout, \
 	  "gethostbyname(string)\nSee the gethostbyname() man pages")
@@ -465,6 +477,7 @@ DEFUN_DLD(gethostbyname,args,nargout, \
   return octave_value(host_list);
 }
 
+// PKG_ADD: autoload ("send", "sockets.oct");
 // function to send data over a socket
 DEFUN_DLD(send,args,nargout, \
 	  "send(octave_socket,octave_value)\nSee the send() man pages.  This will only allow the" \
@@ -526,6 +539,7 @@ DEFUN_DLD(send,args,nargout, \
   return octave_value(retval);
 }
 
+// PKG_ADD: autoload ("recv", "sockets.oct");
 // function to receive data over a socket
 DEFUN_DLD(recv,args,nargout, \
 	  "recv(octave_socket,int)\nSee the send() man pages.  This will only allow the" \
@@ -584,6 +598,7 @@ DEFUN_DLD(recv,args,nargout, \
   return return_list;
 }
 
+// PKG_ADD: autoload ("bind", "sockets.oct");
 // function to bind a socket
 DEFUN_DLD(bind,args,nargout, \
 	  "bind(octave_socket,int)\nSee the bind() man pages.  This will bind a socket to a" \
@@ -627,6 +642,7 @@ DEFUN_DLD(bind,args,nargout, \
   return octave_value(retval);
 }
 
+// PKG_ADD: autoload ("listen", "sockets.oct");
 // function to listen on a socket
 DEFUN_DLD(listen,args,nargout, \
 	  "listen(octave_socket,int)\nSee the listen() man pages")
@@ -664,6 +680,7 @@ DEFUN_DLD(listen,args,nargout, \
   return octave_value(retval);
 }
 
+// PKG_ADD: autoload ("accept", "sockets.oct");
 // function to accept on a listening socket
 DEFUN_DLD(accept,args,nargout, \
 	  "accept(octave_socket)\nSee the accept() man pages")
@@ -729,6 +746,7 @@ DEFUN_DLD(accept,args,nargout, \
 }
 
 
+// PKG_ADD: autoload ("load_socket_constants", "sockets.oct");
 // function to load socket constants
 DEFUN_DLD(load_socket_constants,args,nargout, \
 	  "Loads various socket constants like AF_INET, SOCK_STREAM, etc.")
