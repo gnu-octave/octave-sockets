@@ -478,7 +478,7 @@ DEFUN_DLD(gethostbyname,args,nargout, \
       retval = octave_value (host_list);
     }
   else
-    print_usage ()
+    print_usage ();
 
   return retval;
 }
