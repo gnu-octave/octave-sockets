@@ -456,25 +456,31 @@ DEFUN_DLD(disconnect,args,nargout, \
 DEFUN_DLD(gethostbyname,args,nargout, \
 	  "gethostbyname(string)\nSee the gethostbyname() man pages")
 {
+  int nargin = args.length ();
   struct hostent*    hostInfo = NULL;
-  string_vector host_list;
+  octave_value retval;
 
-
-  if ( args(0).is_string() )
-  {
-    string addr = args(0).string_value();
-    hostInfo = gethostbyname( addr.c_str() );
-    if ( hostInfo )
+  if (nargin != 1)
+    print_usage ();
+  else if ( args(0).is_string() )
     {
-      for ( int i = 0 ; i < hostInfo->h_length/4 ; i++ )
-      {
-	string temp_addr = string(  inet_ntoa( *(struct in_addr*)hostInfo->h_addr_list[i] ));
-	host_list.append( temp_addr );
-      }
+      string_vector host_list;
+      string addr = args(0).string_value();
+      hostInfo = gethostbyname( addr.c_str() );
+      if ( hostInfo )
+	{
+	  for ( int i = 0 ; i < hostInfo->h_length/4 ; i++ )
+	    {
+	      string temp_addr = string(  inet_ntoa( *(struct in_addr*)hostInfo->h_addr_list[i] ));
+	      host_list.append( temp_addr );
+	    }
+	}
+      retval = octave_value (host_list);
     }
-  }
+  else
+    print_usage ()
 
-  return octave_value(host_list);
+  return retval;
 }
 
 // PKG_ADD: autoload ("send", "sockets.oct");
@@ -675,7 +681,8 @@ DEFUN_DLD(listen,args,nargout, \
   int backlog = args(1).int_value();
 //  octave_stdout << "BACKLOG: " << backlog << endl;
 
-  retval = ::listen( s->get_sock_fd(), backlog );
+  if (! error_state)
+    retval = ::listen( s->get_sock_fd(), backlog );
 
   return octave_value(retval);
 }
