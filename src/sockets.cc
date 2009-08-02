@@ -202,7 +202,7 @@ DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_soc
 // This macro must start with DEFUN_DLD so that the automatic collection
 // of function helps can take place.
 #define DEFUN_DLD_SOCKET_CONSTANT(name, help ) \
-DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, help) \
+DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help) \
 { return octave_value( name ); };
 
 // PKG_ADD: autoload ("AF_UNIX", "sockets.oct");
