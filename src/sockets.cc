@@ -534,7 +534,7 @@ DEFUN_DLD(send,args,nargout, \
     for ( int i = 0 ; i < d1.length() ; i++ )
       buf[i] = (unsigned char)d1(i);
     retval = ::send( s->get_sock_fd(), (const char*)buf, data.byte_size(), 0 );
-    delete buf;
+    delete[] buf;
   }
   else
   {
@@ -577,11 +577,14 @@ DEFUN_DLD(recv,args,nargout, \
   }
   else
   {
-    error("connect: expecting a octave_socket or integer");
+    error("recv: expecting a octave_socket or integer");
     return octave_value(-1);
   }
 
   long len = args(1).int_value();
+  if(len<0) 
+    error("recv: negative receive length requested");
+  
   unsigned char* buf = new unsigned char[ len ];
 #ifndef __WIN32__
   retval = ::recv( s->get_sock_fd(), buf, len, flags );
@@ -593,6 +596,8 @@ DEFUN_DLD(recv,args,nargout, \
   octave_value_list return_list;
   for ( int i = 0 ; i < retval ; i++ )
     return_buf(0,i) = buf[i];
+
+  delete[] buf;
 
   octave_value in_buf(return_buf);
   octave_value out_buf;
