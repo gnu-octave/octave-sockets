@@ -252,6 +252,10 @@ DEFUN_DLD_SOCKET_CONSTANT(SOCK_RAW, "socket constant" );
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(SOCK_PACKET, "socket constant" );
 
+// PKG_ADD: autoload ("MSG_PEEK", "sockets.oct");
+DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK, "socket constant" );
+// PKG_ADD: autoload ("MSG_DONTWAIT", "sockets.oct");
+DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
 
 std::map< int, octave_socket * > socket_map;
 static bool type_loaded = false;
@@ -592,6 +596,9 @@ DEFUN_DLD(recv,args,nargout, \
 	  "The read data is returned in an uint8 array data. The number of\n"
 	  "bytes read is returned in count\n"
 	  "\n"
+	  "You can get non-blocking operation by using the flag MSG_DONTWAIT\n"
+	  "which makes the recv() call return immediately. If there is no\n"
+	  "data, -1 is returned.\n"
 	  "See the recv() man pages for further details.\n")
 {
   int retval = 0;
@@ -625,9 +632,11 @@ DEFUN_DLD(recv,args,nargout, \
   }
 
   long len = args(1).int_value();
-  if(len<0) 
+  if(len<0) {
     error("recv: negative receive length requested");
-  
+    return octave_value(-1);
+  }
+
   unsigned char* buf = new unsigned char[ len ];
 #ifndef __WIN32__
   retval = ::recv( s->get_sock_fd(), buf, len, flags );

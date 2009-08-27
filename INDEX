@@ -19,4 +19,6 @@ Socket constants
   SOCK_SEQPACKET
   SOCK_RAW
   SOCK_RDM
+  MSG_PEEK
+  MSG_DONTWAIT
   load_socket_constants
