@@ -299,7 +299,9 @@ void octave_socket::remove_sock_fd(void)
 
 // PKG_ADD: autoload ("socket", "sockets.oct");
 // Function to create a socket
-DEFUN_DLD(socket,args,nargout,"socket(int,int,int)\nSee the socket() man pages\n")
+DEFUN_DLD(socket,args,nargout,
+	  "socket(int,int,int)\n"
+	  "See the socket() man pages\n")
 {
   int domain    = AF_INET;
   int type      = SOCK_STREAM;
@@ -358,7 +360,8 @@ DEFUN_DLD(socket,args,nargout,"socket(int,int,int)\nSee the socket() man pages\n
 // PKG_ADD: autoload ("connect", "sockets.oct");
 // function to create an outgoing connection
 DEFUN_DLD(connect,args,nargout, \
-	  "connect(octave_socket,struct)\nSee the connect() man pages")
+	  "connect(octave_socket,struct)\n"
+	  "See the connect() man pages\n")
 {
   int retval = -1;
   struct sockaddr_in serverInfo;
@@ -425,7 +428,8 @@ DEFUN_DLD(connect,args,nargout, \
 // PKG_ADD: autoload ("disconnect", "sockets.oct");
 // function to disconnect asocket
 DEFUN_DLD(disconnect,args,nargout, \
-	  "disconnect(octave_socket)\nSince we can't call fclose on the fd directly, use this to disconnect")
+	  "disconnect(octave_socket)\n"
+	  "Since we can't call fclose on the fd directly, use this to disconnect")
 {
   // Determine the socket on which to operate
   octave_socket* s = NULL;
@@ -454,7 +458,8 @@ DEFUN_DLD(disconnect,args,nargout, \
 // PKG_ADD: autoload ("gethostbyname", "sockets.oct");
 // function to get a host number from a host name
 DEFUN_DLD(gethostbyname,args,nargout, \
-	  "gethostbyname(string)\nSee the gethostbyname() man pages")
+	  "gethostbyname(string)\n"
+	  "See the gethostbyname() man pages")
 {
   int nargin = args.length ();
   struct hostent*    hostInfo = NULL;
@@ -486,8 +491,9 @@ DEFUN_DLD(gethostbyname,args,nargout, \
 // PKG_ADD: autoload ("send", "sockets.oct");
 // function to send data over a socket
 DEFUN_DLD(send,args,nargout, \
-	  "send(octave_socket,octave_value)\nSee the send() man pages.  This will only allow the" \
-	  " user to send uint8 arrays or strings")
+	  "send(octave_socket,octave_value,flags)\n"
+	  "See the send() man pages.  This will only allow the\n"
+	  "user to send uint8 arrays or strings\n")
 {
   int retval = 0;
   int flags = 0;
@@ -548,8 +554,9 @@ DEFUN_DLD(send,args,nargout, \
 // PKG_ADD: autoload ("recv", "sockets.oct");
 // function to receive data over a socket
 DEFUN_DLD(recv,args,nargout, \
-	  "recv(octave_socket,int)\nSee the send() man pages.  This will only allow the" \
-	  " user to receive uint8 arrays or strings")
+	  "recv(octave_socket,len,flags)\n"
+	  "See the recv() man pages.  This will only allow the" \
+	  " user to receive uint8 arrays or strings\n")
 {
   int retval = 0;
   int flags = 0;
@@ -612,8 +619,9 @@ DEFUN_DLD(recv,args,nargout, \
 // PKG_ADD: autoload ("bind", "sockets.oct");
 // function to bind a socket
 DEFUN_DLD(bind,args,nargout, \
-	  "bind(octave_socket,int)\nSee the bind() man pages.  This will bind a socket to a" \
-	  " specific port")
+	  "bind(octave_socket,int)\n"
+	  "See the bind() man pages.  This will bind a socket to a" \
+	  " specific port\n")
 {
   int retval = 0;
   if ( args.length() < 2 )
@@ -656,7 +664,8 @@ DEFUN_DLD(bind,args,nargout, \
 // PKG_ADD: autoload ("listen", "sockets.oct");
 // function to listen on a socket
 DEFUN_DLD(listen,args,nargout, \
-	  "listen(octave_socket,int)\nSee the listen() man pages")
+	  "listen(octave_socket,int)\n"
+	  "See the listen() man pages\n")
 {
   int retval = 0;
   if ( args.length() < 2 )
@@ -695,7 +704,8 @@ DEFUN_DLD(listen,args,nargout, \
 // PKG_ADD: autoload ("accept", "sockets.oct");
 // function to accept on a listening socket
 DEFUN_DLD(accept,args,nargout, \
-	  "accept(octave_socket)\nSee the accept() man pages")
+	  "accept(octave_socket)\n"
+	  "See the accept() man pages\n")
 {
   int retval = 0;
   struct sockaddr_in clientInfo;
@@ -761,7 +771,7 @@ DEFUN_DLD(accept,args,nargout, \
 // PKG_ADD: autoload ("load_socket_constants", "sockets.oct");
 // function to load socket constants
 DEFUN_DLD(load_socket_constants,args,nargout, \
-	  "Loads various socket constants like AF_INET, SOCK_STREAM, etc.")
+	  "Loads various socket constants like AF_INET, SOCK_STREAM, etc.\n")
 {
   octave_socket temp();
   return octave_value();
