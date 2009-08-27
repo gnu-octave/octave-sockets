@@ -199,11 +199,25 @@ void install_socket_ops(void)
 DEFINE_OCTAVE_ALLOCATOR (octave_socket);
 DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_socket");
 
+
+
 // This macro must start with DEFUN_DLD so that the automatic collection
-// of function helps can take place.
-#define DEFUN_DLD_SOCKET_CONSTANT(name, help ) \
-DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help) \
-{ return octave_value( name ); };
+// of function helps can take place. To get the code working in
+// multiple versions of octave, we have to check the version number.
+#if !defined(MINORVERSION) || !defined(MAJORVERSION)
+# error "please define MAJORVERSION and MINORVERSION to the octave version numbers"
+#endif
+
+#if MAJORVERSION==3 && MINORVERSION<2
+# define DEFUN_DLD_SOCKET_CONSTANT(name, help )				\
+  DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, help)	\
+  {    return octave_value( name ); };					
+#else
+# define DEFUN_DLD_SOCKET_CONSTANT(name, help )				\
+  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help)	\
+  {    return octave_value( name ); };					
+#endif
+
 
 // PKG_ADD: autoload ("AF_UNIX", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX, "socket constant" );
