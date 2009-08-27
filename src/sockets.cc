@@ -300,8 +300,16 @@ void octave_socket::remove_sock_fd(void)
 // PKG_ADD: autoload ("socket", "sockets.oct");
 // Function to create a socket
 DEFUN_DLD(socket,args,nargout,
-	  "socket(int,int,int)\n"
-	  "See the socket() man pages\n")
+	  "s=socket(domain,type,protocol)\n"
+	  "Creates a socket. Domain is an integer, where the value AF_INET\n"
+	  "can be used to create an IPv4 socket.\n"
+	  "type is an integer describing the socket. When using IP, specifying "
+	  "SOCK_STREAM gives a TCP socket.\n"
+	  "protocol is currently not used and should be 0 if specified.\n"
+	  "\n"
+	  "If no input arguments are given, default values AF_INET and \n"
+	  "SOCK_STREAM are used.\n"
+	  "See the local socket() reference for more details\n")
 {
   int domain    = AF_INET;
   int type      = SOCK_STREAM;
@@ -360,8 +368,16 @@ DEFUN_DLD(socket,args,nargout,
 // PKG_ADD: autoload ("connect", "sockets.oct");
 // function to create an outgoing connection
 DEFUN_DLD(connect,args,nargout, \
-	  "connect(octave_socket,struct)\n"
-	  "See the connect() man pages\n")
+	  "status=connect(sock,serverinfo)\n"
+	  "Connects the socket given in sock following the information\n"
+	  "given in the struct serverinfo\n"
+	  "serverinfo shall contain the following fields:\n"
+	  " addr - a string with the host name to connect to\n"
+	  " port - the port number to connect to (an integer)\n"
+	  "\n"
+	  "On successful connect, zero is returned in status.\n"
+	  "\n"
+	  "See the connect() man pages for further details.\n")
 {
   int retval = -1;
   struct sockaddr_in serverInfo;
@@ -554,9 +570,15 @@ DEFUN_DLD(send,args,nargout, \
 // PKG_ADD: autoload ("recv", "sockets.oct");
 // function to receive data over a socket
 DEFUN_DLD(recv,args,nargout, \
-	  "recv(octave_socket,len,flags)\n"
-	  "See the recv() man pages.  This will only allow the" \
-	  " user to receive uint8 arrays or strings\n")
+	  "[data,count]=recv(sock,len,flags)\n"
+	  "Requests reading len bytes from the socket given in sock.\n"
+	  "The integer flags parameter can be used to modify the behaviour\n"
+	  "of recv.\n"
+	  "\n"
+	  "The read data is returned in an uint8 array data. The number of\n"
+	  "bytes read is returned in count\n"
+	  "\n"
+	  "See the recv() man pages for further details.\n")
 {
   int retval = 0;
   int flags = 0;
@@ -599,20 +621,30 @@ DEFUN_DLD(recv,args,nargout, \
   retval = ::recv( s->get_sock_fd(), ( char* )buf, len, flags );
 #endif
 
-  Matrix return_buf(1,retval);
+
   octave_value_list return_list;
-  for ( int i = 0 ; i < retval ; i++ )
-    return_buf(0,i) = buf[i];
+  //always return the status in the second output parameter
+  return_list(1) = retval; 
+  if(retval<0) {
+    //We get -1 if an error occurs,or if there is no data and the
+    //socket is non-blocking. We should return in both cases.
+  } else if (0==retval) {
+    //The peer has shut down.
+  } else {
+    //Normal behaviour.
+    Matrix return_buf(1,retval);
+    
+    for ( int i = 0 ; i < retval ; i++ )
+      return_buf(0,i) = buf[i];
+    
+    octave_value in_buf(return_buf);
+    octave_value out_buf;
+    OCTAVE_TYPE_CONV( in_buf, out_buf, uint8 );
+    return_list(0) = out_buf;
+  }
 
   delete[] buf;
-
-  octave_value in_buf(return_buf);
-  octave_value out_buf;
-  OCTAVE_TYPE_CONV( in_buf, out_buf, uint8 );
-  return_list(0) = out_buf;
-	//return_list(0) = return_buf;
-  return_list(1) = retval;
-
+  
   return return_list;
 }
 
