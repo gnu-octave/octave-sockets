@@ -21,4 +21,5 @@ Socket constants
   SOCK_RDM
   MSG_PEEK
   MSG_DONTWAIT
+  MSG_WAITALL
   load_socket_constants

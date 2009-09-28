@@ -256,6 +256,8 @@ DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
 DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK, "socket constant" );
 // PKG_ADD: autoload ("MSG_DONTWAIT", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
+// PKG_ADD: autoload ("MSG_WAITALL", "sockets.oct");
+DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
 
 std::map< int, octave_socket * > socket_map;
 static bool type_loaded = false;
