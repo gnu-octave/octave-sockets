@@ -1,10 +1,10 @@
 Name: sockets
-Version: 1.0.5
-Date: 2008-08-23
+Version: 1.0.6
+Date: 2009-11-16
 Author: John Swensen <jpswensen@comcast.net>
 Maintainer: Tom Holroyd <tomh@kurage.nimh.nih.gov>
 Title: Sockets
-Description: Socket functions
+Description: Socket functions for networking from within octave.
 Categories: Sockets
 Depends: octave (>= 2.9.10)
 Autoload: no
