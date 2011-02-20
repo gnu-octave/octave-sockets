@@ -413,8 +413,35 @@ DEFUN_DLD(connect,args,nargout, \
   const octave_base_value& struct_serverInfo = args(1).get_rep();
   octave_struct& addrInfo = ((octave_struct&)struct_serverInfo);
 
+#if MINORVERSION <= 2
   string addr = addrInfo.map_value().stringfield("addr");
   int port = addrInfo.map_value().intfield("port");
+#else
+  const Cell addr_cell = addrInfo.map_value().getfield ("addr");
+  string addr;
+  if (addr_cell.numel () == 1 && addr_cell (0).is_string ())
+    {
+      addr = addr_cell (0).string_value ();
+    }
+  else
+    {
+      error ("connect: invalid input: no 'addr' field");
+      return octave_value (-1);
+    }
+
+  const Cell port_cell = addrInfo.map_value().getfield ("port");
+  int port;
+  if (port_cell.numel () == 1 && port_cell (0).is_numeric_type ())
+    {
+      port = port_cell (0).int_value ();
+    }
+  else
+    {
+      error ("connect: invalid input: no 'port' field");
+      return octave_value (-1);
+    }
+#endif
+
 
   // Determine the socket on which to operate
   octave_socket* s = NULL;
