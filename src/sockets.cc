@@ -39,6 +39,7 @@ using namespace std;
 #endif
 #else
 typedef unsigned int socklen_t;
+#include <winsock2.h>
 #endif
 #include <errno.h>
 
@@ -254,8 +255,10 @@ DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
 
 // PKG_ADD: autoload ("MSG_PEEK", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK, "socket constant" );
+#ifndef __WIN32__
 // PKG_ADD: autoload ("MSG_DONTWAIT", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
+#endif
 // PKG_ADD: autoload ("MSG_WAITALL", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
 
