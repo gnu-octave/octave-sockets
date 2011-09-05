@@ -255,12 +255,14 @@ DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
 
 // PKG_ADD: autoload ("MSG_PEEK", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK, "socket constant" );
-#ifndef __WIN32__
+#ifdef MSG_DONTWAIT
 // PKG_ADD: autoload ("MSG_DONTWAIT", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
 #endif
+#ifdef MSG_WAITALL
 // PKG_ADD: autoload ("MSG_WAITALL", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
+#endif
 
 std::map< int, octave_socket * > socket_map;
 static bool type_loaded = false;
