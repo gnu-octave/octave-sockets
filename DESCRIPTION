@@ -8,5 +8,5 @@ Description: Socket functions for networking from within octave.
 Categories: Sockets
 Depends: octave (>= 2.9.10)
 Autoload: no
-License: GPL version 2 or later
+License: GPLv3+
 Url: http://octave.sf.net
