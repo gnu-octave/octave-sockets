@@ -340,7 +340,7 @@ void octave_socket::remove_sock_fd(void)
 // Function to create a socket
 DEFUN_DLD(socket,args,nargout,
 	  "s=socket(domain,type,protocol)\n"
-	  "Creates a socket. Domain is an integer, where the value AF_INET\n"
+	  "Creates a socket s. Domain is an integer, where the value AF_INET\n"
 	  "can be used to create an IPv4 socket.\n"
 	  "type is an integer describing the socket. When using IP, specifying "
 	  "SOCK_STREAM gives a TCP socket.\n"
@@ -348,7 +348,7 @@ DEFUN_DLD(socket,args,nargout,
 	  "\n"
 	  "If no input arguments are given, default values AF_INET and \n"
 	  "SOCK_STREAM are used.\n"
-	  "See the local socket() reference for more details\n")
+	  "See the local socket() reference for more details.\n")
 {
   int domain    = AF_INET;
   int type      = SOCK_STREAM;
@@ -407,14 +407,14 @@ DEFUN_DLD(socket,args,nargout,
 // PKG_ADD: autoload ("connect", "sockets.oct");
 // function to create an outgoing connection
 DEFUN_DLD(connect,args,nargout, \
-	  "status=connect(sock,serverinfo)\n"
-	  "Connects the socket given in sock following the information\n"
-	  "given in the struct serverinfo\n"
+	  "status=connect(s,serverinfo)\n"
+	  "Connects the socket s following the information\n"
+	  "in the struct serverinfo.\n"
 	  "serverinfo shall contain the following fields:\n"
 	  " addr - a string with the host name to connect to\n"
 	  " port - the port number to connect to (an integer)\n"
 	  "\n"
-	  "On successful connect, zero is returned in status.\n"
+	  "On successful connect, the returned status is zero.\n"
 	  "\n"
 	  "See the connect() man pages for further details.\n")
 {
@@ -422,9 +422,9 @@ DEFUN_DLD(connect,args,nargout, \
   struct sockaddr_in serverInfo;
   struct hostent*    hostInfo;
 
-  if ( args.length() < 2 )
+  if ( args.length() != 2 )
   {
-    error("connect: you must specify 2 paramters");
+    error("connect: you must specify 2 parameters.");
     return octave_value(-1);
   }
 
@@ -444,7 +444,7 @@ DEFUN_DLD(connect,args,nargout, \
     }
   else
     {
-      error ("connect: invalid input: no 'addr' field");
+      error ("connect: invalid input: no 'addr' field in serverinfo.");
       return octave_value (-1);
     }
 
@@ -456,7 +456,7 @@ DEFUN_DLD(connect,args,nargout, \
     }
   else
     {
-      error ("connect: invalid input: no 'port' field");
+      error ("connect: invalid input: no 'port' field in serverinfo.");
       return octave_value (-1);
     }
 #endif
@@ -476,7 +476,7 @@ DEFUN_DLD(connect,args,nargout, \
   }
   else
   {
-    error("connect: expecting a octave_socket or integer");
+    error("connect: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
@@ -510,8 +510,10 @@ DEFUN_DLD(connect,args,nargout, \
 // PKG_ADD: autoload ("disconnect", "sockets.oct");
 // function to disconnect asocket
 DEFUN_DLD(disconnect,args,nargout, \
-	  "disconnect(octave_socket)\n"
-	  "Since we can't call fclose on the fd directly, use this to disconnect")
+	  "disconnect(s)\n"
+	  "Disconnects the socket s.\n"
+	  "Since we can't call fclose on the file descriptor directly,\n"
+	  "use this function to disconnect the socket.")
 {
   // Determine the socket on which to operate
   octave_socket* s = NULL;
@@ -527,7 +529,7 @@ DEFUN_DLD(disconnect,args,nargout, \
   }
   else
   {
-    error("connect: expecting a octave_socket or integer");
+    error("connect: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
@@ -540,8 +542,13 @@ DEFUN_DLD(disconnect,args,nargout, \
 // PKG_ADD: autoload ("gethostbyname", "sockets.oct");
 // function to get a host number from a host name
 DEFUN_DLD(gethostbyname,args,nargout, \
-	  "gethostbyname(string)\n"
-	  "See the gethostbyname() man pages")
+	  "addr=gethostbyname(hostname)\n"
+	  "Returns an IP adress addr for a host name.\n"
+	  "Example:\n"
+	  "addr=gethostbyname('localhost')\n"
+	  "addr = 127.0.0.1\n"
+	  "\n"
+	  "See the gethostbyname() man pages for details.")
 {
   int nargin = args.length ();
   struct hostent*    hostInfo = NULL;
@@ -573,16 +580,17 @@ DEFUN_DLD(gethostbyname,args,nargout, \
 // PKG_ADD: autoload ("send", "sockets.oct");
 // function to send data over a socket
 DEFUN_DLD(send,args,nargout, \
-	  "send(octave_socket,octave_value,flags)\n"
-	  "See the send() man pages.  This will only allow the\n"
-	  "user to send uint8 arrays or strings\n")
+	  "send(s,data,flags)\n"
+	  "Sends data on socket s. data should be an uint8 array or\n"
+	  "a string.\n"
+	  "See the send() man pages for further details.\n")
 {
   int retval = 0;
   int flags = 0;
 
   if ( args.length() < 2 )
   {
-    error( "send: you must specify 2 parameters");
+    error( "send: you must specify two or more parameters");
     return octave_value(-1);
   }
 
@@ -604,7 +612,7 @@ DEFUN_DLD(send,args,nargout, \
   }
   else
   {
-    error("connect: expecting a octave_socket or integer");
+    error("connect: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
@@ -636,8 +644,8 @@ DEFUN_DLD(send,args,nargout, \
 // PKG_ADD: autoload ("recv", "sockets.oct");
 // function to receive data over a socket
 DEFUN_DLD(recv,args,nargout, \
-	  "[data,count]=recv(sock,len,flags)\n"
-	  "Requests reading len bytes from the socket given in sock.\n"
+	  "[data,count]=recv(s,len,flags)\n"
+	  "Requests reading len bytes from the socket s.\n"
 	  "The integer flags parameter can be used to modify the behaviour\n"
 	  "of recv.\n"
 	  "\n"
@@ -645,7 +653,7 @@ DEFUN_DLD(recv,args,nargout, \
 	  "bytes read is returned in count\n"
 	  "\n"
 	  "You can get non-blocking operation by using the flag MSG_DONTWAIT\n"
-	  "which makes the recv() call return immediately. If there is no\n"
+	  "which makes the recv() call return immediately. If there are no\n"
 	  "data, -1 is returned.\n"
 	  "See the recv() man pages for further details.\n")
 {
@@ -675,7 +683,7 @@ DEFUN_DLD(recv,args,nargout, \
   }
   else
   {
-    error("recv: expecting a octave_socket or integer");
+    error("recv: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
@@ -722,12 +730,12 @@ DEFUN_DLD(recv,args,nargout, \
 // PKG_ADD: autoload ("bind", "sockets.oct");
 // function to bind a socket
 DEFUN_DLD(bind,args,nargout, \
-	  "bind(octave_socket,int)\n"
-	  "See the bind() man pages.  This will bind a socket to a" \
-	  " specific port\n")
+	  "bind(s,portnumber)\n"
+	  "binds the sockets to port portnumber.\n"
+	  "See the bind() man pages for further details.\n")
 {
   int retval = 0;
-  if ( args.length() < 2 )
+  if ( args.length() != 2 )
   {
     error( "bind: you must specify 2 parameters" );
     return octave_value(-1);
@@ -747,7 +755,7 @@ DEFUN_DLD(bind,args,nargout, \
   }
   else
   {
-    error("connect: expecting a octave_socket or integer");
+    error("connect: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
@@ -767,11 +775,15 @@ DEFUN_DLD(bind,args,nargout, \
 // PKG_ADD: autoload ("listen", "sockets.oct");
 // function to listen on a socket
 DEFUN_DLD(listen,args,nargout, \
-	  "listen(octave_socket,int)\n"
-	  "See the listen() man pages\n")
+	  "r=listen(s,backlog)\n"
+	  "Listens on socket s for connections. backlog specifies\n"
+	  "how large the queue of incoming connections is allowed to\n"
+	  "grow.\n"
+	  "On success, zero is returned.\n"
+	  "See the listen() man pages for details.\n")
 {
   int retval = 0;
-  if ( args.length() < 2 )
+  if ( args.length() != 2 )
   {
     error( "listen: you must specify 2 parameters" );
     return octave_value(-1);
@@ -791,7 +803,7 @@ DEFUN_DLD(listen,args,nargout, \
   }
   else
   {
-    error("connect: expecting a octave_socket or integer");
+    error("connect: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
@@ -807,8 +819,11 @@ DEFUN_DLD(listen,args,nargout, \
 // PKG_ADD: autoload ("accept", "sockets.oct");
 // function to accept on a listening socket
 DEFUN_DLD(accept,args,nargout, \
-	  "accept(octave_socket)\n"
-	  "See the accept() man pages\n")
+	  "[client,info]=accept(s)\n"
+	  "Accepts an incoming connection on the socket s.\n"
+	  "The newly created socket is returned in client, and\n"
+	  "associated information in a struct info.\n"
+	  "See the accept() man pages for details.\n")
 {
   int retval = 0;
   struct sockaddr_in clientInfo;
@@ -834,7 +849,7 @@ DEFUN_DLD(accept,args,nargout, \
   }
   else
   {
-    error("accept: expecting a octave_socket or integer");
+    error("accept: expecting an octave_socket or integer");
     return octave_value(-1);
   }
 
