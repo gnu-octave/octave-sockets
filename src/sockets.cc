@@ -50,9 +50,7 @@ using namespace std;
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#ifdef __CYGWIN__
 #include <unistd.h>
-#endif
 #else
 typedef unsigned int socklen_t;
 #include <winsock2.h>
