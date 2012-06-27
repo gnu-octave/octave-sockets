@@ -148,7 +148,7 @@ public:
   bool print_as_scalar (void) const { return true;}
 
   // Still undefined.
-  bool is_data_available() {};
+  //bool is_data_available() {};
 
   /**
    * Overloaded methods to print the fd as the socket id
@@ -825,7 +825,6 @@ DEFUN_DLD(accept,args,nargout, \
 	  "associated information in a struct info.\n"
 	  "See the accept() man pages for details.\n")
 {
-  int retval = 0;
   struct sockaddr_in clientInfo;
   socklen_t clientLen = sizeof(struct sockaddr_in);
 
