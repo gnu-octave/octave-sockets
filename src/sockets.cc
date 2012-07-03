@@ -240,8 +240,9 @@ DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX, "socket constant" );
 // PKG_ADD: autoload ("AF_LOCAL", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL, "socket constant" );
 #else
-DEFUNX_DLD ( "AF_LOCAL", FAFL_OCAL, FSAF_LOCAL, args, nargout, "socket constant" )
-{ error( "AF_LOCAL address family not supported on this platform" ); return octave_value(); };
+DEFUNX_DLD ("AF_LOCAL", FAF_LOCAL, GAF_LOCAL, args, nargout, "(not supported)")
+{ error( "AF_LOCAL address family not supported on this platform" );
+  return octave_value(); };
 #endif
 // PKG_ADD: autoload ("AF_INET", "sockets.oct");
 DEFUN_DLD_SOCKET_CONSTANT(AF_INET, "socket constant" );
