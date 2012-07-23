@@ -651,13 +651,19 @@ DEFUN_DLD(recv,args,nargout, \
 	  "of recv.\n"
 	  "\n"
 	  "The read data is returned in an uint8 array data. The number of\n"
-	  "bytes read is returned in count\n"
+	  "bytes read is returned in count.\n"
 	  "\n"
 	  "You can get non-blocking operation by using the flag MSG_DONTWAIT\n"
 	  "which makes the recv() call return immediately. If there are no\n"
-	  "data, -1 is returned.\n"
+	  "data, -1 is returned in count.\n"
 	  "See the recv() man pages for further details.\n")
 {
+  if(nargout>2) 
+    {
+      error("recv: please use at most two output arguments.");
+      return octave_value(-1);
+    }
+
   int retval = 0;
   int flags = 0;
 
@@ -678,7 +684,7 @@ DEFUN_DLD(recv,args,nargout, \
     s = &((octave_socket &)rep);
   }
   else if ( args(0).is_scalar_type() )
-  {
+    {//what happens if fd does not exist in socket_map?
     int fd = args(0).int_value();
     s = socket_map[fd];
   }
@@ -701,26 +707,32 @@ DEFUN_DLD(recv,args,nargout, \
   retval = ::recv( s->get_sock_fd(), ( char* )buf, len, flags );
 #endif
 
-
   octave_value_list return_list;
+  uint8NDArray data;
+
   //always return the status in the second output parameter
   return_list(1) = retval; 
   if(retval<0) {
     //We get -1 if an error occurs,or if there is no data and the
     //socket is non-blocking. We should return in both cases.
+    return_list(0) = data;
   } else if (0==retval) {
     //The peer has shut down.
+    return_list(0) = data;
   } else {
-    //Normal behaviour.
-    Matrix return_buf(1,retval);
-    
+    //Normal behaviour. Copy the buffer to the output variable. For
+    //backward compatibility, a row vector is returned.
+    dim_vector d;
+    d(0)=1;
+    d(1)=retval;
+    data.resize(d);
+
+    //this could possibly be made more efficient with memcpy and
+    //fortran_vec() instead.
     for ( int i = 0 ; i < retval ; i++ )
-      return_buf(0,i) = buf[i];
+      data(i) = buf[i];
     
-    octave_value in_buf(return_buf);
-    octave_value out_buf;
-    OCTAVE_TYPE_CONV( in_buf, out_buf, uint8 );
-    return_list(0) = out_buf;
+    return_list(0) = data;
   }
 
   delete[] buf;

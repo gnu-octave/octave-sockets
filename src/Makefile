@@ -5,6 +5,10 @@ SRC := $(OCT:.oct=.cc)
 MKOCTFILE ?= mkoctfile
 OCTAVE ?= octave
 
+#windows users should link with -lws2_32 (on mingw, at least). If you
+#know how to detect windows and find the appropriate linker flag here,
+#please drop a mail to the octave-dev mailing list.
+
 #See which octave version we run by querying mkoctfile for its version
 #string. This is needed because there was an octave macro that changed
 #from 3.0 to 3.2. When 3.0 is considered long gone, this is not
