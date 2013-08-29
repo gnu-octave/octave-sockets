@@ -876,7 +876,7 @@ DEFUN_DLD(accept,args,nargout, \
     octave_socket* retobj = new octave_socket(fd);
 
     // place the client information into a structure
-    Octave_map client_info_map;
+    octave_scalar_map client_info_map;
     client_info_map.assign("sin_family", octave_value(clientInfo.sin_family));
     client_info_map.assign("sin_port", octave_value(clientInfo.sin_port));
     client_info_map.assign("sin_addr", octave_value( inet_ntoa(clientInfo.sin_addr)));
