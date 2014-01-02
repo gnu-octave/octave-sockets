@@ -644,7 +644,7 @@ See the @command{send} man pages for further details.\n\
       string buf = data.string_value ();
       retval = ::send (s->get_sock_fd (), buf.c_str (), buf.length (), flags);
     }
-  else if (data.byte_size () == data.numel ())
+  else if (data.byte_size () == size_t (data.numel ()))
     {
       const NDArray d1 = data.array_value ();
       const octave_idx_type length = d1.numel ();
