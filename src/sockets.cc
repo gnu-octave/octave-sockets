@@ -516,6 +516,12 @@ DEFUN_DLD(disconnect,args,nargout, \
 	  "Since we can't call fclose on the file descriptor directly,\n"
 	  "use this function to disconnect the socket.")
 {
+  if (args.length () != 1)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
   // Determine the socket on which to operate
   octave_socket* s = NULL;
   if ( args(0).type_id() == octave_socket::static_type_id() )
