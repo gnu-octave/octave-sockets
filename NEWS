@@ -1,3 +1,10 @@
+Summary of important user-visible changes for sockets 1.2.0:
+-------------------------------------------------------------------
+
+ ** The sockets package is now dependent on Octave versions >= 3.2.0
+
+ ** Functions now perform better input check to prevent accidental segfaults.
+
 Summary of important user-visible changes for sockets 1.0.8:
 -------------------------------------------------------------------
 

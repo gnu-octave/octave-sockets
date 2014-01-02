@@ -66,51 +66,52 @@ std::string to_string(T t, std::ios_base & (*f)(std::ios_base&))
   return oss.str();
 }
 
-#define OCTAVE_TYPE_CONV_HELPER(VAR_IN, VAR_OUT, NAME, MATRIX_RESULT_T, SCALAR_RESULT_T) \
- \
-      int t_arg = VAR_IN.type_id (); \
- \
-      int t_result = MATRIX_RESULT_T::static_type_id (); \
- \
-      if (t_arg == t_result || VAR_IN.class_name () == #NAME) \
-	{ \
-	  VAR_OUT = VAR_IN; \
-	} \
-      else \
-	{ \
-	  octave_base_value::type_conv_fcn cf \
-	    = octave_value_typeinfo::lookup_type_conv_op (t_arg, t_result); \
- \
-	  if (cf) \
-	    { \
-	      octave_base_value *tmp (cf (*(VAR_IN.internal_rep ()))); \
- \
-	      if (tmp) \
-		{ \
-		  VAR_OUT = octave_value (tmp); \
- \
-		  VAR_OUT.maybe_mutate (); \
-		} \
-	    } \
-	  else \
-	    { \
-	      std::string arg_tname = VAR_IN.type_name (); \
- \
-	      std::string result_tname = VAR_IN.numel () == 1 \
-		? SCALAR_RESULT_T::static_type_name () \
-		: MATRIX_RESULT_T::static_type_name (); \
- \
-	      gripe_invalid_conversion (arg_tname, result_tname); \
-	    } \
-	}
+#define OCTAVE_TYPE_CONV_HELPER(VAR_IN, VAR_OUT, NAME, MATRIX_RESULT_T, SCALAR_RESULT_T)\
+\
+      int t_arg = VAR_IN.type_id ();\
+\
+      int t_result = MATRIX_RESULT_T::static_type_id ();\
+\
+      if (t_arg == t_result || VAR_IN.class_name () == #NAME)\
+        {\
+          VAR_OUT = VAR_IN;\
+        }\
+      else\
+        {\
+          octave_base_value::type_conv_fcn cf\
+            = octave_value_typeinfo::lookup_type_conv_op (t_arg, t_result);\
+\
+          if (cf)\
+            {\
+              octave_base_value *tmp (cf (*(VAR_IN.internal_rep ())));\
+\
+              if (tmp)\
+                {\
+                  VAR_OUT = octave_value (tmp);\
+\
+                  VAR_OUT.maybe_mutate ();\
+                }\
+            }\
+          else\
+            {\
+              std::string arg_tname = VAR_IN.type_name ();\
+\
+              std::string result_tname = VAR_IN.numel () == 1\
+                ? SCALAR_RESULT_T::static_type_name ()\
+                : MATRIX_RESULT_T::static_type_name ();\
+\
+              gripe_invalid_conversion (arg_tname, result_tname);\
+            }\
+        }
 
 
-#define OCTAVE_TYPE_CONV(VAR_IN, VAR_OUT, NAME) \
-  OCTAVE_TYPE_CONV_HELPER (VAR_IN, VAR_OUT, NAME, octave_ ## NAME ## _matrix, \
-			  octave_ ## NAME ## _scalar)
+#define OCTAVE_TYPE_CONV(VAR_IN, VAR_OUT, NAME)\
+  OCTAVE_TYPE_CONV_HELPER (VAR_IN, VAR_OUT, NAME, octave_ ## NAME ## _matrix,\
+                          octave_ ## NAME ## _scalar)
 
 // Derive an octave_socket class from octave_base_value
-class octave_socket : public octave_base_value
+class
+octave_socket : public octave_base_value
 {
 private:
 
@@ -124,29 +125,29 @@ public:
   /**
    * Default constructor.  Must be defined, but never used.
    */
-  octave_socket() {}
+  octave_socket () { }
 
   /**
    * Constructor used to set the fd on creation.
    */
-  octave_socket( int fd );
+  octave_socket (int fd);
 
   /**
    * Constructor used to create the socket.
    */
-  octave_socket( int domain, int type, int protocol );
+  octave_socket (int domain, int type, int protocol);
 
   /**
    * Destructor.
    */
-  ~octave_socket();
+  ~octave_socket ();
 
   /**
    * Various properties of the octave_socket datatype.
    */
-  bool is_constant (void) const { return true;}
-  bool is_defined (void) const { return true;}
-  bool print_as_scalar (void) const { return true;}
+  bool is_constant (void) const { return true; }
+  bool is_defined (void) const { return true; }
+  bool print_as_scalar (void) const { return true; }
 
   // Still undefined.
   //bool is_data_available() {};
@@ -160,19 +161,15 @@ public:
   /**
    * Utility function for retrieving the socket fd.
    */
-  int get_sock_fd(void) { return sock_fd;};
+  int get_sock_fd (void) { return sock_fd; };
 
-  void remove_sock_fd(void);
+  void remove_sock_fd (void);
 
   virtual double scalar_value (bool frc_str_conv = false) const
-  {
-    return (double)sock_fd;
-  }
+  { return double (sock_fd); }
 
   double socket_value () const
-  {
-    return (double)sock_fd;
-  }
+  { return double (sock_fd); }
 
 private:
   DECLARE_OCTAVE_ALLOCATOR
@@ -194,7 +191,8 @@ DEFBINOP_OP (ge_s_sock, scalar, socket, >=)
 DEFBINOP_OP (gt_s_sock, scalar, socket, >)
 DEFBINOP_OP (ne_s_sock, scalar, socket, !=)
 
-void install_socket_ops(void)
+void
+install_socket_ops (void)
 {
   INSTALL_BINOP (op_lt, octave_socket, octave_scalar, lt_sock_s);
   INSTALL_BINOP (op_le, octave_socket, octave_scalar, le_sock_s);
@@ -215,24 +213,9 @@ void install_socket_ops(void)
 DEFINE_OCTAVE_ALLOCATOR (octave_socket);
 DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_socket");
 
-
-
-// This macro must start with DEFUN_DLD so that the automatic collection
-// of function helps can take place. To get the code working in
-// multiple versions of octave, we have to check the version number.
-#if !defined(MINORVERSION) || !defined(MAJORVERSION)
-# error "please define MAJORVERSION and MINORVERSION to the octave version numbers"
-#endif
-
-#if MAJORVERSION==3 && MINORVERSION<2
-# define DEFUN_DLD_SOCKET_CONSTANT(name, help )				\
-  DEFUNX_DLD ( #name, F ## name, FS ## name, args, nargout, help)	\
-  {    return octave_value( name ); };					
-#else
-# define DEFUN_DLD_SOCKET_CONSTANT(name, help )				\
-  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help)	\
-  {    return octave_value( name ); };					
-#endif
+# define DEFUN_DLD_SOCKET_CONSTANT(name, help )\
+  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help)\
+  {    return octave_value( name ); };
 
 
 // PKG_ADD: autoload ("AF_UNIX", "sockets.oct");
@@ -285,7 +268,7 @@ static bool type_loaded = false;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-octave_socket::octave_socket( int fd )
+octave_socket::octave_socket (int fd)
 {
   sock_fd = fd;
   socket_map[sock_fd] = this;
@@ -293,117 +276,143 @@ octave_socket::octave_socket( int fd )
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-octave_socket::octave_socket( int domain, int type, int protocol )
+octave_socket::octave_socket (int domain, int type, int protocol)
 {
-  sock_fd = ::socket( domain, type, protocol );
-  if ( sock_fd == -1 )
-  {
-    error( "octave_socket: Error creating socket" );
-  }
+  sock_fd = ::socket (domain, type, protocol);
+  if (sock_fd == -1)
+    error_state = 1;
   else
-  {
     socket_map[sock_fd] = this;
-  }
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 octave_socket::~octave_socket()
 {
-	remove_sock_fd();
+  remove_sock_fd();
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void octave_socket::print (ostream& os, bool pr_as_read_syntax ) const
+void
+octave_socket::print (ostream& os, bool pr_as_read_syntax) const
 {
   print_raw (os, pr_as_read_syntax);
   newline (os);
 }
 
-void octave_socket::print_raw (std::ostream& os, bool pr_as_read_syntax) const
+void
+octave_socket::print_raw (std::ostream& os, bool pr_as_read_syntax) const
 {
   os << sock_fd;
 }
 
-void octave_socket::remove_sock_fd(void)
+void
+octave_socket::remove_sock_fd (void)
 {
 #ifndef __WIN32__
-	::close( sock_fd );
+  ::close (sock_fd);
 #else
-	::closesocket( sock_fd );
+  ::closesocket (sock_fd);
 #endif
-	socket_map.erase( sock_fd );
-	sock_fd = -1;
+  socket_map.erase (sock_fd);
+  sock_fd = -1;
 }
-
 
 // PKG_ADD: autoload ("socket", "sockets.oct");
 // Function to create a socket
-DEFUN_DLD(socket,args,nargout,
-	  "s=socket(domain,type,protocol)\n"
-	  "Creates a socket s. Domain is an integer, where the value AF_INET\n"
-	  "can be used to create an IPv4 socket.\n"
-	  "type is an integer describing the socket. When using IP, specifying "
-	  "SOCK_STREAM gives a TCP socket.\n"
-	  "protocol is currently not used and should be 0 if specified.\n"
-	  "\n"
-	  "If no input arguments are given, default values AF_INET and \n"
-	  "SOCK_STREAM are used.\n"
-	  "See the local socket() reference for more details.\n")
+DEFUN_DLD(socket, args, , "\
+-*- texinfo -*-\n\
+@deftypefn  {Loadable Function} {} socket ()\n\
+@deftypefnx {Loadable Function} {} socket (@var{domain})\n\
+@deftypefnx {Loadable Function} {} socket (@var{domain}, @var{type})\n\
+@deftypefnx {Loadable Function} {} socket (@var{domain}, @var{type}, @var{protocol})\n\
+Creates a socket.\n\
+\n\
+@var{domain} is an integer, where the value AF_INET\n\
+can be used to create an IPv4 socket.\n\
+\n\
+@var{type} is an integer describing the socket.  When using IP, specifying\n\
+SOCK_STREAM gives a TCP socket.\n\
+\n\
+@var{protocol} is currently not used and should be 0 if specified.\n\
+\n\
+If no input arguments are given, default values AF_INET and\n\
+SOCK_STREAM are used.\n\
+\n\
+See the local @command{socket} reference for more details.\n\
+@end deftypefn")
 {
   int domain    = AF_INET;
   int type      = SOCK_STREAM;
   int protocol  = 0;
 
-  if ( !type_loaded )
-  {
-    octave_socket::register_type ();
-    install_socket_ops();
-    type_loaded = true;
-#ifdef __WIN32__
-    WORD wVersionRequested;
-    WSADATA wsaData;
-    int err;
-
-    wVersionRequested = MAKEWORD( 2, 2 );
-    err = WSAStartup( wVersionRequested, &wsaData );
-    if ( err != 0 )
+  if (! type_loaded)
     {
-      error( "could not initialize winsock library" );
-      return octave_value();
-    }
+      octave_socket::register_type ();
+      install_socket_ops ();
+      type_loaded = true;
+#ifdef __WIN32__
+      WORD wVersionRequested;
+      WSADATA wsaData;
+      int err;
+
+      wVersionRequested = MAKEWORD (2, 2);
+      err = WSAStartup (wVersionRequested, &wsaData);
+      if (err != 0)
+        {
+          error ("socket: could not initialize winsock library");
+          return octave_value();
+        }
 #endif
-  }
+    }
 
   // Convert the arguments to their #define'd value
-  if ( args.length() > 0 )
-  {
-		domain = args(0).int_value();
-  }
+  const octave_idx_type nargin = args.length ();
+  if (nargin > 0)
+    {
+      domain = args(0).int_value ();
+      if (error_state)
+        {
+          error ("socket: DOMAIN must be a scalar integer");
+          return octave_value ();
+        }
+    }
 
-  if ( args.length() > 1 )
-  {
-		type = args(1).int_value();
-  }
+  if (nargin > 1)
+    {
+      type = args(1).int_value ();
+      if (error_state)
+        {
+          error ("socket: TYPE must be a scalar integer");
+          return octave_value ();
+        }
+    }
 
-  if ( args.length() > 2 )
-  {
-		protocol = args(2).int_value();
-		if( protocol != 0 )
-		{
-			error( "For now, protocol must always be 0 (zero)" );
-	return octave_value(-1);
-		}
-  }
+  if (nargin > 2)
+    {
+      protocol = args(2).int_value ();
+      if (error_state)
+        {
+          error ("socket: PROTOCOL must be a scalar integer");
+          return octave_value ();
+        }
+      else if (protocol != 0)
+      {
+        error ("socket: for now, PROTOCOL must always be 0 (zero)");
+        return octave_value ();
+      }
+    }
 
   // Create the new socket
-  octave_socket* retval = new octave_socket( domain, type, protocol );
-  if ( nargout > 0 && retval->get_sock_fd() != -1 )
-    return octave_value(retval);
+  octave_socket* retval = new octave_socket (domain, type, protocol);
+  if (error_state)
+    {
+      error ("socket: could not create new socket");
+      return octave_value ();
+    }
 
-  return octave_value();
-
+  return octave_value (retval);
 }
 
 octave_socket*
@@ -430,106 +439,32 @@ get_socket (const octave_value& arg)
 
 // PKG_ADD: autoload ("connect", "sockets.oct");
 // function to create an outgoing connection
-DEFUN_DLD(connect,args,nargout, \
-	  "status=connect(s,serverinfo)\n"
-	  "Connects the socket s following the information\n"
-	  "in the struct serverinfo.\n"
-	  "serverinfo shall contain the following fields:\n"
-	  " addr - a string with the host name to connect to\n"
-	  " port - the port number to connect to (an integer)\n"
-	  "\n"
-	  "On successful connect, the returned status is zero.\n"
-	  "\n"
-	  "See the connect() man pages for further details.\n")
+DEFUN_DLD(connect, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} connect (@var{s}, @var{serverinfo})\n\
+Connect socket.\n\
+\n\
+Connects the socket @var{s} following the information\n\
+in the struct @var{serverinfo} which must contain the\n\
+following fields:\n\
+\n\
+@table @code\n\
+@item addr\n\
+a string with the host name to connect to\n\
+\n\
+@item port\n\
+the port number to connect to (an integer)\n\
+@end table\n\
+\n\
+On successful connect, the returned status is zero.\n\
+\n\
+See the @command{connect} man pages for further details.\n\
+@end deftypefn")
 {
-  int retval = -1;
   struct sockaddr_in serverInfo;
   struct hostent*    hostInfo;
 
-  if ( args.length() != 2 )
-  {
-    error("connect: you must specify 2 parameters.");
-    return octave_value(-1);
-  }
-
-  // Extract information about the server to connect to.
-  const octave_base_value& struct_serverInfo = args(1).get_rep();
-  octave_struct& addrInfo = ((octave_struct&)struct_serverInfo);
-
-#if MINORVERSION <= 2
-  string addr = addrInfo.map_value().stringfield("addr");
-  int port = addrInfo.map_value().intfield("port");
-#else
-  const Cell addr_cell = addrInfo.map_value().getfield ("addr");
-  string addr;
-  if (addr_cell.numel () == 1 && addr_cell (0).is_string ())
-    {
-      addr = addr_cell (0).string_value ();
-    }
-  else
-    {
-      error ("connect: invalid input: no 'addr' field in serverinfo.");
-      return octave_value (-1);
-    }
-
-  const Cell port_cell = addrInfo.map_value().getfield ("port");
-  int port;
-  if (port_cell.numel () == 1 && port_cell (0).is_numeric_type ())
-    {
-      port = port_cell (0).int_value ();
-    }
-  else
-    {
-      error ("connect: invalid input: no 'port' field in serverinfo.");
-      return octave_value (-1);
-    }
-#endif
-
-
-  // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
-  if (error_state)
-    {
-      error ("connect: S must be a valid socket");
-      return octave_value ();
-    }
-
-  // Fill in the server info struct
-  serverInfo.sin_family = AF_INET;
-  if ( addr.length() > 0 )
-  {
-    hostInfo = gethostbyname( addr.c_str() );
-    if ( hostInfo )
-    {
-      serverInfo.sin_addr.s_addr = *((long*)hostInfo->h_addr_list[0]);
-    }
-    else
-    {
-      error( "connect: error in gethostbyname()" );
-      return octave_value(-1);
-    }
-  }
-  else
-  {
-    error( "connect: empty address" );
-    return octave_value(-1);
-  }
-  serverInfo.sin_port = htons(port);
-
-  retval = connect( s->get_sock_fd(), (struct sockaddr*)&serverInfo, sizeof(struct sockaddr) );
-
-  return octave_value(retval);
-}
-
-// PKG_ADD: autoload ("disconnect", "sockets.oct");
-// function to disconnect asocket
-DEFUN_DLD(disconnect,args,nargout, \
-	  "disconnect(s)\n"
-	  "Disconnects the socket s.\n"
-	  "Since we can't call fclose on the file descriptor directly,\n"
-	  "use this function to disconnect the socket.")
-{
-  if (args.length () != 1)
+  if (args.length () != 2)
     {
       print_usage ();
       return octave_value ();
@@ -543,153 +478,252 @@ DEFUN_DLD(disconnect,args,nargout, \
       return octave_value ();
     }
 
-  s->remove_sock_fd();
+  // Extract information about the server to connect to.
+  const octave_scalar_map struct_serverInfo = args(1).scalar_map_value ();
+  if (error_state)
+    {
+      error ("connect: SERVERINFO must be a struct");
+      return octave_value ();
+    }
 
-  return octave_value(0);
+  const string addr = struct_serverInfo.getfield ("addr").string_value ();
+  const int port    = struct_serverInfo.getfield ("port").int_value ();
+  if (error_state)
+    {
+      error ("connect: SERVERINFO must have a string and integer in fields \"addr\" and \"port\"");
+      return octave_value ();
+    }
+  else if (addr.empty ())
+    {
+      error ("connect: SERVERINFO addr is an empty string");
+      return octave_value ();
+    }
 
+  // Fill in the server info struct
+  serverInfo.sin_family = AF_INET;
+  hostInfo = gethostbyname (addr.c_str ());
+  if (! hostInfo)
+    {
+      error ("connect: error in gethostbyname()");
+      return octave_value ();
+    }
+  serverInfo.sin_addr.s_addr = *((long*)hostInfo->h_addr_list[0]);
+  serverInfo.sin_port = htons(port);
+
+  const int retval = connect (s->get_sock_fd (), (struct sockaddr*)&serverInfo, sizeof (struct sockaddr));
+  return octave_value (retval);
+}
+
+// PKG_ADD: autoload ("disconnect", "sockets.oct");
+// function to disconnect asocket
+DEFUN_DLD(disconnect, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} disconnect (@var{s})\n\
+Disconnect socket.\n\
+\n\
+Disconnects the socket @var{s}.  If successful, @code{disconnect} returns 0,\n\
+otherwise, it returns -1.\n\
+\n\
+Since we can't call fclose on the file descriptor directly, use this\n\
+function to disconnect the socket.\n\
+\n\
+@end deftypefn")
+{
+  if (args.length () != 1)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
+  int retval = -1;
+  octave_socket* s = get_socket (args(0));
+  if (! error_state)
+    {
+      s->remove_sock_fd ();
+      retval = 0;
+    }
+  return octave_value (retval);
 }
 
 // PKG_ADD: autoload ("gethostbyname", "sockets.oct");
 // function to get a host number from a host name
-DEFUN_DLD(gethostbyname,args,nargout, \
-	  "addr=gethostbyname(hostname)\n"
-	  "Returns an IP adress addr for a host name.\n"
-	  "Example:\n"
-	  "addr=gethostbyname('localhost')\n"
-	  "addr = 127.0.0.1\n"
-	  "\n"
-	  "See the gethostbyname() man pages for details.")
+DEFUN_DLD(gethostbyname, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} gethostbyname (@var{hostname})\n\
+Return IP address for host name.\n\
+\n\
+For example:\n\
+\n\
+@example\n\
+@group\n\
+gethostbyname (\"localhost\")\n\
+  @result{} 127.0.0.1\n\
+@end group\n\
+@end example\n\
+\n\
+See the @command{gethostbyname} man pages for details.\n\
+\n\
+@end deftypefn")
 {
-  int nargin = args.length ();
-  struct hostent*    hostInfo = NULL;
-  octave_value retval;
+  const int nargin = args.length ();
+  struct hostent* hostInfo = NULL;
 
   if (nargin != 1)
-    print_usage ();
-  else if ( args(0).is_string() )
     {
-      string_vector host_list;
-      string addr = args(0).string_value();
-      hostInfo = gethostbyname( addr.c_str() );
-      if ( hostInfo )
-	{
-	  for ( int i = 0 ; i < hostInfo->h_length/4 ; i++ )
-	    {
-	      string temp_addr = string(  inet_ntoa( *(struct in_addr*)hostInfo->h_addr_list[i] ));
-	      host_list.append( temp_addr );
-	    }
-	}
-      retval = octave_value (host_list);
+      print_usage ();
+      return octave_value ();
     }
-  else
-    print_usage ();
 
-  return retval;
+  const string addr = args(0).string_value ();
+  if (error_state)
+    {
+      error ("gethostbyname: HOSTNAME must be a string");
+      return octave_value ();
+    }
+
+  string_vector host_list;
+  hostInfo = gethostbyname (addr.c_str ());
+  if (hostInfo)
+    {
+      for (int i = 0 ; i < hostInfo->h_length/4; i++)
+        {
+          string temp_addr = inet_ntoa (*(struct in_addr*)hostInfo->h_addr_list[i]);
+          host_list.append (temp_addr);
+        }
+    }
+  return octave_value (host_list);
 }
 
 // PKG_ADD: autoload ("send", "sockets.oct");
 // function to send data over a socket
-DEFUN_DLD(send,args,nargout, \
-	  "send(s,data,flags)\n"
-	  "Sends data on socket s. data should be an uint8 array or\n"
-	  "a string.\n"
-	  "See the send() man pages for further details.\n")
+DEFUN_DLD(send, args, , "\
+-*- texinfo -*-\n\
+@deftypefn  {Loadable Function} {} send (@var{s}, @var{data})\n\
+@deftypefnx {Loadable Function} {} send (@var{s}, @var{data}, @var{flags})\n\
+Send data on specified socket.\n\
+\n\
+Sends data on socket @var{s}.  @var{data} should be an uint8 array or\n\
+a string.\n\
+\n\
+See the @command{send} man pages for further details.\n\
+\n\
+@end deftypefn")
 {
-  int retval = 0;
-  int flags = 0;
+  const octave_idx_type nargin = args.length ();
 
-  if ( args.length() < 2 )
+  if (nargin < 2 || nargin > 3)
   {
-    error( "send: you must specify two or more parameters");
-    return octave_value(-1);
+    print_usage ();
+    return octave_value ();
   }
 
-  if ( args.length() > 2 && args(2).is_scalar_type() )
-    flags = args(2).int_value();
-
+  int flags = 0;
+  if (nargin > 2)
+    {
+      flags = args(2).int_value ();
+      if (error_state)
+        {
+          error ("send: FLAGS must be a scalar integer");
+          return octave_value ();
+        }
+    }
 
   // Determine the socket on which to operate
   octave_socket* s = get_socket (args(0));
   if (error_state)
     {
-      error ("connect: S must be a valid socket");
+      error ("send: S must be a valid socket");
       return octave_value ();
     }
 
+  int retval = -1;
   // Extract the data from the octave variable and send it
-  const octave_base_value& data = args(1).get_rep();
-  if ( data.is_string() )
-  {
-    string buf = data.string_value();
-    retval = ::send( s->get_sock_fd(), buf.c_str(), buf.length(), flags );
-  }
-  else if ( data.byte_size() == data.numel() )
-  {
-    NDArray d1 = data.array_value();
-    unsigned char* buf = new unsigned char[ d1.length() ];
-    for ( int i = 0 ; i < d1.length() ; i++ )
-      buf[i] = (unsigned char)d1(i);
-    retval = ::send( s->get_sock_fd(), (const char*)buf, data.byte_size(), 0 );
-    delete[] buf;
-  }
-  else
-  {
-    error( "connect: you have specified an invalid data type to send.  Please format it prior to sending" );
-    return octave_value(-1);
-  }
+  const octave_base_value& data = args(1).get_rep ();
+  if (data.is_string ())
+    {
+      string buf = data.string_value ();
+      retval = ::send (s->get_sock_fd (), buf.c_str (), buf.length (), flags);
+    }
+  else if (data.byte_size () == data.numel ())
+    {
+      const NDArray d1 = data.array_value ();
+      const octave_idx_type length = d1.numel ();
+      const double* d1fvec = d1.data ();
 
-  return octave_value(retval);
+      OCTAVE_LOCAL_BUFFER (unsigned char, buf, length);
+      for (int i = 0 ; i < length; i++)
+        buf[i] = (unsigned char)d1fvec[i];
+
+      retval = ::send (s->get_sock_fd (), (const char*)buf, data.byte_size (), 0);
+    }
+  else
+    {
+      error( "connect: invalid DATA to send.  Please format it prior to sending" );
+      return octave_value ();
+    }
+
+  return octave_value (retval);
 }
 
 // PKG_ADD: autoload ("recv", "sockets.oct");
 // function to receive data over a socket
-DEFUN_DLD(recv,args,nargout, \
-	  "[data,count]=recv(s,len,flags)\n"
-	  "Requests reading len bytes from the socket s.\n"
-	  "The integer flags parameter can be used to modify the behaviour\n"
-	  "of recv.\n"
-	  "\n"
-	  "The read data is returned in an uint8 array data. The number of\n"
-	  "bytes read is returned in count.\n"
-	  "\n"
-	  "You can get non-blocking operation by using the flag MSG_DONTWAIT\n"
-	  "which makes the recv() call return immediately. If there are no\n"
-	  "data, -1 is returned in count.\n"
-	  "See the recv() man pages for further details.\n")
+DEFUN_DLD(recv, args, , "\
+-*- texinfo -*-\n\
+@deftypefn  {Loadable Function} {[@var{data}, @var{count}] =} recv (@var{s}, @var{len})\n\
+@deftypefnx {Loadable Function} {[@var{data}, @var{count}] =} recv (@var{s}, @var{len}, @var{flags})\n\
+Read data from specified socket.\n\
+\n\
+Requests reading @var{len} bytes from the socket @var{s}.\n\
+The optional integer @var{flags} parameter can be used to modify the\n\
+behaviour of @code{recv}.\n\
+\n\
+The read data is returned in the uint8 array @var{data}.  The number of\n\
+bytes read is returned in @var{count}.\n\
+\n\
+You can get non-blocking operation by using the flag @code{MSG_DONTWAIT}\n\
+which makes the @code{recv()} call return immediately.  If there is no\n\
+data, -1 is returned in count.\n\
+\n\
+See the @command{recv} man pages for further details.\n\
+\n\
+@end deftypefn")
 {
-  if(nargout>2) 
-    {
-      error("recv: please use at most two output arguments.");
-      return octave_value(-1);
-    }
-
+  const octave_idx_type nargin = args.length ();
   int retval = 0;
   int flags = 0;
 
-  if ( args.length() < 2 )
-  {
-    error( "recv: you must specify 2 parameters" );
-    return octave_value(-1);
-  }
+  if (nargin < 2 || nargin > 3)
+    {
+      print_usage ();
+      return octave_value ();
+    }
 
-  if ( args.length() > 2 && args(2).is_scalar_type() )
-    flags = args(2).int_value();
+  if (nargin > 2)
+    {
+      flags = args(2).int_value ();
+      if (error_state)
+        {
+          error ("recv: FLAGS must be a scalar integer");
+          return octave_value ();
+        }
+    }
 
   // Determine the socket on which to operate
   octave_socket* s = get_socket (args(0));
   if (error_state)
     {
-      error ("connect: S must be a valid socket");
+      error ("recv: S must be a valid socket");
       return octave_value ();
     }
 
-  long len = args(1).int_value();
-  if(len<0) {
-    error("recv: negative receive length requested");
-    return octave_value(-1);
-  }
+  const long len = args(1).int_value ();
+  if (error_state || len < 0)
+    {
+      error ("recv: LEN must be a non-negative integer");
+      return octave_value(-1);
+    }
 
-  unsigned char* buf = new unsigned char[ len ];
+  OCTAVE_LOCAL_BUFFER (unsigned char, buf, len);
 #ifndef __WIN32__
   retval = ::recv( s->get_sock_fd(), buf, len, flags );
 #else
@@ -700,127 +734,138 @@ DEFUN_DLD(recv,args,nargout, \
   uint8NDArray data;
 
   //always return the status in the second output parameter
-  return_list(1) = retval; 
-  if(retval<0) {
-    //We get -1 if an error occurs,or if there is no data and the
-    //socket is non-blocking. We should return in both cases.
+  return_list(1) = retval;
+  if (retval <= 0)
+    // We get -1 if an error occurs,or if there is no data and the
+    // socket is non-blocking. We should return in both cases.
+    // We get 0 if the peer has shut down.
     return_list(0) = data;
-  } else if (0==retval) {
-    //The peer has shut down.
-    return_list(0) = data;
-  } else {
-    //Normal behaviour. Copy the buffer to the output variable. For
-    //backward compatibility, a row vector is returned.
-    dim_vector d;
-    d(0)=1;
-    d(1)=retval;
-    data.resize(d);
+  else
+    {
+      //Normal behaviour. Copy the buffer to the output variable. For
+      //backward compatibility, a row vector is returned.
+      data.resize (dim_vector (1, retval));
+      octave_uint8* data_fvec = data.fortran_vec ();
+      for (int i = 0 ; i < retval ; i++)
+        data_fvec[i] = buf[i];
 
-    //this could possibly be made more efficient with memcpy and
-    //fortran_vec() instead.
-    for ( int i = 0 ; i < retval ; i++ )
-      data(i) = buf[i];
-    
-    return_list(0) = data;
-  }
-
-  delete[] buf;
-  
+      return_list(0) = data;
+    }
   return return_list;
 }
 
 // PKG_ADD: autoload ("bind", "sockets.oct");
 // function to bind a socket
-DEFUN_DLD(bind,args,nargout, \
-	  "bind(s,portnumber)\n"
-	  "binds the sockets to port portnumber.\n"
-	  "See the bind() man pages for further details.\n")
+DEFUN_DLD(bind, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} bind (@var{s}, @var{portnumber})\n\
+Bind specific soocket to port number.\n\
+\n\
+See the @command{bind} man pages for further details.\n\
+\n\
+@end deftypefn")
 {
-  int retval = 0;
-  if ( args.length() != 2 )
-  {
-    error( "bind: you must specify 2 parameters" );
-    return octave_value(-1);
-  }
+  if (args.length () != 2)
+    {
+      print_usage ();
+      return octave_value ();
+    }
 
   // Determine the socket on which to operate
   octave_socket* s = get_socket (args(0));
   if (error_state)
     {
-      error ("connect: S must be a valid socket");
+      error ("bind: S must be a valid socket");
       return octave_value ();
     }
 
-
-  long port = args(1).int_value();
+  const long port = args(1).int_value ();
+  if (error_state)
+    {
+      error ("bind: PORT must be a scalar integer");
+      return octave_value ();
+    }
 
   struct sockaddr_in serverInfo;
   serverInfo.sin_family = AF_INET;
-  serverInfo.sin_port = htons( port );
+  serverInfo.sin_port = htons (port);
   serverInfo.sin_addr.s_addr = INADDR_ANY;
 
-  retval = ::bind( s->get_sock_fd(), (struct sockaddr *)&serverInfo, sizeof(serverInfo) );
-
-  return octave_value(retval);
+  int retval = ::bind (s->get_sock_fd (), (struct sockaddr *)&serverInfo, sizeof (serverInfo));
+  return octave_value (retval);
 }
 
 // PKG_ADD: autoload ("listen", "sockets.oct");
 // function to listen on a socket
-DEFUN_DLD(listen,args,nargout, \
-	  "r=listen(s,backlog)\n"
-	  "Listens on socket s for connections. backlog specifies\n"
-	  "how large the queue of incoming connections is allowed to\n"
-	  "grow.\n"
-	  "On success, zero is returned.\n"
-	  "See the listen() man pages for details.\n")
+DEFUN_DLD(listen, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} listen (@var{s}, @var{backlog})\n\
+Listen on socket for connections.\n\
+\n\
+Listens on socket @var{s} for connections.  @var{backlog} specifies\n\
+how large the queue of incoming connections is allowed to\n\
+grow.\n\
+\n\
+On success, zero is returned.\n\
+\n\
+See the @command{listen} man pages for further details.\n\
+\n\
+@end deftypefn")
 {
-  int retval = 0;
-  if ( args.length() != 2 )
-  {
-    error( "listen: you must specify 2 parameters" );
-    return octave_value(-1);
-  }
+  if (args.length() != 2)
+    {
+      print_usage ();
+      return octave_value ();
+    }
 
   // Determine the socket on which to operate
   octave_socket* s = get_socket (args(0));
   if (error_state)
     {
-      error ("connect: S must be a valid socket");
+      error ("listen: S must be a valid socket");
       return octave_value ();
     }
 
-  int backlog = args(1).int_value();
-//  octave_stdout << "BACKLOG: " << backlog << endl;
+  const int backlog = args(1).int_value ();
+  if (error_state)
+    {
+      error ("listen: BACKLOG must be an integer scalar");
+      return octave_value ();
+    }
 
-  if (! error_state)
-    retval = ::listen( s->get_sock_fd(), backlog );
-
-  return octave_value(retval);
+  const int retval = ::listen (s->get_sock_fd(), backlog);
+  return octave_value (retval);
 }
 
 // PKG_ADD: autoload ("accept", "sockets.oct");
 // function to accept on a listening socket
-DEFUN_DLD(accept,args,nargout, \
-	  "[client,info]=accept(s)\n"
-	  "Accepts an incoming connection on the socket s.\n"
-	  "The newly created socket is returned in client, and\n"
-	  "associated information in a struct info.\n"
-	  "See the accept() man pages for details.\n")
+DEFUN_DLD(accept,args,nargout, "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {[@var{client}, @var{info}] =} accept (@var{s})\n\
+Accept incoming connection on specified socket.\n\
+\n\
+Accepts an incoming connection on the socket @var{s}.\n\
+The newly created socket is returned in @var{client}, and\n\
+associated information in a struct info.\n\
+\n\
+See the @command{accept} man pages for further details.\n\
+\n\
+@end deftypefn")
 {
   struct sockaddr_in clientInfo;
-  socklen_t clientLen = sizeof(struct sockaddr_in);
+  socklen_t clientLen = sizeof (struct sockaddr_in);
 
-  if ( args.length() < 1 )
-  {
-    error( "accept: you must specify 1 parameter" );
-    return octave_value(-1);
-  }
+  if (args.length () != 1)
+    {
+      print_usage ();
+      return octave_value ();
+    }
 
   // Determine the socket on which to operate
   octave_socket* s = get_socket (args(0));
   if (error_state)
     {
-      error ("connect: S must be a valid socket");
+      error ("accept: S must be a valid socket");
       return octave_value ();
     }
 
@@ -829,40 +874,47 @@ DEFUN_DLD(accept,args,nargout, \
 #else
   int fd = ::accept( s->get_sock_fd(), (struct sockaddr *)&clientInfo, ( int* )&clientLen );
 #endif
-  if ( fd != -1 )
-  {
-    // create the octave_socket object and set the fd
-    octave_socket* retobj = new octave_socket(fd);
+  if (fd == -1)
+    {
+      ostringstream os;
+      os << "accept: failed with error: " << errno;
+      error (os.str ().c_str ());
+      return octave_value ();
+    }
 
-    // place the client information into a structure
-    octave_scalar_map client_info_map;
-    client_info_map.assign("sin_family", octave_value(clientInfo.sin_family));
-    client_info_map.assign("sin_port", octave_value(clientInfo.sin_port));
-    client_info_map.assign("sin_addr", octave_value( inet_ntoa(clientInfo.sin_addr)));
+  // create the octave_socket object and set the fd
+  octave_socket* retobj = new octave_socket(fd);
 
-    // returns the accepted socket and a clientinfo structure
-    octave_value_list return_list;
-    return_list(0) = octave_value(retobj);
-    return_list(1) = client_info_map;
+  // place the client information into a structure
+  octave_scalar_map client_info_map;
+  client_info_map.assign ("sin_family", octave_value (clientInfo.sin_family));
+  client_info_map.assign ("sin_port", octave_value (clientInfo.sin_port));
+  client_info_map.assign ("sin_addr", octave_value (inet_ntoa(clientInfo.sin_addr)));
 
-    return return_list;
-  }
-  else
-  {
-    ostringstream os;
-    os << "accept: failed with errno = " << errno;
-    error(os.str().c_str());
-    return octave_value(fd);
-  }
+  // returns the accepted socket and a clientinfo structure
+  octave_value_list return_list;
+  return_list(0) = octave_value (retobj);
+  return_list(1) = client_info_map;
+
+  return return_list;
 }
-
 
 // PKG_ADD: autoload ("load_socket_constants", "sockets.oct");
 // function to load socket constants
-DEFUN_DLD(load_socket_constants,args,nargout, \
-	  "Loads various socket constants like AF_INET, SOCK_STREAM, etc.\n")
+DEFUN_DLD(load_socket_constants, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} load_socket_constants ()\n\
+Load socket constants.\n\
+\n\
+Loads various socket constants like AF_INET, SOCK_STREAM, etc\n\
+\n\
+@end deftypefn")
 {
-  octave_socket temp();
-  return octave_value();
+  if (args.length () != 0)
+    {
+      print_usage ();
+    }
+  octave_socket temp ();
+  return octave_value ();
 }
 
