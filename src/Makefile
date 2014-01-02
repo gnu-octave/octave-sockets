@@ -1,4 +1,4 @@
-OCT = sockets.oct
+OCT = socket.oct
 SRC := $(OCT:.oct=.cc)
 
 MKOCTFILE ?= mkoctfile -Wall
