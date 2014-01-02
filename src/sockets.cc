@@ -1,6 +1,7 @@
 // Copyright (C) John Swensen <jpswensen@comcast.net>
 // Copyright (C) 2007 Tom Holroyd <tomh@kurage.nimh.nih.gov>
 // Copyright (C) 2009 Paul Dreik <slask@pauldreik.se>
+// Copyright (C) 2013 Carnë Draug <carandraug@octave.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -405,6 +406,28 @@ DEFUN_DLD(socket,args,nargout,
 
 }
 
+octave_socket*
+get_socket (const octave_value& arg)
+{
+  octave_socket* s = NULL;
+  if (arg.type_id () == octave_socket::static_type_id ())
+    {
+      const octave_base_value& rep = arg.get_rep ();
+      s = &((octave_socket &)rep);
+    }
+  else
+    {
+      const int fd = arg.int_value();
+      if (! error_state)
+        {
+          s = socket_map[fd];
+          if (s == NULL)
+            error_state = 1;
+        }
+    }
+  return s;
+}
+
 // PKG_ADD: autoload ("connect", "sockets.oct");
 // function to create an outgoing connection
 DEFUN_DLD(connect,args,nargout, \
@@ -464,22 +487,12 @@ DEFUN_DLD(connect,args,nargout, \
 
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-  {
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("connect: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
   // Fill in the server info struct
   serverInfo.sin_family = AF_INET;
@@ -523,22 +536,12 @@ DEFUN_DLD(disconnect,args,nargout, \
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-  {
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("connect: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
   s->remove_sock_fd();
 
@@ -606,22 +609,12 @@ DEFUN_DLD(send,args,nargout, \
 
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-  {
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("connect: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
   // Extract the data from the octave variable and send it
   const octave_base_value& data = args(1).get_rep();
@@ -683,22 +676,12 @@ DEFUN_DLD(recv,args,nargout, \
     flags = args(2).int_value();
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-    {//what happens if fd does not exist in socket_map?
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("recv: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
   long len = args(1).int_value();
   if(len<0) {
@@ -761,22 +744,12 @@ DEFUN_DLD(bind,args,nargout, \
   }
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-  {
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("connect: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
 
   long port = args(1).int_value();
@@ -809,22 +782,12 @@ DEFUN_DLD(listen,args,nargout, \
   }
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-  {
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("connect: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
   int backlog = args(1).int_value();
 //  octave_stdout << "BACKLOG: " << backlog << endl;
@@ -854,22 +817,12 @@ DEFUN_DLD(accept,args,nargout, \
   }
 
   // Determine the socket on which to operate
-  octave_socket* s = NULL;
-  if ( args(0).type_id() == octave_socket::static_type_id() )
-  {
-    const octave_base_value& rep = args(0).get_rep();
-    s = &((octave_socket &)rep);
-  }
-  else if ( args(0).is_scalar_type() )
-  {
-    int fd = args(0).int_value();
-    s = socket_map[fd];
-  }
-  else
-  {
-    error("accept: expecting an octave_socket or integer");
-    return octave_value(-1);
-  }
+  octave_socket* s = get_socket (args(0));
+  if (error_state)
+    {
+      error ("connect: S must be a valid socket");
+      return octave_value ();
+    }
 
 #ifndef __WIN32__
   int fd = ::accept( s->get_sock_fd(), (struct sockaddr *)&clientInfo, &clientLen );
