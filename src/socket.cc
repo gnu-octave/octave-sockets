@@ -918,3 +918,58 @@ Loads various socket constants like AF_INET, SOCK_STREAM, etc\n\
   return octave_value ();
 }
 
+/*
+
+%!test
+%! ## Server socket
+%! server = socket (AF_INET, SOCK_STREAM, 0);
+%! assert (server >= 0);
+%!
+%! rc = bind (server, 9001);
+%! assert (rc, 0);
+%!
+%! rc = listen (server, 1);
+%! assert (rc, 0);
+%!
+%! ## Client socket
+%! client = socket (AF_INET, SOCK_STREAM, 0);
+%! assert (client >= 0);
+%!
+%! ## Create the connection and accept the connection
+%! server_info = struct ("addr", "127.0.0.1", "port", 9001);
+%! rc = connect (client, server_info);
+%! assert (rc, 0);
+%!
+%! server_data = accept (server);
+%! assert (server_data >= 0);
+%!
+%! ## Send and receive data
+%!
+%! ## Send as string from client
+%! msg = "Hello socket-land!";
+%! rc = send (client, msg);
+%! assert (rc,length (msg));
+%!
+%! ## Receive at server
+%! [msg_s, len_s] = recv (server_data, 100);
+%! assert (msg_s != -1);
+%! assert (len_s, length (msg));
+%!
+%! ## Send back out from server
+%! rc = send (server_data, msg_s);
+%! assert (rc, length (msg_s));
+%!
+%! ## Receive at client
+%! [msg_c, len_c] = recv (client, 100);
+%! assert (msg_c != -1);
+%! assert (len_c, length (msg));
+%!
+%! ## Compare original string with recv string
+%! assert (msg, num2str (msg_c, "%c"));
+%!
+%! assert (disconnect (client), 0);
+%! assert (disconnect (server_data), 0);
+%! assert (disconnect (server), 0);
+
+*/
+

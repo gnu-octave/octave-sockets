@@ -13,12 +13,16 @@ all: $(OCT)
 %.oct: %.cc
 	$(MKOCTFILE) $<
 
-## for this to work, the PKG_ADD commands need to extracted from the source
+## We need to generate a PKG_ADD file for this to work. We could also
+## get a string with the stuff in PKG_ADD and eval it before the test
+## command, but it messes up the quotes.
 check: $(OCT)
-	$(OCTAVE) -q ./test_octave_sockets
+	grep PKG_ADD socket.cc | sed 's/\/\/ PKG_ADD: //' > PKG_ADD
+	$(OCTAVE) -q --no-gui --eval "test socket.cc"
+	rm PKG_ADD
 
 clean:
-	rm -f *.o octave-core core *.oct *~
+	rm -f *.o octave-core core *.oct *~ PKG_ADD
 
 .PHONY: all clean test
 
