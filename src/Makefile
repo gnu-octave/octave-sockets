@@ -4,14 +4,15 @@ SRC := $(OCT:.oct=.cc)
 MKOCTFILE ?= mkoctfile -Wall
 OCTAVE ?= octave
 
-## windows users should link with -lws2_32 (on mingw, at least). If you
-## know how to detect windows and find the appropriate linker flag here,
-## please drop a mail to the octave maintainers mailing list.
+EXTRALIBS = 
+ifeq ($(OS),Windows_NT)
+  EXTRALIBS = -lws2_32
+endif
 
 all: $(OCT)
 
 %.oct: %.cc
-	$(MKOCTFILE) $<
+	$(MKOCTFILE) $< $(EXTRALIBS)
 
 ## We need to generate a PKG_ADD file for this to work. We could also
 ## get a string with the stuff in PKG_ADD and eval it before the test
