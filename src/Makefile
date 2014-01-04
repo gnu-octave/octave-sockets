@@ -25,5 +25,5 @@ check: $(OCT)
 clean:
 	rm -f *.o octave-core core *.oct *~ PKG_ADD
 
-.PHONY: all clean test
+.PHONY: all clean check
 
