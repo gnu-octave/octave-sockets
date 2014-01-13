@@ -4,6 +4,8 @@ SRC := $(OCT:.oct=.cc)
 MKOCTFILE ?= mkoctfile -Wall
 OCTAVE ?= octave
 
+$(info octave is $(OCTAVE))
+
 EXTRALIBS := 
 ifeq ($(OS),Windows_NT)
   EXTRALIBS := -lws2_32
@@ -19,7 +21,7 @@ all: $(OCT)
 ## command, but it messes up the quotes.
 check: $(OCT)
 	grep PKG_ADD $(SRC) | sed 's/\/\/ PKG_ADD: //' > PKG_ADD
-	$(OCTAVE) -q --no-gui --eval "test $(SRC)"
+	$(OCTAVE) -q --no-window-system --eval "test $(SRC)"
 	rm PKG_ADD
 
 clean:
