@@ -58,6 +58,7 @@ typedef unsigned int socklen_t;
 #endif
 #include <errno.h>
 
+#if 0
 template <class T>
 std::string to_string(T t, std::ios_base & (*f)(std::ios_base&))
 {
@@ -65,7 +66,9 @@ std::string to_string(T t, std::ios_base & (*f)(std::ios_base&))
   oss << f << t;
   return oss.str();
 }
+#endif
 
+#if 0
 #define OCTAVE_TYPE_CONV_HELPER(VAR_IN, VAR_OUT, NAME, MATRIX_RESULT_T, SCALAR_RESULT_T)\
 \
       int t_arg = VAR_IN.type_id ();\
@@ -103,12 +106,15 @@ std::string to_string(T t, std::ios_base & (*f)(std::ios_base&))
               gripe_invalid_conversion (arg_tname, result_tname);\
             }\
         }
+#endif
 
-
+#if 0
 #define OCTAVE_TYPE_CONV(VAR_IN, VAR_OUT, NAME)\
   OCTAVE_TYPE_CONV_HELPER (VAR_IN, VAR_OUT, NAME, octave_ ## NAME ## _matrix,\
                           octave_ ## NAME ## _scalar)
+#endif
 
+#if 0
 // Derive an octave_socket class from octave_base_value
 class
 octave_socket : public octave_base_value
@@ -213,6 +219,8 @@ install_socket_ops (void)
 DEFINE_OCTAVE_ALLOCATOR (octave_socket);
 DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_socket");
 
+#endif
+
 # define DEFUN_DLD_SOCKET_CONSTANT(name, help )\
   DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help)\
   {    return octave_value( name ); };
@@ -275,10 +283,12 @@ DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
 #endif
 
+#if 0
 std::map< int, octave_socket * > socket_map;
+#endif
 static bool type_loaded = false;
 
-
+#if 0
 //////////////////////////////////////////////////////////////////////////////////////////
 octave_socket::octave_socket (int fd)
 {
@@ -330,6 +340,7 @@ octave_socket::remove_sock_fd (void)
   socket_map.erase (sock_fd);
   sock_fd = -1;
 }
+#endif
 
 // PKG_ADD: autoload ("socket", which ("socket"));
 // PKG_DEL: try; autoload ("socket", which ("socket"), "remove"); catch; end;
@@ -362,8 +373,10 @@ See the local @command{socket} reference for more details.\n\
 
   if (! type_loaded)
     {
+#if 0
       octave_socket::register_type ();
       install_socket_ops ();
+#endif
       type_loaded = true;
 #ifdef __WIN32__
       WORD wVersionRequested;
@@ -418,7 +431,15 @@ See the local @command{socket} reference for more details.\n\
     }
 
   // Create the new socket
+#if 0
   octave_socket* retval = new octave_socket (domain, type, protocol);
+#else
+  const int sock_fd = ::socket (domain, type, protocol);
+  //maybe check for -1, read errno and give a better diagnostic.
+  return octave_value(sock_fd);
+#endif
+
+#if 0
   if (error_state)
     {
       error ("socket: could not create new socket");
@@ -426,8 +447,10 @@ See the local @command{socket} reference for more details.\n\
     }
 
   return octave_value (retval);
+#endif
 }
 
+#if 0
 octave_socket*
 get_socket (const octave_value& arg)
 {
@@ -448,6 +471,32 @@ get_socket (const octave_value& arg)
         }
     }
   return s;
+}
+#else
+/*
+ * helper function to convert an octave value to an integer,
+ * returning -1 if it failed.
+ */
+int get_socket(const octave_value& arg)
+{
+  const int fd = arg.int_value();
+  if (error_state)
+    {
+      return -1;
+    }
+  return fd;
+}
+#endif
+
+/*
+ * closes the given socket file descriptor
+ */
+inline void close_octavesocket(const int sock_fd) {
+#ifndef __WIN32__
+  ::close (sock_fd);
+#else
+  ::closesocket (sock_fd);
+#endif
 }
 
 // PKG_ADD: autoload ("connect", which ("socket"));
@@ -485,7 +534,7 @@ See the @command{connect} man pages for further details.\n\
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (error_state)
     {
       error ("connect: S must be a valid socket");
@@ -524,7 +573,7 @@ See the @command{connect} man pages for further details.\n\
   serverInfo.sin_addr.s_addr = *((long*)hostInfo->h_addr_list[0]);
   serverInfo.sin_port = htons(port);
 
-  const int retval = connect (s->get_sock_fd (), (struct sockaddr*)&serverInfo, sizeof (struct sockaddr));
+  const int retval = connect (s, (struct sockaddr*)&serverInfo, sizeof (struct sockaddr));
   return octave_value (retval);
 }
 
@@ -551,10 +600,10 @@ function to disconnect the socket.\n\
     }
 
   int retval = -1;
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (! error_state)
     {
-      s->remove_sock_fd ();
+      close_octavesocket(s);
       retval = 0;
     }
   return octave_value (retval);
@@ -646,10 +695,10 @@ See the @command{send} man pages for further details.\n\
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (error_state)
     {
-      error ("send: S must be a valid socket");
+      error ("send: s must be a valid socket");
       return octave_value ();
     }
 
@@ -659,7 +708,7 @@ See the @command{send} man pages for further details.\n\
   if (data.is_string ())
     {
       string buf = data.string_value ();
-      retval = ::send (s->get_sock_fd (), buf.c_str (), buf.length (), flags);
+      retval = ::send (s, buf.c_str (), buf.length (), flags);
     }
   else if (data.byte_size () == size_t (data.numel ()))
     {
@@ -671,7 +720,7 @@ See the @command{send} man pages for further details.\n\
       for (int i = 0 ; i < length; i++)
         buf[i] = (unsigned char)d1fvec[i];
 
-      retval = ::send (s->get_sock_fd (), (const char*)buf, data.byte_size (), 0);
+      retval = ::send (s, (const char*)buf, data.byte_size (), 0);
     }
   else
     {
@@ -727,7 +776,7 @@ See the @command{recv} man pages for further details.\n\
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (error_state)
     {
       error ("recv: S must be a valid socket");
@@ -743,9 +792,9 @@ See the @command{recv} man pages for further details.\n\
 
   OCTAVE_LOCAL_BUFFER (unsigned char, buf, len);
 #ifndef __WIN32__
-  retval = ::recv( s->get_sock_fd(), buf, len, flags );
+  retval = ::recv( s, buf, len, flags );
 #else
-  retval = ::recv( s->get_sock_fd(), ( char* )buf, len, flags );
+  retval = ::recv( s, ( char* )buf, len, flags );
 #endif
 
   octave_value_list return_list;
@@ -791,10 +840,10 @@ See the @command{bind} man pages for further details.\n\
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (error_state)
     {
-      error ("bind: S must be a valid socket");
+      error ("bind: s must be a valid socket");
       return octave_value ();
     }
 
@@ -810,7 +859,7 @@ See the @command{bind} man pages for further details.\n\
   serverInfo.sin_port = htons (port);
   serverInfo.sin_addr.s_addr = INADDR_ANY;
 
-  int retval = ::bind (s->get_sock_fd (), (struct sockaddr *)&serverInfo, sizeof (serverInfo));
+  int retval = ::bind (s, (struct sockaddr *)&serverInfo, sizeof (serverInfo));
   return octave_value (retval);
 }
 
@@ -839,7 +888,7 @@ See the @command{listen} man pages for further details.\n\
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (error_state)
     {
       error ("listen: S must be a valid socket");
@@ -853,7 +902,7 @@ See the @command{listen} man pages for further details.\n\
       return octave_value ();
     }
 
-  const int retval = ::listen (s->get_sock_fd(), backlog);
+  const int retval = ::listen (s, backlog);
   return octave_value (retval);
 }
 
@@ -883,7 +932,7 @@ See the @command{accept} man pages for further details.\n\
     }
 
   // Determine the socket on which to operate
-  octave_socket* s = get_socket (args(0));
+  const int s = get_socket (args(0));
   if (error_state)
     {
       error ("accept: S must be a valid socket");
@@ -891,9 +940,9 @@ See the @command{accept} man pages for further details.\n\
     }
 
 #ifndef __WIN32__
-  int fd = ::accept( s->get_sock_fd(), (struct sockaddr *)&clientInfo, &clientLen );
+  int fd = ::accept( s, (struct sockaddr *)&clientInfo, &clientLen );
 #else
-  int fd = ::accept( s->get_sock_fd(), (struct sockaddr *)&clientInfo, ( int* )&clientLen );
+  int fd = ::accept( s, (struct sockaddr *)&clientInfo, ( int* )&clientLen );
 #endif
   if (fd == -1)
     {
@@ -903,9 +952,10 @@ See the @command{accept} man pages for further details.\n\
       return octave_value ();
     }
 
+#if 0
   // create the octave_socket object and set the fd
   octave_socket* retobj = new octave_socket(fd);
-
+#endif
   // place the client information into a structure
   octave_scalar_map client_info_map;
   client_info_map.assign ("sin_family", octave_value (clientInfo.sin_family));
@@ -914,12 +964,13 @@ See the @command{accept} man pages for further details.\n\
 
   // returns the accepted socket and a clientinfo structure
   octave_value_list return_list;
-  return_list(0) = octave_value (retobj);
+  return_list(0) = octave_value (fd);
   return_list(1) = client_info_map;
 
   return return_list;
 }
 
+#if 0
 // PKG_ADD: autoload ("load_socket_constants", which ("socket"));
 // PKG_DEL: try; autoload ("load_socket_constants", which ("socket"), "remove"); catch; end;
 // function to load socket constants
@@ -939,6 +990,7 @@ Loads various socket constants like AF_INET, SOCK_STREAM, etc\n\
   octave_socket temp ();
   return octave_value ();
 }
+#endif
 
 /*
 
