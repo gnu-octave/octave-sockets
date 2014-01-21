@@ -23,7 +23,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
-using namespace std;
+
 
 // Octave Includes
 #include <octave/oct.h>
@@ -293,7 +293,7 @@ See the @command{connect} man pages for further details.\n\
       return octave_value ();
     }
 
-  const string addr = struct_serverInfo.getfield ("addr").string_value ();
+  const std::string addr = struct_serverInfo.getfield ("addr").string_value ();
   const int port    = struct_serverInfo.getfield ("port").int_value ();
   if (error_state)
     {
@@ -383,7 +383,7 @@ See the @command{gethostbyname} man pages for details.\n\
       return octave_value ();
     }
 
-  const string addr = args(0).string_value ();
+  const std::string addr = args(0).string_value ();
   if (error_state)
     {
       error ("gethostbyname: HOSTNAME must be a string");
@@ -396,7 +396,7 @@ See the @command{gethostbyname} man pages for details.\n\
     {
       for (int i = 0 ; i < hostInfo->h_length/4; i++)
         {
-          string temp_addr = inet_ntoa (*(struct in_addr*)hostInfo->h_addr_list[i]);
+          std::string temp_addr = inet_ntoa (*(struct in_addr*)hostInfo->h_addr_list[i]);
           host_list.append (temp_addr);
         }
     }
@@ -451,7 +451,7 @@ See the @command{send} man pages for further details.\n\
   const octave_base_value& data = args(1).get_rep ();
   if (data.is_string ())
     {
-      string buf = data.string_value ();
+      std::string buf = data.string_value ();
       retval = ::send (s, buf.c_str (), buf.length (), flags);
     }
   else if (data.byte_size () == size_t (data.numel ()))
@@ -690,7 +690,7 @@ See the @command{accept} man pages for further details.\n\
 #endif
   if (fd == -1)
     {
-      ostringstream os;
+      std::ostringstream os;
       os << "accept: failed with error: " << errno;
       error (os.str ().c_str ());
       return octave_value ();
