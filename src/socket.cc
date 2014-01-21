@@ -219,9 +219,11 @@ DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_soc
 
 
 // PKG_ADD: autoload ("AF_UNIX", which ("socket"));
+// PKG_DEL: try; autoload ("AF_UNIX", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX, "socket constant" );
 #ifndef __WIN32__
 // PKG_ADD: autoload ("AF_LOCAL", which ("socket"));
+// PKG_DEL: try; autoload ("AF_LOCAL", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL, "socket constant" );
 #else
 DEFUNX_DLD ("AF_LOCAL", FAF_LOCAL, GAF_LOCAL, args, nargout, "(not supported)")
@@ -229,8 +231,10 @@ DEFUNX_DLD ("AF_LOCAL", FAF_LOCAL, GAF_LOCAL, args, nargout, "(not supported)")
   return octave_value(); };
 #endif
 // PKG_ADD: autoload ("AF_INET", which ("socket"));
+// PKG_DEL: try; autoload ("AF_INET", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(AF_INET, "socket constant" );
 // PKG_ADD: autoload ("AF_APPLETALK", which ("socket"));
+// PKG_DEL: try; autoload ("AF_APPLETALK", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_INET6, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_IPX, "socket constant" );
@@ -241,25 +245,33 @@ DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(AF_PACKET, "socket constant" );
 
 // PKG_ADD: autoload ("SOCK_STREAM", which ("socket"));
+// PKG_DEL: try; autoload ("SOCK_STREAM", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_STREAM, "socket constant" );
 // PKG_ADD: autoload ("SOCK_DGRAM", which ("socket"));
+// PKG_DEL: try; autoload ("SOCK_DGRAM", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_DGRAM, "socket constant" );
 // PKG_ADD: autoload ("SOCK_SEQPACKET", which ("socket"));
+// PKG_DEL: try; autoload ("SOCK_SEQPACKET", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_SEQPACKET, "socket constant" );
 // PKG_ADD: autoload ("SOCK_RAW", which ("socket"));
+// PKG_DEL: try; autoload ("SOCK_RAW", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_RAW, "socket constant" );
 // PKG_ADD: autoload ("SOCK_RDM", which ("socket"));
+// PKG_DEL: try; autoload ("SOCK_RDM", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
 //DEFUN_DLD_SOCKET_CONSTANT(SOCK_PACKET, "socket constant" );
 
 // PKG_ADD: autoload ("MSG_PEEK", which ("socket"));
+// PKG_DEL: try; autoload ("MSG_PEEK", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK, "socket constant" );
 #ifdef MSG_DONTWAIT
 // PKG_ADD: autoload ("MSG_DONTWAIT", which ("socket"));
+// PKG_DEL: try; autoload ("MSG_DONTWAIT", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
 #endif
 #ifdef MSG_WAITALL
 // PKG_ADD: autoload ("MSG_WAITALL", which ("socket"));
+// PKG_DEL: try; autoload ("MSG_WAITALL", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
 #endif
 
@@ -320,6 +332,7 @@ octave_socket::remove_sock_fd (void)
 }
 
 // PKG_ADD: autoload ("socket", which ("socket"));
+// PKG_DEL: try; autoload ("socket", which ("socket"), "remove"); catch; end;
 // Function to create a socket
 DEFUN_DLD(socket, args, , "\
 -*- texinfo -*-\n\
@@ -438,6 +451,7 @@ get_socket (const octave_value& arg)
 }
 
 // PKG_ADD: autoload ("connect", which ("socket"));
+// PKG_DEL: try; autoload ("connect", which ("socket"), "remove"); catch; end;
 // function to create an outgoing connection
 DEFUN_DLD(connect, args, , "\
 -*- texinfo -*-\n\
@@ -515,6 +529,7 @@ See the @command{connect} man pages for further details.\n\
 }
 
 // PKG_ADD: autoload ("disconnect", which ("socket"));
+// PKG_DEL: try ; autoload ("disconnect", which ("socket"), "remove") ; catch ; end;
 // function to disconnect asocket
 DEFUN_DLD(disconnect, args, , "\
 -*- texinfo -*-\n\
@@ -546,6 +561,7 @@ function to disconnect the socket.\n\
 }
 
 // PKG_ADD: autoload ("gethostbyname", which ("socket"));
+// PKG_DEL: try; autoload ("gethostbyname", which ("socket"), "remove"); ; catch; end;
 // function to get a host number from a host name
 DEFUN_DLD(gethostbyname, args, , "\
 -*- texinfo -*-\n\
@@ -595,6 +611,7 @@ See the @command{gethostbyname} man pages for details.\n\
 }
 
 // PKG_ADD: autoload ("send", which ("socket"));
+// PKG_DEL: try; autoload ("send", which ("socket"), "remove"); catch; end;
 // function to send data over a socket
 DEFUN_DLD(send, args, , "\
 -*- texinfo -*-\n\
@@ -666,6 +683,7 @@ See the @command{send} man pages for further details.\n\
 }
 
 // PKG_ADD: autoload ("recv", which ("socket"));
+// PKG_DEL: try; autoload ("recv", which ("socket"), "remove"); catch; end;
 // function to receive data over a socket
 DEFUN_DLD(recv, args, , "\
 -*- texinfo -*-\n\
@@ -755,6 +773,7 @@ See the @command{recv} man pages for further details.\n\
 }
 
 // PKG_ADD: autoload ("bind", which ("socket"));
+// PKG_DEL: try; autoload ("bind", which ("socket"), "remove"); catch; end;
 // function to bind a socket
 DEFUN_DLD(bind, args, , "\
 -*- texinfo -*-\n\
@@ -796,6 +815,7 @@ See the @command{bind} man pages for further details.\n\
 }
 
 // PKG_ADD: autoload ("listen", which ("socket"));
+// PKG_DEL: try; autoload ("listen", which ("socket"), "remove"); catch; end;
 // function to listen on a socket
 DEFUN_DLD(listen, args, , "\
 -*- texinfo -*-\n\
@@ -838,6 +858,7 @@ See the @command{listen} man pages for further details.\n\
 }
 
 // PKG_ADD: autoload ("accept", which ("socket"));
+// PKG_DEL: try; autoload ("accept", which ("socket"), "remove"); catch; end;
 // function to accept on a listening socket
 DEFUN_DLD(accept,args,nargout, "\
 -*- texinfo -*-\n\
@@ -900,6 +921,7 @@ See the @command{accept} man pages for further details.\n\
 }
 
 // PKG_ADD: autoload ("load_socket_constants", which ("socket"));
+// PKG_DEL: try; autoload ("load_socket_constants", which ("socket"), "remove"); catch; end;
 // function to load socket constants
 DEFUN_DLD(load_socket_constants, args, , "\
 -*- texinfo -*-\n\
