@@ -53,18 +53,23 @@ typedef unsigned int socklen_t;
 #endif
 #include <errno.h>
 
-# define DEFUN_DLD_SOCKET_CONSTANT(name, help )\
-  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help)\
+/*
+ * macro for defining all the socket constants as
+ * octave functions.
+ */
+# define DEFUN_DLD_SOCKET_CONSTANT(name)\
+  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, \
+               "socket constant")                          \
   {    return octave_value( name ); };
 
 
 // PKG_ADD: autoload ("AF_UNIX", which ("socket"));
 // PKG_DEL: try; autoload ("AF_UNIX", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX );
 #ifndef __WIN32__
 // PKG_ADD: autoload ("AF_LOCAL", which ("socket"));
 // PKG_DEL: try; autoload ("AF_LOCAL", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL );
 #else
 DEFUNX_DLD ("AF_LOCAL", FAF_LOCAL, GAF_LOCAL, args, nargout, "(not supported)")
 { error( "AF_LOCAL address family not supported on this platform" );
@@ -72,47 +77,47 @@ DEFUNX_DLD ("AF_LOCAL", FAF_LOCAL, GAF_LOCAL, args, nargout, "(not supported)")
 #endif
 // PKG_ADD: autoload ("AF_INET", which ("socket"));
 // PKG_DEL: try; autoload ("AF_INET", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(AF_INET, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(AF_INET );
 // PKG_ADD: autoload ("AF_APPLETALK", which ("socket"));
 // PKG_DEL: try; autoload ("AF_APPLETALK", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_INET6, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_IPX, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_NETLINK, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_X25, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_AX25, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_ATMPVC, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(AF_PACKET, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(AF_APPLETALK );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_INET6 );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_IPX );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_NETLINK );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_X25 );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_AX25 );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_ATMPVC );
+//DEFUN_DLD_SOCKET_CONSTANT(AF_PACKET );
 
 // PKG_ADD: autoload ("SOCK_STREAM", which ("socket"));
 // PKG_DEL: try; autoload ("SOCK_STREAM", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(SOCK_STREAM, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(SOCK_STREAM );
 // PKG_ADD: autoload ("SOCK_DGRAM", which ("socket"));
 // PKG_DEL: try; autoload ("SOCK_DGRAM", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(SOCK_DGRAM, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(SOCK_DGRAM );
 // PKG_ADD: autoload ("SOCK_SEQPACKET", which ("socket"));
 // PKG_DEL: try; autoload ("SOCK_SEQPACKET", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(SOCK_SEQPACKET, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(SOCK_SEQPACKET );
 // PKG_ADD: autoload ("SOCK_RAW", which ("socket"));
 // PKG_DEL: try; autoload ("SOCK_RAW", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(SOCK_RAW, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(SOCK_RAW );
 // PKG_ADD: autoload ("SOCK_RDM", which ("socket"));
 // PKG_DEL: try; autoload ("SOCK_RDM", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM, "socket constant" );
-//DEFUN_DLD_SOCKET_CONSTANT(SOCK_PACKET, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(SOCK_RDM );
+//DEFUN_DLD_SOCKET_CONSTANT(SOCK_PACKET );
 
 // PKG_ADD: autoload ("MSG_PEEK", which ("socket"));
 // PKG_DEL: try; autoload ("MSG_PEEK", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK );
 #ifdef MSG_DONTWAIT
 // PKG_ADD: autoload ("MSG_DONTWAIT", which ("socket"));
 // PKG_DEL: try; autoload ("MSG_DONTWAIT", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT );
 #endif
 #ifdef MSG_WAITALL
 // PKG_ADD: autoload ("MSG_WAITALL", which ("socket"));
 // PKG_DEL: try; autoload ("MSG_WAITALL", which ("socket"), "remove"); catch; end;
-DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
+DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL );
 #endif
 
 //we need to keep track if sockets has been loaded, as it
