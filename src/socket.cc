@@ -16,14 +16,9 @@
 // You should have received a copy of the GNU General Public License along with
 // this program; if not, see <http://www.gnu.org/licenses/>.
 
-// C++ STL includes
-#include <cstdio>
-#include <iostream>
+// standard c++
 #include <string>
-#include <vector>
-#include <map>
 #include <sstream>
-
 
 // Octave Includes
 #include <octave/oct.h>
