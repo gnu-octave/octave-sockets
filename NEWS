@@ -1,6 +1,9 @@
 Summary of important user-visible changes for sockets 1.2.0:
 -------------------------------------------------------------------
 
+ ** Functions are cleaned on package unload (requires Octave >= 3.8)
+    using the PKG_DEL directive.
+
  ** The sockets package is now dependent on Octave versions >= 3.2.0
 
  ** Functions now perform better input check to prevent accidental segfaults.
