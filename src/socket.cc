@@ -714,27 +714,6 @@ See the @command{accept} man pages for further details.\n\
   return return_list;
 }
 
-#if 0
-// PKG_ADD: autoload ("load_socket_constants", which ("socket"));
-// PKG_DEL: try; autoload ("load_socket_constants", which ("socket"), "remove"); catch; end;
-// function to load socket constants
-DEFUN_DLD(load_socket_constants, args, , "\
--*- texinfo -*-\n\
-@deftypefn {Loadable Function} {} load_socket_constants ()\n\
-Load socket constants.\n\
-\n\
-Loads various socket constants like AF_INET, SOCK_STREAM, etc\n\
-\n\
-@end deftypefn")
-{
-  if (args.length () != 0)
-    {
-      print_usage ();
-    }
-  octave_socket temp ();
-  return octave_value ();
-}
-#endif
 
 /*
 
