@@ -268,8 +268,6 @@ On successful connect, the returned status is zero.\n\
 See the @command{connect} man pages for further details.\n\
 @end deftypefn")
 {
-  struct sockaddr_in serverInfo;
-  struct hostent*    hostInfo;
 
   if (args.length () != 2)
     {
@@ -307,8 +305,10 @@ See the @command{connect} man pages for further details.\n\
     }
 
   // Fill in the server info struct
+  struct sockaddr_in serverInfo;
   serverInfo.sin_family = AF_INET;
-  hostInfo = gethostbyname (addr.c_str ());
+
+  struct hostent* hostInfo = gethostbyname (addr.c_str ());
   if (! hostInfo)
     {
       error ("connect: error in gethostbyname()");
@@ -317,7 +317,8 @@ See the @command{connect} man pages for further details.\n\
   serverInfo.sin_addr.s_addr = *((long*)hostInfo->h_addr_list[0]);
   serverInfo.sin_port = htons(port);
 
-  const int retval = connect (s, (struct sockaddr*)&serverInfo, sizeof (struct sockaddr));
+  const int retval = connect (s, (struct sockaddr*)&serverInfo,
+                              sizeof (struct sockaddr));
   return octave_value (retval);
 }
 
@@ -375,7 +376,6 @@ See the @command{gethostbyname} man pages for details.\n\
 @end deftypefn")
 {
   const int nargin = args.length ();
-  struct hostent* hostInfo = NULL;
 
   if (nargin != 1)
     {
@@ -391,7 +391,7 @@ See the @command{gethostbyname} man pages for details.\n\
     }
 
   string_vector host_list;
-  hostInfo = gethostbyname (addr.c_str ());
+  struct hostent* hostInfo = gethostbyname (addr.c_str ());
   if (hostInfo)
     {
       for (int i = 0 ; i < hostInfo->h_length/4; i++)
