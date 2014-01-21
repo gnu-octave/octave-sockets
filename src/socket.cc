@@ -58,169 +58,6 @@ typedef unsigned int socklen_t;
 #endif
 #include <errno.h>
 
-#if 0
-template <class T>
-std::string to_string(T t, std::ios_base & (*f)(std::ios_base&))
-{
-  std::ostringstream oss;
-  oss << f << t;
-  return oss.str();
-}
-#endif
-
-#if 0
-#define OCTAVE_TYPE_CONV_HELPER(VAR_IN, VAR_OUT, NAME, MATRIX_RESULT_T, SCALAR_RESULT_T)\
-\
-      int t_arg = VAR_IN.type_id ();\
-\
-      int t_result = MATRIX_RESULT_T::static_type_id ();\
-\
-      if (t_arg == t_result || VAR_IN.class_name () == #NAME)\
-        {\
-          VAR_OUT = VAR_IN;\
-        }\
-      else\
-        {\
-          octave_base_value::type_conv_fcn cf\
-            = octave_value_typeinfo::lookup_type_conv_op (t_arg, t_result);\
-\
-          if (cf)\
-            {\
-              octave_base_value *tmp (cf (*(VAR_IN.internal_rep ())));\
-\
-              if (tmp)\
-                {\
-                  VAR_OUT = octave_value (tmp);\
-\
-                  VAR_OUT.maybe_mutate ();\
-                }\
-            }\
-          else\
-            {\
-              std::string arg_tname = VAR_IN.type_name ();\
-\
-              std::string result_tname = VAR_IN.numel () == 1\
-                ? SCALAR_RESULT_T::static_type_name ()\
-                : MATRIX_RESULT_T::static_type_name ();\
-\
-              gripe_invalid_conversion (arg_tname, result_tname);\
-            }\
-        }
-#endif
-
-#if 0
-#define OCTAVE_TYPE_CONV(VAR_IN, VAR_OUT, NAME)\
-  OCTAVE_TYPE_CONV_HELPER (VAR_IN, VAR_OUT, NAME, octave_ ## NAME ## _matrix,\
-                          octave_ ## NAME ## _scalar)
-#endif
-
-#if 0
-// Derive an octave_socket class from octave_base_value
-class
-octave_socket : public octave_base_value
-{
-private:
-
-  /**
-   * Socket file descriptor
-   */
-  int sock_fd;
-
-public:
-
-  /**
-   * Default constructor.  Must be defined, but never used.
-   */
-  octave_socket () { }
-
-  /**
-   * Constructor used to set the fd on creation.
-   */
-  octave_socket (int fd);
-
-  /**
-   * Constructor used to create the socket.
-   */
-  octave_socket (int domain, int type, int protocol);
-
-  /**
-   * Destructor.
-   */
-  ~octave_socket ();
-
-  /**
-   * Various properties of the octave_socket datatype.
-   */
-  bool is_constant (void) const { return true; }
-  bool is_defined (void) const { return true; }
-  bool print_as_scalar (void) const { return true; }
-
-  // Still undefined.
-  //bool is_data_available() {};
-
-  /**
-   * Overloaded methods to print the fd as the socket id
-   */
-  void print (ostream& os, bool pr_as_read_syntax = false) const;
-  void print_raw (std::ostream& os, bool pr_as_read_syntax) const;
-
-  /**
-   * Utility function for retrieving the socket fd.
-   */
-  int get_sock_fd (void) { return sock_fd; };
-
-  void remove_sock_fd (void);
-
-  virtual double scalar_value (bool frc_str_conv = false) const
-  { return double (sock_fd); }
-
-  double socket_value () const
-  { return double (sock_fd); }
-
-private:
-  DECLARE_OCTAVE_ALLOCATOR
-  DECLARE_OV_TYPEID_FUNCTIONS_AND_DATA
-};
-
-
-DEFBINOP_OP (lt_sock_s, socket, scalar, <)
-DEFBINOP_OP (le_sock_s, socket, scalar, <=)
-DEFBINOP_OP (eq_sock_s, socket, scalar, ==)
-DEFBINOP_OP (ge_sock_s, socket, scalar, >=)
-DEFBINOP_OP (gt_sock_s, socket, scalar, >)
-DEFBINOP_OP (ne_sock_s, socket, scalar, !=)
-
-DEFBINOP_OP (lt_s_sock, scalar, socket, <)
-DEFBINOP_OP (le_s_sock, scalar, socket, <=)
-DEFBINOP_OP (eq_s_sock, scalar, socket, ==)
-DEFBINOP_OP (ge_s_sock, scalar, socket, >=)
-DEFBINOP_OP (gt_s_sock, scalar, socket, >)
-DEFBINOP_OP (ne_s_sock, scalar, socket, !=)
-
-void
-install_socket_ops (void)
-{
-  INSTALL_BINOP (op_lt, octave_socket, octave_scalar, lt_sock_s);
-  INSTALL_BINOP (op_le, octave_socket, octave_scalar, le_sock_s);
-  INSTALL_BINOP (op_eq, octave_socket, octave_scalar, eq_sock_s);
-  INSTALL_BINOP (op_ge, octave_socket, octave_scalar, ge_sock_s);
-  INSTALL_BINOP (op_gt, octave_socket, octave_scalar, gt_sock_s);
-  INSTALL_BINOP (op_ne, octave_socket, octave_scalar, ne_sock_s);
-
-  INSTALL_BINOP (op_lt, octave_scalar, octave_socket, lt_s_sock);
-  INSTALL_BINOP (op_le, octave_scalar, octave_socket, le_s_sock);
-  INSTALL_BINOP (op_eq, octave_scalar, octave_socket, eq_s_sock);
-  INSTALL_BINOP (op_ge, octave_scalar, octave_socket, ge_s_sock);
-  INSTALL_BINOP (op_gt, octave_scalar, octave_socket, gt_s_sock);
-  INSTALL_BINOP (op_ne, octave_scalar, octave_socket, ne_s_sock);
-}
-
-
-DEFINE_OCTAVE_ALLOCATOR (octave_socket);
-DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_socket, "octave_socket", "octave_socket");
-
-#endif
-
 # define DEFUN_DLD_SOCKET_CONSTANT(name, help )\
   DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, help)\
   {    return octave_value( name ); };
@@ -283,63 +120,10 @@ DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT, "socket constant" );
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL, "socket constant" );
 #endif
 
-#if 0
-std::map< int, octave_socket * > socket_map;
-#endif
+//we need to keep track if sockets has been loaded, as it
+//requires initialization on windows platforms.
+#ifdef __WIN32__
 static bool type_loaded = false;
-
-#if 0
-//////////////////////////////////////////////////////////////////////////////////////////
-octave_socket::octave_socket (int fd)
-{
-  sock_fd = fd;
-  socket_map[sock_fd] = this;
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-octave_socket::octave_socket (int domain, int type, int protocol)
-{
-  sock_fd = ::socket (domain, type, protocol);
-  if (sock_fd == -1)
-    error_state = 1;
-  else
-    socket_map[sock_fd] = this;
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-octave_socket::~octave_socket()
-{
-  remove_sock_fd();
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void
-octave_socket::print (ostream& os, bool pr_as_read_syntax) const
-{
-  print_raw (os, pr_as_read_syntax);
-  newline (os);
-}
-
-void
-octave_socket::print_raw (std::ostream& os, bool pr_as_read_syntax) const
-{
-  os << sock_fd;
-}
-
-void
-octave_socket::remove_sock_fd (void)
-{
-#ifndef __WIN32__
-  ::close (sock_fd);
-#else
-  ::closesocket (sock_fd);
-#endif
-  socket_map.erase (sock_fd);
-  sock_fd = -1;
-}
 #endif
 
 // PKG_ADD: autoload ("socket", which ("socket"));
@@ -371,14 +155,11 @@ See the local @command{socket} reference for more details.\n\
   int type      = SOCK_STREAM;
   int protocol  = 0;
 
+#ifdef __WIN32__
   if (! type_loaded)
     {
-#if 0
-      octave_socket::register_type ();
-      install_socket_ops ();
-#endif
       type_loaded = true;
-#ifdef __WIN32__
+
       WORD wVersionRequested;
       WSADATA wsaData;
       int err;
@@ -390,8 +171,8 @@ See the local @command{socket} reference for more details.\n\
           error ("socket: could not initialize winsock library");
           return octave_value();
         }
-#endif
     }
+#endif
 
   // Convert the arguments to their #define'd value
   const octave_idx_type nargin = args.length ();
@@ -431,48 +212,11 @@ See the local @command{socket} reference for more details.\n\
     }
 
   // Create the new socket
-#if 0
-  octave_socket* retval = new octave_socket (domain, type, protocol);
-#else
   const int sock_fd = ::socket (domain, type, protocol);
   //maybe check for -1, read errno and give a better diagnostic.
   return octave_value(sock_fd);
-#endif
-
-#if 0
-  if (error_state)
-    {
-      error ("socket: could not create new socket");
-      return octave_value ();
-    }
-
-  return octave_value (retval);
-#endif
 }
 
-#if 0
-octave_socket*
-get_socket (const octave_value& arg)
-{
-  octave_socket* s = NULL;
-  if (arg.type_id () == octave_socket::static_type_id ())
-    {
-      const octave_base_value& rep = arg.get_rep ();
-      s = &((octave_socket &)rep);
-    }
-  else
-    {
-      const int fd = arg.int_value();
-      if (! error_state)
-        {
-          s = socket_map[fd];
-          if (s == NULL)
-            error_state = 1;
-        }
-    }
-  return s;
-}
-#else
 /*
  * helper function to convert an octave value to an integer,
  * returning -1 if it failed.
@@ -486,7 +230,7 @@ int get_socket(const octave_value& arg)
     }
   return fd;
 }
-#endif
+
 
 /*
  * closes the given socket file descriptor
