@@ -463,7 +463,8 @@ See the @command{send} man pages for further details.\n\
       OCTAVE_LOCAL_BUFFER (unsigned char, buf, length);
       for (int i = 0 ; i < length; i++)
         buf[i] = (unsigned char)d1fvec[i];
-
+      
+      //hmm, flags are set to 0, unlike the call above!
       retval = ::send (s, (const char*)buf, data.byte_size (), 0);
     }
   else
@@ -587,7 +588,7 @@ See the @command{bind} man pages for further details.\n\
   const int s = get_socket (args(0));
   if (error_state)
     {
-      error ("bind: s must be a valid socket");
+      error ("bind: S must be a valid socket");
       return octave_value ();
     }
 
