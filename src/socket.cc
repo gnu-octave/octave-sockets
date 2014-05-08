@@ -574,7 +574,7 @@ See the @command{recv} man pages for further details.\n\
 DEFUN_DLD(bind, args, , "\
 -*- texinfo -*-\n\
 @deftypefn {Loadable Function} {} bind (@var{s}, @var{portnumber})\n\
-Bind specific soocket to port number.\n\
+Bind specific socket to port number.\n\
 \n\
 See the @command{bind} man pages for further details.\n\
 \n\
