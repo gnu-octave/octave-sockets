@@ -16,10 +16,6 @@
 // You should have received a copy of the GNU General Public License along with
 // this program; if not, see <http://www.gnu.org/licenses/>.
 
-// standard c++
-#include <string>
-#include <sstream>
-
 // Octave Includes
 #include <octave/oct.h>
 #include <octave/parse.h>
@@ -52,6 +48,7 @@ typedef unsigned int socklen_t;
 #include <winsock2.h>
 #endif
 #include <errno.h>
+#include <string.h>
 
 /*
  * macro for defining all the socket constants as
@@ -213,7 +210,9 @@ See the local @command{socket} reference for more details.\n\
 
   // Create the new socket
   const int sock_fd = ::socket (domain, type, protocol);
-  //maybe check for -1, read errno and give a better diagnostic.
+  if (sock_fd == -1)
+      error ("socket failed with error %i (%s)", errno, strerror(errno));
+
   return octave_value(sock_fd);
 }
 
@@ -319,6 +318,9 @@ See the @command{connect} man pages for further details.\n\
 
   const int retval = connect (s, (struct sockaddr*)&serverInfo,
                               sizeof (struct sockaddr));
+  if (retval == -1)
+      error ("connect failed with error %i (%s)", errno, strerror(errno));
+
   return octave_value (retval);
 }
 
@@ -605,6 +607,9 @@ See the @command{bind} man pages for further details.\n\
   serverInfo.sin_addr.s_addr = INADDR_ANY;
 
   int retval = ::bind (s, (struct sockaddr *)&serverInfo, sizeof (serverInfo));
+  if (retval == -1)
+      error ("bind failed with error %i (%s)", errno, strerror(errno));
+
   return octave_value (retval);
 }
 
@@ -648,6 +653,9 @@ See the @command{listen} man pages for further details.\n\
     }
 
   const int retval = ::listen (s, backlog);
+  if (retval == -1)
+      error ("listen failed with error %i (%s)", errno, strerror(errno));
+
   return octave_value (retval);
 }
 
@@ -691,9 +699,7 @@ See the @command{accept} man pages for further details.\n\
 #endif
   if (fd == -1)
     {
-      std::ostringstream os;
-      os << "accept: failed with error: " << errno;
-      error (os.str ().c_str ());
+      error ("accept failed with error %i (%s)", errno, strerror(errno));
       return octave_value ();
     }
 
