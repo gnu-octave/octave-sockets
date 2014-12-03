@@ -1,6 +1,10 @@
 Summary of important user-visible changes for sockets 1.2.0:
 -------------------------------------------------------------------
 
+ ** Sockets are now represented with ordinary numbers, not a
+    custom socket type. If you relied on checks like
+    isa(s,'octave_socket') you will need to update your code.
+
  ** Functions are cleaned on package unload (requires Octave >= 3.8)
     using the PKG_DEL directive.
 
