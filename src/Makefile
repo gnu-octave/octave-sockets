@@ -8,12 +8,15 @@ OCT := socket.oct
 SRC := $(OCT:.oct=.cc)
 
 MKOCTFILE ?= mkoctfile -Wall
+OCTAVE_CONFIG ?= octave-config
 OCTAVE ?= octave
+
+CANONICAL_HOST_TYPE := $(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE))
 
 #The following is necessary to get the sockets package working in Windows.
 #It has been tried on Win7 and XP, in Octave 3.8.0 using mxe-octave (mingw)
 EXTRALIBS := 
-ifeq ($(OS),Windows_NT)
+ifneq (,$(findstring mingw,$(CANONICAL_HOST_TYPE)))
   EXTRALIBS := -lws2_32
 endif
 
