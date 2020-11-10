@@ -6,6 +6,6 @@ Maintainer: Paul Dreik <slask@pauldreik.se>
 Title: Sockets
 Description: Socket functions for networking from within octave.
 Categories: Sockets
-Depends: octave (>= 3.2.0)
+Depends: octave (>= 3.6.0)
 License: GPLv3+
 Url: http://octave.sourceforge.net
