@@ -174,37 +174,39 @@ See the local @command{socket} reference for more details.\n\
   const octave_idx_type nargin = args.length ();
   if (nargin > 0)
     {
-      domain = args(0).int_value ();
-      if (error_state)
+      if (! args(0).is_real_scalar ())
         {
           error ("socket: DOMAIN must be a scalar integer");
           return octave_value ();
         }
+      domain = args(0).int_value ();
     }
 
   if (nargin > 1)
     {
-      type = args(1).int_value ();
-      if (error_state)
+      if (! args(0).is_real_scalar ())
         {
           error ("socket: TYPE must be a scalar integer");
           return octave_value ();
         }
+ 
+      type = args(1).int_value ();
     }
 
   if (nargin > 2)
     {
-      protocol = args(2).int_value ();
-      if (error_state)
+      if (! args(0).is_real_scalar ())
         {
           error ("socket: PROTOCOL must be a scalar integer");
           return octave_value ();
         }
-      else if (protocol != 0)
-      {
-        error ("socket: for now, PROTOCOL must always be 0 (zero)");
-        return octave_value ();
-      }
+ 
+      protocol = args(2).int_value ();
+      if (protocol != 0)
+        {
+          error ("socket: for now, PROTOCOL must always be 0 (zero)");
+          return octave_value ();
+        }
     }
 
   // Create the new socket
@@ -221,11 +223,13 @@ See the local @command{socket} reference for more details.\n\
  */
 int get_socket(const octave_value& arg)
 {
-  const int fd = arg.int_value();
-  if (error_state)
+  if (! arg.is_real_scalar ())
     {
       return -1;
     }
+
+  const int fd = arg.int_value();
+
   return fd;
 }
 
@@ -275,7 +279,7 @@ See the @command{connect} man pages for further details.\n\
 
   // Determine the socket on which to operate
   const int s = get_socket (args(0));
-  if (error_state)
+  if (s == -1)
     {
       error ("connect: S must be a valid socket");
       return octave_value ();
@@ -283,20 +287,26 @@ See the @command{connect} man pages for further details.\n\
 
   // Extract information about the server to connect to.
   const octave_scalar_map struct_serverInfo = args(1).scalar_map_value ();
-  if (error_state)
+  if (struct_serverInfo.nfields () == 0)
     {
       error ("connect: SERVERINFO must be a struct");
       return octave_value ();
     }
 
-  const std::string addr = struct_serverInfo.getfield ("addr").string_value ();
-  const int port    = struct_serverInfo.getfield ("port").int_value ();
-  if (error_state)
+  if(! (struct_serverInfo.contains ("addr") && struct_serverInfo.contains ("port")))
     {
       error ("connect: SERVERINFO must have a string and integer in fields \"addr\" and \"port\"");
       return octave_value ();
     }
-  else if (addr.empty ())
+
+  if(! (struct_serverInfo.getfield ("addr").is_string() && struct_serverInfo.getfield ("port").is_real_scalar()))
+    {
+      error ("connect: SERVERINFO must have a string and integer in fields \"addr\" and \"port\"");
+      return octave_value ();
+    }
+  const std::string addr = struct_serverInfo.getfield ("addr").string_value ();
+  const int port    = struct_serverInfo.getfield ("port").int_value ();
+  if (addr.empty ())
     {
       error ("connect: SERVERINFO addr is an empty string");
       return octave_value ();
@@ -347,7 +357,7 @@ function to disconnect the socket.\n\
 
   int retval = -1;
   const int s = get_socket (args(0));
-  if (! error_state)
+  if (s != -1)
     {
       close_octavesocket(s);
       retval = 0;
@@ -384,12 +394,12 @@ See the @command{gethostbyname} man pages for details.\n\
       return octave_value ();
     }
 
-  const std::string addr = args(0).string_value ();
-  if (error_state)
+  if (! args(0).is_string ())
     {
       error ("gethostbyname: HOSTNAME must be a string");
       return octave_value ();
     }
+  const std::string addr = args(0).string_value ();
 
   string_vector host_list;
   struct hostent* hostInfo = gethostbyname (addr.c_str ());
@@ -431,17 +441,18 @@ See the @command{send} man pages for further details.\n\
   int flags = 0;
   if (nargin > 2)
     {
-      flags = args(2).int_value ();
-      if (error_state)
+      if (! args(2).is_real_scalar ())
         {
           error ("send: FLAGS must be a scalar integer");
           return octave_value ();
-        }
+         }
+
+      flags = args(2).int_value ();
     }
 
   // Determine the socket on which to operate
   const int s = get_socket (args(0));
-  if (error_state)
+  if (s == -1)
     {
       error ("send: s must be a valid socket");
       return octave_value ();
@@ -513,24 +524,31 @@ See the @command{recv} man pages for further details.\n\
 
   if (nargin > 2)
     {
-      flags = args(2).int_value ();
-      if (error_state)
+      if (! args(2).is_real_scalar ())
         {
           error ("recv: FLAGS must be a scalar integer");
           return octave_value ();
         }
+
+      flags = args(2).int_value ();
     }
 
   // Determine the socket on which to operate
   const int s = get_socket (args(0));
-  if (error_state)
+  if (s == -1)
     {
       error ("recv: S must be a valid socket");
       return octave_value ();
     }
 
+  if (! args(1).is_real_scalar ())
+    {
+      error ("recv: LEN must be a non-negative integer");
+      return octave_value (-1);
+    }
+
   const long len = args(1).int_value ();
-  if (error_state || len < 0)
+  if (len < 0)
     {
       error ("recv: LEN must be a non-negative integer");
       return octave_value(-1);
@@ -587,18 +605,19 @@ See the @command{bind} man pages for further details.\n\
 
   // Determine the socket on which to operate
   const int s = get_socket (args(0));
-  if (error_state)
+  if (s == -1)
     {
       error ("bind: S must be a valid socket");
       return octave_value ();
     }
 
-  const long port = args(1).int_value ();
-  if (error_state)
+  if (! args(1).is_real_scalar ())
     {
       error ("bind: PORT must be a scalar integer");
-      return octave_value ();
+      return octave_value (-1);
     }
+
+  const long port = args(1).int_value ();
 
   struct sockaddr_in serverInfo;
   serverInfo.sin_family = AF_INET;
@@ -638,18 +657,19 @@ See the @command{listen} man pages for further details.\n\
 
   // Determine the socket on which to operate
   const int s = get_socket (args(0));
-  if (error_state)
+  if (s == -1)
     {
       error ("listen: S must be a valid socket");
       return octave_value ();
     }
 
-  const int backlog = args(1).int_value ();
-  if (error_state)
+  if (! args(1).is_real_scalar ())
     {
       error ("listen: BACKLOG must be an integer scalar");
-      return octave_value ();
+      return octave_value (-1);
     }
+
+  const int backlog = args(1).int_value ();
 
   const int retval = ::listen (s, backlog);
   if (retval == -1)
@@ -685,7 +705,7 @@ See the @command{accept} man pages for further details.\n\
 
   // Determine the socket on which to operate
   const int s = get_socket (args(0));
-  if (error_state)
+  if (s == -1)
     {
       error ("accept: S must be a valid socket");
       return octave_value ();
