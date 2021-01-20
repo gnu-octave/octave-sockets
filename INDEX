@@ -6,7 +6,9 @@ Sockets
   disconnect
   accept
   send
+  sendto
   recv
+  recvfrom
   gethostbyname
   listen
 Socket constants

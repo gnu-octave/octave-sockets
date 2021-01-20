@@ -2,6 +2,7 @@
 // Copyright (C) 2007 Tom Holroyd <tomh@kurage.nimh.nih.gov>
 // Copyright (C) 2009 Paul Dreik <slask@pauldreik.se>
 // Copyright (C) 2013 Carnë Draug <carandraug@octave.org>
+// Copyright (C) 2020 Octave maintainers <maintainers@octave.org>
 //
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -740,6 +741,246 @@ See the @command{accept} man pages for further details.\n\
   return return_list;
 }
 
+// PKG_ADD: autoload ("sendto", which ("socket"));
+// PKG_DEL: try; autoload ("sendto", which ("socket"), "remove"); catch; end;
+// function to send data over a socket
+DEFUN_DLD(sendto, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} sendto (@var{s}, @var{data}, @var{dest_info})\n\
+@deftypefnx {Loadable Function} {} sendto (@var{s}, @var{data}, @var{flags}, @var{dest_info})\n\
+Send data on specified socket.\n\
+\n\
+Sends data on socket @var{s} to destination.  @var{data} should be an uint8 array or\n\
+a string.\n\
+\n\
+The dest_info struct @var{dest_info} must contain the\n\
+following fields:\n\
+\n\
+@table @code\n\
+@item addr\n\
+a string with the host name to send to\n\
+\n\
+@item port\n\
+the port number to send to (an integer)\n\
+@end table\n\
+\n\
+See the @command{sendto} man pages for further details.\n\
+\n\
+@end deftypefn")
+{
+  const octave_idx_type nargin = args.length ();
+
+  if (nargin < 3 || nargin > 4)
+  {
+    print_usage ();
+    return octave_value ();
+  }
+
+  int dest_info_pos = 2;
+  int flags = 0;
+  if (nargin == 4)
+    {
+      if (! args(2).is_real_scalar ())
+        {
+          error ("send: FLAGS must be a scalar integer");
+          return octave_value ();
+        }
+      dest_info_pos = 3;
+    }
+
+  // Determine the socket on which to operate
+  const int s = get_socket (args(0));
+  if (s == -1)
+    {
+      error ("send: s must be a valid socket");
+      return octave_value ();
+    }
+
+  // Extract information about the server to send to.
+  const octave_scalar_map struct_dest_info = args(dest_info_pos).scalar_map_value ();
+  if (struct_dest_info.nfields () == 0)
+    {
+      error ("sendto: DESTINFO must be a struct");
+      return octave_value ();
+    }
+
+  if(! (struct_dest_info.contains ("addr") && struct_dest_info.contains ("port")))
+    {
+      error ("sendto: DESTINFO must have a string and integer in fields \"addr\" and \"port\"");
+      return octave_value ();
+    }
+
+  if(! (struct_dest_info.getfield ("addr").is_string() && struct_dest_info.getfield ("port").is_real_scalar()))
+    {
+      error ("sendto: DESTINFO must have a string and integer in fields \"addr\" and \"port\"");
+      return octave_value ();
+    }
+  const std::string addr = struct_dest_info.getfield ("addr").string_value ();
+  const int port    = struct_dest_info.getfield ("port").int_value ();
+  if (addr.empty ())
+    {
+      error ("sendto: DESTINFO addr is an empty string");
+      return octave_value ();
+    }
+
+  // Fill in the dest info struct
+  struct sockaddr_in dest_info;
+  memset(&dest_info, 0, sizeof(dest_info));
+  dest_info.sin_family = AF_INET;
+
+  struct hostent* hostInfo = gethostbyname (addr.c_str ());
+  if (! hostInfo)
+    {
+      error ("sendto: error in gethostbyname()");
+      return octave_value ();
+    }
+  dest_info.sin_addr.s_addr = *((long*)hostInfo->h_addr_list[0]);
+  dest_info.sin_port = htons(port);
+
+  int retval = -1;
+  // Extract the data from the octave variable and send it
+  const octave_base_value& data = args(1).get_rep ();
+  if (data.is_string ())
+    {
+      std::string buf = data.string_value ();
+      retval = ::sendto (s, buf.c_str (), buf.length (), flags, (sockaddr*)&dest_info, sizeof(dest_info));
+    }
+  else if (data.byte_size () == size_t (data.numel ()))
+    {
+      const NDArray d1 = data.array_value ();
+      const octave_idx_type length = d1.numel ();
+      const double* d1fvec = d1.data ();
+
+      OCTAVE_LOCAL_BUFFER (unsigned char, buf, length);
+      for (int i = 0 ; i < length; i++)
+        buf[i] = (unsigned char)d1fvec[i];
+      
+      //hmm, flags are set to 0, unlike the call above!
+      retval = ::sendto (s, (const char*)buf, data.byte_size (), flags, (sockaddr*)&dest_info, sizeof(dest_info));
+    }
+  else
+    {
+      error( "sendto: invalid DATA to send.  Please format it prior to sending" );
+      return octave_value ();
+    }
+
+  return octave_value (retval);
+}
+
+// PKG_ADD: autoload ("recvfrom", which ("socket"));
+// PKG_DEL: try; autoload ("recvfrom", which ("socket"), "remove"); catch; end;
+// function to receive data over a socket
+DEFUN_DLD(recvfrom, args, , "\
+-*- texinfo -*-\n\
+@deftypefn  {Loadable Function} {[@var{data}, @var{count}, @var{src_info}] =} recvfrom (@var{s}, @var{len})\n\
+@deftypefnx {Loadable Function} {[@var{data}, @var{count}, @var{src_info}] =} recvfrom (@var{s}, @var{len}, @var{flags})\n\
+Read data from specified socket.\n\
+\n\
+Requests reading @var{len} bytes from the socket @var{s}.\n\
+The optional integer @var{flags} parameter can be used to modify the\n\
+behaviour of @code{recvfrom}.\n\
+\n\
+The read data is returned in the uint8 array @var{data}.  The number of\n\
+bytes read is returned in @var{count} and a structure with fields addr and port contain the source of the\n\
+data.\n\
+\n\
+You can get non-blocking operation by using the flag @code{MSG_DONTWAIT}\n\
+which makes the @code{recvfrom()} call return immediately.  If there is no\n\
+data, -1 is returned in count.\n\
+\n\
+See the @command{recvfrom} man pages for further details.\n\
+\n\
+@end deftypefn")
+{
+  const octave_idx_type nargin = args.length ();
+  int retval = 0;
+  int flags = 0;
+
+  if (nargin < 2 || nargin > 3)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
+  if (nargin > 2)
+    {
+      if (! args(2).is_real_scalar ())
+        {
+          error ("recv: FLAGS must be a scalar integer");
+          return octave_value ();
+        }
+
+      flags = args(2).int_value ();
+    }
+
+  // Determine the socket on which to operate
+  const int s = get_socket (args(0));
+  if (s == -1)
+    {
+      error ("recv: S must be a valid socket");
+      return octave_value ();
+    }
+
+  if (! args(1).is_real_scalar ())
+    {
+      error ("recv: LEN must be a non-negative integer");
+      return octave_value (-1);
+    }
+
+  const long len = args(1).int_value ();
+  if (len < 0)
+    {
+      error ("recv: LEN must be a non-negative integer");
+      return octave_value(-1);
+    }
+
+  struct sockaddr_in src_addr;
+#ifndef __WIN32__
+  socklen_t addrlen = sizeof(src_addr);
+#else
+  int addrlen = sizeof(src_addr);
+#endif
+
+  OCTAVE_LOCAL_BUFFER (unsigned char, buf, len);
+#ifndef __WIN32__
+  retval = ::recvfrom( s, buf, len, flags, (sockaddr*)&src_addr, &addrlen );
+#else
+  retval = ::recvfrom( s, ( char* )buf, len, flags, (sockaddr*)&src_addr, &addrlen );
+#endif
+
+  octave_value_list return_list;
+  uint8NDArray data;
+
+  octave_scalar_map client_info_map;
+
+  //always return the status in the second output parameter
+  return_list(1) = retval;
+  return_list(2) = client_info_map;
+  if (retval <= 0)
+    // We get -1 if an error occurs,or if there is no data and the
+    // socket is non-blocking. We should return in both cases.
+    // We get 0 if the peer has shut down.
+    return_list(0) = data;
+  else
+    {
+      //Normal behaviour. Copy the buffer to the output variable. For
+      //backward compatibility, a row vector is returned.
+      data.resize (dim_vector (1, retval));
+      octave_uint8* data_fvec = data.fortran_vec ();
+      for (int i = 0 ; i < retval ; i++)
+        data_fvec[i] = buf[i];
+
+      return_list(0) = data;
+
+      client_info_map.assign ("family", octave_value (src_addr.sin_family));
+      client_info_map.assign ("port", octave_value (htons(src_addr.sin_port)));
+      client_info_map.assign ("addr", octave_value (inet_ntoa(src_addr.sin_addr)));
+      return_list(2) = client_info_map;
+    }
+  return return_list;
+}
+
+
 
 /*
 
@@ -794,5 +1035,26 @@ See the @command{accept} man pages for further details.\n\
 %! assert (disconnect (server_data), 0);
 %! assert (disconnect (server), 0);
 
+%!test
+%! ## UDP
+%! sock = socket (AF_INET, SOCK_DGRAM, 0);
+%! assert (sock >= 0);
+%!
+%! rc = bind (sock, 9001);
+%! assert (rc, 0);
+%!
+%! msg = "Hello socket-land!";
+%! addrinfo = struct ("addr", "127.0.0.1", "port", 9001);
+%! rc = sendto (sock, msg, 0, addrinfo);
+%! assert (rc,length (msg));
+%!
+%! [msg_c, len_c, addr_c] = recvfrom (sock, 100);
+%! assert (msg_c != -1);
+%! assert (len_c, length (msg));
+%! assert (addr_c.port, 9001);
+%!
+%! assert (msg, num2str (msg_c, "%c"));
+%!
+%! assert (disconnect (sock), 0);
 */
 

@@ -1,3 +1,8 @@
+Summary of important user-visible changes for sockets 1.2.1+:
+-------------------------------------------------------------------
+
+ ** added new functions: sendto, recvfrom
+
 Summary of important user-visible changes for sockets 1.2.1:
 -------------------------------------------------------------------
 
