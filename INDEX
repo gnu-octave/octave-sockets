@@ -11,6 +11,8 @@ Sockets
   recvfrom
   gethostbyname
   listen
+  getsockopt
+  setsockopt
 Socket constants
   AF_LOCAL
   AF_UNIX
@@ -24,4 +26,6 @@ Socket constants
   MSG_PEEK
   MSG_DONTWAIT
   MSG_WAITALL
-
+  SOL_SOCKET
+  SO_KEEPALIVE
+  SO_REUSEADDR

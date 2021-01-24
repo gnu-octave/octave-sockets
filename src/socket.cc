@@ -43,8 +43,10 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
+#define SOCK_OPT_TYPE void*
 #else
-typedef unsigned int socklen_t;
+typedef int socklen_t;
+#define SOCK_OPT_TYPE char*
 #include <winsock2.h>
 #endif
 #include <errno.h>
@@ -116,6 +118,22 @@ DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT );
 // PKG_DEL: try; autoload ("MSG_WAITALL", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL );
 #endif
+
+// PKG_ADD: autoload ("SOL_SOCKET", which ("socket"));
+// PKG_DEL: try; autoload ("SOL_SOCKET", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SOL_SOCKET );
+
+// PKG_ADD: autoload ("SO_KEEPALIVE", which ("socket"));
+// PKG_DEL: try; autoload ("SO_KEEPALIVE", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SO_KEEPALIVE );
+
+// PKG_ADD: autoload ("SO_REUSEADDR", which ("socket"));
+// PKG_DEL: try; autoload ("SO_REUSEADDR", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SO_REUSEADDR );
+
+// PKG_ADD: autoload ("SO_TYPE", which ("socket"));
+// PKG_DEL: try; autoload ("SO_TYPE", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SO_TYPE );
 
 //we need to keep track if sockets has been loaded, as it
 //requires initialization on windows platforms.
@@ -980,7 +998,179 @@ See the @command{recvfrom} man pages for further details.\n\
   return return_list;
 }
 
+// PKG_ADD: autoload ("getsockopt", which ("socket"));
+// PKG_DEL: try; autoload ("getsockopt", which ("socket"), "remove"); catch; end;
+// function to get socket option
+DEFUN_DLD(getsockopt,args,nargout, "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {[@var{data}, @var{status}] =} getsockopt (@var{s}, @var{level}, @var{optname})\n\
+Get a socket option value from a socket.\n\
+\n\
+Returns the value of @var{level} @{optname} from the socket @var{s}.\n\
+\n\
+Data type depends on the option used. @var{status} returns as  0 if no error.\n\
+\n\
+See the @command{getsockopt} man pages for further details.\n\
+\n\
+@end deftypefn")
+{
+  if (args.length () != 3)
+    {
+      print_usage ();
+      return octave_value ();
+    }
 
+  // Determine the socket on which to operate
+  const int s = get_socket (args(0));
+  if (s == -1)
+    {
+      error ("getsockopt: S must be a valid socket");
+      return octave_value ();
+    }
+
+  if (! args(1).is_real_scalar ())
+    {
+      error ("getsockopt: LEVEL must be a scalar integer");
+      return octave_value (-1);
+    }
+
+  if (! args(2).is_real_scalar ())
+    {
+      error ("getsockopt: OPTNAME must be a scalar integer");
+      return octave_value (-1);
+    }
+
+  const int level = args(1).int_value ();
+  const int optname = args(2).int_value ();
+
+  if (level != SOL_SOCKET)
+    {
+      error ("getsockopt: currently only a level of SOL_SOCKET is supported");
+      return octave_value (-1);
+    }
+
+  socklen_t optlen;
+  SOCK_OPT_TYPE optvalue;
+#ifndef __WIN32__
+  int ivalue = 0;
+#else
+  DWORD ivalue = 0;
+#endif
+
+  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE)
+    {
+      optlen = sizeof(ivalue);
+      optvalue = (SOCK_OPT_TYPE)&ivalue;
+    }
+  else
+    {
+      error ("getsockopt: currently unimplmented or unknown socket optname");
+      return octave_value (-1);
+    }
+
+  int result = ::getsockopt( s, level, optname, optvalue, &optlen);
+
+  octave_value value;
+
+  if(result == 0)
+    {
+      if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE)
+        value = octave_value(ivalue);
+    }
+
+  // returns the accepted socket and a clientinfo structure
+  octave_value_list return_list;
+  return_list(0) = value;
+  return_list(1) = octave_value(result);
+
+  return return_list;
+}
+
+// PKG_ADD: autoload ("setsockopt", which ("socket"));
+// PKG_DEL: try; autoload ("setsockopt", which ("socket"), "remove"); catch; end;
+// function to get socket option
+DEFUN_DLD(setsockopt,args,nargout, "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {@var{status} =} setsockopt (@var{s}, @var{level}, @var{optname}, @var{optvalue})\n\
+Set a socket option value on a socket.\n\
+\n\
+@var{status} returns as  0 if no error.\n\
+\n\
+See the @command{setsockopt} man pages for further details.\n\
+\n\
+@end deftypefn")
+{
+  if (args.length () != 4)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
+  // Determine the socket on which to operate
+  const int s = get_socket (args(0));
+  if (s == -1)
+    {
+      error ("setsockopt: S must be a valid socket");
+      return octave_value ();
+    }
+
+  if (! args(1).is_real_scalar ())
+    {
+      error ("setsockopt: LEVEL must be a scalar integer");
+      return octave_value (-1);
+    }
+
+  if (! args(2).is_real_scalar ())
+    {
+      error ("setsockopt: OPTNAME must be a scalar integer");
+      return octave_value (-1);
+    }
+
+  const int level = args(1).int_value ();
+  const int optname = args(2).int_value ();
+
+  if (level != SOL_SOCKET)
+    {
+      error ("setsockopt: currently only a level of SOL_SOCKET is supported");
+      return octave_value (-1);
+    }
+
+  socklen_t optlen;
+  SOCK_OPT_TYPE optvalue;
+#ifndef __WIN32__
+  int ivalue = 0;
+#else
+  DWORD ivalue = 0;
+#endif
+
+  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR)
+    {
+      if (! args(3).is_real_scalar ())
+        {
+          error ("setsockopt: OPTVALUE must be a scalar integer");
+          return octave_value (-1);
+        }
+
+      ivalue = args(3).int_value ();
+
+      optlen = sizeof(ivalue);
+      optvalue = (SOCK_OPT_TYPE)&ivalue;
+    }
+  else if (optname == SO_TYPE)
+    {
+      error ("setsockopt: can not set SO_TYPE");
+      return octave_value (-1);
+    }
+  else
+    {
+      error ("setsockopt: currently unimplemented or unknown socket optname");
+      return octave_value (-1);
+    }
+
+  int result = ::setsockopt( s, level, optname, optvalue, optlen);
+
+  return octave_value(result);
+}
 
 /*
 
@@ -1056,5 +1246,13 @@ See the @command{recvfrom} man pages for further details.\n\
 %! assert (msg, num2str (msg_c, "%c"));
 %!
 %! assert (disconnect (sock), 0);
+
+%!test
+%! assert (SOL_SOCKET != 0)
+%! assert (MSG_WAITALL != 0)
+%! assert (MSG_PEEK != 0)
+%! assert (SO_REUSEADDR != 0)
+%! assert (SO_KEEPALIVE != 0)
+%! assert (SO_TYPE != 0)
 */
 
