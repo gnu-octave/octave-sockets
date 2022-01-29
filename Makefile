@@ -113,6 +113,33 @@ clean-tarballs:
 	-$(RM) $(release_tarball) $(html_tarball)
 	@echo
 
+## doc build rules
+.PHONY: docs
+docs: doc/$(package).pdf
+
+.PHONY: clean-docs
+clean-docs:
+	$(RM) -f doc/$(package).info
+	$(RM) -f doc/$(package).pdf
+	$(RM) -f doc/functions.texi
+	$(RM) -f doc/docs.cpp
+
+doc/$(package).pdf: doc/$(package).texi doc/functions.texi
+	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(package).texi
+	# remove temp files
+	cd doc && $(RM) -f $(package).aux $(package).cp $(package).cps $(package).fn  $(package).fns $(package).log $(package).toc
+
+# mkdocfuns can find some of our #define socket constants
+CONST_DOC=DEFUN_DLD(\1,,,"\\\n-*- texinfo -*-\nSocket constant for \1\n")\n\{\n
+
+doc/functions.texi:
+	# we need make some marked up sources for our basic
+	# mkfuncdocs to find the #defined constants
+	$(SED) -n -e 's/^DEFUN_DLD_SOCKET_CONSTANT(\(.*\)).*/$(CONST_DOC)/p' src/*.cc > doc/docs.cpp
+	cd doc && ./mkfuncdocs.py --src-dir=../src/ --src-dir=. --allowscan ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
+	$(RM) -f docs.cpp
+	$(RM) -f doc/docs.cpp
+
 ## Create the unpacked package.
 ##
 ## Notes:
@@ -146,15 +173,17 @@ endif
 #	cd "$@/src" && ./configure && $(MAKE) prebuild && \
 #	  $(MAKE) clean && $(RM) Makefile
 ##
+	# build docs
+	$(MAKE) -C "$@" docs
 	${FIX_PERMISSIONS} "$@"
 
 run_in_place = $(OCTAVE) --eval ' pkg ("local_list", "$(package_list)"); ' \
                          --eval ' pkg ("load", "$(package)"); '
 
-html_options = --eval 'options = get_html_options ("octave-forge");'
+#html_options = --eval 'options = get_html_options ("octave-forge");'
 ## Uncomment this for package documentation.
-#html_options = --eval 'options = get_html_options ("octave-forge");' \
-#               --eval 'options.package_doc = "$(package).texi";'
+html_options = --eval 'options = get_html_options ("octave-forge");' \
+               --eval 'options.package_doc = "$(package).texi";'
 $(html_dir): $(install_stamp)
 	$(RM) -r "$@";
 	$(run_in_place)                    \
@@ -241,7 +270,7 @@ check: $(install_stamp)
 
 .PHONY: clean
 
-clean: clean-tarballs clean-unpacked-release clean-install
+clean: clean-tarballs clean-unpacked-release clean-install clean-docs
 	test -e $(target_dir)/fntests.log && rm -f $(target_dir)/fntests.log || true
 	@echo "## Removing target directory (if empty)..."
 	test -e $(target_dir) && rmdir $(target_dir) || true

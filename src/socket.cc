@@ -1006,7 +1006,7 @@ DEFUN_DLD(getsockopt,args,nargout, "\
 @deftypefn {Loadable Function} {[@var{data}, @var{status}] =} getsockopt (@var{s}, @var{level}, @var{optname})\n\
 Get a socket option value from a socket.\n\
 \n\
-Returns the value of @var{level} @{optname} from the socket @var{s}.\n\
+Returns the value of @var{level} @var{optname} from the socket @var{s}.\n\
 \n\
 Data type depends on the option used. @var{status} returns as  0 if no error.\n\
 \n\
