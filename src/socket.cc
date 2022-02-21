@@ -135,6 +135,18 @@ DEFUN_DLD_SOCKET_CONSTANT(SO_REUSEADDR );
 // PKG_DEL: try; autoload ("SO_TYPE", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SO_TYPE );
 
+#ifdef SO_DONTROUTE
+// PKG_ADD: try; autoload ("SO_DONTROUTE", which ("socket")); catch; end;
+// PKG_DEL: try; autoload ("SO_DONTROUTE", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SO_DONTROUTE );
+#endif
+
+#ifdef SO_BROADCAST
+// PKG_ADD: try; autoload ("SO_BROADCAST", which ("socket")); catch; end;
+// PKG_DEL: try; autoload ("SO_BROADCAST", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SO_BROADCAST );
+#endif
+
 //we need to keep track if sockets has been loaded, as it
 //requires initialization on windows platforms.
 #ifdef __WIN32__
@@ -1057,7 +1069,7 @@ See the @command{getsockopt} man pages for further details.\n\
   DWORD ivalue = 0;
 #endif
 
-  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE)
+  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE || optname == SO_DONTROUTE || optname == SO_BROADCAST)
     {
       optlen = sizeof(ivalue);
       optvalue = (SOCK_OPT_TYPE)&ivalue;
@@ -1074,7 +1086,7 @@ See the @command{getsockopt} man pages for further details.\n\
 
   if(result == 0)
     {
-      if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE)
+      if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE || optname == SO_DONTROUTE || optname == SO_BROADCAST)
         value = octave_value(ivalue);
     }
 
@@ -1143,7 +1155,7 @@ See the @command{setsockopt} man pages for further details.\n\
   DWORD ivalue = 0;
 #endif
 
-  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR)
+  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_DONTROUTE || optname == SO_BROADCAST)
     {
       if (! args(3).is_real_scalar ())
         {

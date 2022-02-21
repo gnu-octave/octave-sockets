@@ -1,5 +1,5 @@
 sockets >> Sockets
-Sockets
+Sockets functions
   socket
   bind
   connect
@@ -29,3 +29,5 @@ Socket constants
   SOL_SOCKET
   SO_KEEPALIVE
   SO_REUSEADDR
+  SO_DONTROUTE
+  SO_BROADCAST
