@@ -1,6 +1,6 @@
 Name: sockets
-Version: 1.2.1
-Date: 2020-11-10
+Version: 1.3.0
+Date: 2022-02-22
 Author: John Swensen <jpswensen@comcast.net>
 Maintainer: Octave-Forge community <maintainers@octave.org>
 Title: Sockets
