@@ -61,6 +61,11 @@ typedef int socklen_t;
                "socket constant")                          \
   {    return octave_value( name ); };
 
+# define DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(name)\
+  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, \
+               "socket constant")                          \
+  {    error (#name " is not supported on this platform.");   return octave_value(); };
+
 
 // PKG_ADD: autoload ("AF_UNIX", which ("socket"));
 // PKG_DEL: try; autoload ("AF_UNIX", which ("socket"), "remove"); catch; end;
@@ -70,9 +75,7 @@ DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX );
 // PKG_DEL: try; autoload ("AF_LOCAL", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(AF_LOCAL );
 #else
-DEFUNX_DLD ("AF_LOCAL", FAF_LOCAL, GAF_LOCAL, args, nargout, "(not supported)")
-{ error( "AF_LOCAL address family not supported on this platform" );
-  return octave_value(); };
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(AF_LOCAL );
 #endif
 // PKG_ADD: autoload ("AF_INET", which ("socket"));
 // PKG_DEL: try; autoload ("AF_INET", which ("socket"), "remove"); catch; end;
@@ -112,11 +115,16 @@ DEFUN_DLD_SOCKET_CONSTANT(MSG_PEEK );
 // PKG_ADD: autoload ("MSG_DONTWAIT", which ("socket"));
 // PKG_DEL: try; autoload ("MSG_DONTWAIT", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(MSG_DONTWAIT );
+#else
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(MSG_DONTWAIT );
 #endif
 #ifdef MSG_WAITALL
 // PKG_ADD: autoload ("MSG_WAITALL", which ("socket"));
 // PKG_DEL: try; autoload ("MSG_WAITALL", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(MSG_WAITALL );
+#else
+#define MSG_WAITALL -1
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(MSG_WAITALL );
 #endif
 
 // PKG_ADD: autoload ("SOL_SOCKET", which ("socket"));
@@ -136,15 +144,21 @@ DEFUN_DLD_SOCKET_CONSTANT(SO_REUSEADDR );
 DEFUN_DLD_SOCKET_CONSTANT(SO_TYPE );
 
 #ifdef SO_DONTROUTE
-// PKG_ADD: try; autoload ("SO_DONTROUTE", which ("socket")); catch; end;
+// PKG_ADD: autoload ("SO_DONTROUTE", which ("socket"));
 // PKG_DEL: try; autoload ("SO_DONTROUTE", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SO_DONTROUTE );
+#else
+#define SO_DONTROUTE -1
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(SO_DONTROUTE );
 #endif
 
 #ifdef SO_BROADCAST
-// PKG_ADD: try; autoload ("SO_BROADCAST", which ("socket")); catch; end;
+// PKG_ADD: autoload ("SO_BROADCAST", which ("socket"));
 // PKG_DEL: try; autoload ("SO_BROADCAST", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SO_BROADCAST );
+#else
+#define BROADCAST -1
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(SO_BROADCAST );
 #endif
 
 //we need to keep track if sockets has been loaded, as it
