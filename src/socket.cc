@@ -56,6 +56,11 @@ typedef int socklen_t;
  * macro for defining all the socket constants as
  * octave functions.
  */
+# define DEFUN_DLD_SOCKET_CONSTANT_VALUE(name, value)\
+  DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, \
+               "socket constant")                          \
+  {    return octave_value(value); };
+
 # define DEFUN_DLD_SOCKET_CONSTANT(name)\
   DEFUNX_DLD ( #name, F ## name, G ## name, args, nargout, \
                "socket constant")                          \
@@ -160,6 +165,18 @@ DEFUN_DLD_SOCKET_CONSTANT(SO_BROADCAST );
 #define BROADCAST -1
 DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(SO_BROADCAST );
 #endif
+
+// PKG_ADD: autoload ("SHUT_RD", which ("socket"));
+// PKG_DEL: try; autoload ("SHUT_RD", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT_VALUE(SHUT_RD, 0);
+
+// PKG_ADD: autoload ("SHUT_WR", which ("socket"));
+// PKG_DEL: try; autoload ("SHUT_WR", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT_VALUE(SHUT_WR, 1);
+
+// PKG_ADD: autoload ("SHUT_RDWR", which ("socket"));
+// PKG_DEL: try; autoload ("SHUT_RDWR", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT_VALUE(SHUT_RDWR, 2);
 
 //we need to keep track if sockets has been loaded, as it
 //requires initialization on windows platforms.
@@ -1441,6 +1458,54 @@ See the @command{select} man pages for further details.\n\
   return return_list;
 }
 
+// PKG_ADD: autoload ("shutdown", which ("socket"));
+// PKG_DEL: try; autoload ("shutdown", which ("socket"), "remove"); catch; end;
+// function to listen on a socket
+DEFUN_DLD(shutdown, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {} shutdown (@var{s}, @var{how})\n\
+Shutdown all or part of a connection of a socket.\n\
+\n\
+On success, zero is returned.\n\
+\n\
+See the @command{shutdown} man pages for further details.\n\
+\n\
+@end deftypefn")
+{
+  if (args.length() != 2)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
+  // Determine the socket on which to operate
+  const int s = get_socket (args(0));
+  if (s == -1)
+    {
+      error ("shutdown: S must be a valid socket");
+      return octave_value ();
+    }
+
+  if (! args(1).is_real_scalar ())
+    {
+      error ("shutdown: HOW must be an integer scalar");
+      return octave_value (-1);
+    }
+
+  const int how = args(1).int_value ();
+
+  if(how < 0 || how > 2)
+    {
+      error ("shutdown: HOW must be an integer scalar between 0 and 2");
+      return octave_value (-1);
+    }
+
+  const int retval = ::shutdown (s, how);
+  if (retval == -1)
+      error ("shutdown failed with error %i (%s)", errno, strerror(errno));
+
+  return octave_value (retval);
+}
 
 /*
 
@@ -1491,6 +1556,10 @@ See the @command{select} man pages for further details.\n\
 %! ## Compare original string with recv string
 %! assert (msg, num2str (msg_c, "%c"));
 %!
+%! assert (shutdown (client, SHUT_WR), 0);
+%! assert (shutdown (client, SHUT_RD), 0);
+%! assert (shutdown (client, SHUT_RDWR), 0);
+%!
 %! assert (disconnect (client), 0);
 %! assert (disconnect (server_data), 0);
 %! assert (disconnect (server), 0);
@@ -1524,6 +1593,9 @@ See the @command{select} man pages for further details.\n\
 %! assert (SO_REUSEADDR != 0)
 %! assert (SO_KEEPALIVE != 0)
 %! assert (SO_TYPE != 0)
+%! assert (SHUT_RD, 0)
+%! assert (SHUT_WR, 1)
+%! assert (SHUT_RDWR, 2)
 
 %!test
 %! ## select

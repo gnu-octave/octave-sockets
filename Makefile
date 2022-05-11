@@ -136,6 +136,7 @@ doc/functions.texi:
 	# we need make some marked up sources for our basic
 	# mkfuncdocs to find the #defined constants
 	$(SED) -n -e 's/^DEFUN_DLD_SOCKET_CONSTANT(\(.*\)).*/$(CONST_DOC)/p' src/*.cc > doc/docs.cpp
+	$(SED) -n -e 's/^DEFUN_DLD_SOCKET_CONSTANT_VALUE(\([^,]*\).*/$(CONST_DOC)/p' src/*.cc >> doc/docs.cpp
 	cd doc && ./mkfuncdocs.py --src-dir=../src/ --src-dir=. --allowscan ../INDEX | $(SED) 's/@seealso/@xseealso/g' > functions.texi
 	$(RM) -f docs.cpp
 	$(RM) -f doc/docs.cpp

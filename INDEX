@@ -14,6 +14,7 @@ Sockets functions
   listen
   getsockopt
   setsockopt
+  shutdown
 Socket constants
   AF_LOCAL
   AF_UNIX
@@ -27,6 +28,9 @@ Socket constants
   MSG_PEEK
   MSG_DONTWAIT
   MSG_WAITALL
+  SHUT_RD
+  SHUT_RDWR
+  SHUT_WR
   SOL_SOCKET
   SO_KEEPALIVE
   SO_REUSEADDR
