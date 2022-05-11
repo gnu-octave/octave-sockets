@@ -4,6 +4,8 @@ Summary of important user-visible changes for sockets 1.3.0+:
  ** Socket constants that are OS dependant will show an error if not 
     available instead of not existing. (Bug #51273)
 
+ ** added new functions: select
+
 Summary of important user-visible changes for sockets 1.3.0:
 -------------------------------------------------------------------
 

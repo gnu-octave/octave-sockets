@@ -1198,6 +1198,250 @@ See the @command{setsockopt} man pages for further details.\n\
   return octave_value(result);
 }
 
+// PKG_ADD: autoload ("select", which ("socket"));
+// PKG_DEL: try; autoload ("select", which ("socket"), "remove"); catch; end;
+// function wait for data on a socket
+DEFUN_DLD(select,args,nargout, "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {[@var{status}, @var{rfdset}, @var{wfdset}] =} select (@var{nfds}, @var{rfdset}, @var{wfdset}, @var{efdset}, @var{timeout})\n\
+Wait for socket activity on selected sockets.\n\
+\n\
+The fdsets are vectors of fds to check, for example [1 2 3]. Empty vectors equate to null.\n\
+\n\
+nfds tests file descriptions in the range of 0 - nfds-1.\n\
+\n\
+Timeout is can be either an real value for number of seconds, a struct with a tm_sec and tm_usec fields, or empty set for null.\n\
+\n\
+@var{status} returns as  0 if timeout, or number of waiting sockets if ok.\n\
+\n\
+See the @command{select} man pages for further details.\n\
+\n\
+@end deftypefn")
+{
+  if (args.length () != 5)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
+  if (! args(0).is_real_scalar ())
+    {
+      error ("select: NFDS must be a scalar integer");
+      return octave_value (-1);
+    }
+
+  if (! args(1).isempty () && ! args(1).is_real_matrix () && ! args(1).is_real_scalar ())
+    {
+      error ("select: RFDS must be a vector");
+      return octave_value (-1);
+    }
+
+  if (! args(2).isempty () && ! args(2).is_real_matrix () && ! args(2).is_real_scalar ())
+    {
+      error ("select: WFDS must be a vector");
+      return octave_value (-1);
+    }
+
+  if (! args(3).isempty () && ! args(3).is_real_matrix () && ! args(3).is_real_scalar ())
+    {
+      error ("select: EFDS must be a vector");
+      return octave_value (-1);
+    }
+
+  // timeout
+  if (! args(4).isempty ())
+    { 
+      if (!args(4).is_real_scalar ())
+        {
+          if (!args(4).isstruct ())
+	    {
+               error ("select: TIMEOUT must be a real value or struct");
+	    }
+	  else
+            {
+               const octave_scalar_map timeout = args(4).scalar_map_value ();
+
+               if(! (timeout.contains ("tv_sec") && timeout.contains ("tv_usec")))
+                 {
+                    error ("select: TIMEOUT must have integer fields \"tv_sec\" and \"tv_usec\"");
+                    return octave_value ();
+                 }
+
+               if(! (timeout.getfield ("tv_sec").is_real_scalar() && timeout.getfield ("tv_usec").is_real_scalar()))
+                 {
+                   error ("select: TIMEOUT must have integer fields \"tv_sec\" and \"tv_usec\"");
+                   return octave_value ();
+                 }
+            }
+	}
+    }
+
+  // verify all the inputs are valid sockets ?
+  fd_set wfdset, rfdset, efdset;
+  fd_set *wfdsetp, *rfdsetp, *efdsetp;
+  FD_ZERO (&wfdset);
+  FD_ZERO (&rfdset);
+  FD_ZERO (&efdset);
+
+  const int nfds = args(0).int_value ();
+
+  if (args(1).isempty())
+    {
+      rfdsetp = NULL;
+    }
+  else
+    {
+      rfdsetp = &rfdset;
+
+      const Array<double> d1 = args(1).vector_value();
+
+      for (octave_idx_type i = 0 ; i < d1.numel(); i++)
+        {
+          FD_SET((int)d1(i), rfdsetp);
+        }
+    }
+
+  if (args(2).isempty())
+    {
+      wfdsetp = NULL;
+    }
+  else
+    {
+      wfdsetp = &wfdset;
+
+      const Array<double> d1 = args(2).vector_value();
+
+      for (octave_idx_type i = 0 ; i < d1.numel(); i++)
+        {
+          FD_SET((int)d1(i), wfdsetp);
+        }
+    }
+
+  if (args(3).isempty())
+    {
+      efdsetp = NULL;
+    }
+  else
+    {
+      efdsetp = &efdset;
+
+      const Array<double> d1 = args(3).vector_value();
+
+      for (octave_idx_type i = 0 ; i < d1.numel(); i++)
+        {
+          FD_SET((int)d1(i), efdsetp);
+        }
+    }
+
+  struct timeval tv;
+  struct timeval *tvp;
+
+  if (args(4).isempty ())
+    { 
+      tvp = NULL;
+    }
+  else if (args(4).is_real_scalar ())
+    {
+      tvp = &tv;
+      double ivalue, fvalue;
+      fvalue = modf(args(4).double_value(), &ivalue);
+      tv.tv_sec = (long)ivalue;
+      tv.tv_usec = (long)(fvalue * 1000000L);
+    }
+  else
+   {
+      tvp = &tv;
+
+      const octave_scalar_map timeout = args(4).scalar_map_value ();
+
+      tv.tv_sec = timeout.getfield ("tv_sec").long_value();
+      tv.tv_usec = timeout.getfield ("tv_usec").long_value();
+    }
+
+  octave_value rret = Matrix(0,0);
+  octave_value wret = Matrix(0,0);
+  octave_value eret = Matrix(0,0);
+
+  int result = ::select( nfds, rfdsetp, wfdsetp, efdsetp, tvp);
+
+  if (result > 0)
+    {
+      if (! args(1).isempty())
+        {
+          const Array<double> d1 = args(1).vector_value();
+          std::vector<double> selfd;
+
+          for (octave_idx_type i = 0 ; i < d1.numel(); i++)
+          {
+            if (FD_ISSET((int)d1(i), rfdsetp))
+	    {
+              selfd.push_back((int)d1(i));
+	    }
+          }
+          MArray<double> arr(dim_vector(1,selfd.size()));
+          for (octave_idx_type i = 0 ; i < (octave_idx_type)selfd.size(); i++)
+	    {
+              arr(i) = selfd[i]; 
+	    }
+	  if (selfd.size() > 0)
+	    rret = arr;
+        }
+
+      if (! args(2).isempty())
+        {
+          const Array<double> d1 = args(2).vector_value();
+          std::vector<double> selfd;
+
+          for (octave_idx_type i = 0 ; i < d1.numel(); i++)
+          {
+            if (FD_ISSET((int)d1(i), wfdsetp))
+	    {
+              selfd.push_back((int)d1(i));
+	    }
+          }
+          MArray<double> arr(dim_vector(1,selfd.size()));
+          for (octave_idx_type i = 0 ; i < (octave_idx_type)selfd.size(); i++)
+	    {
+              arr(i) = selfd[i]; 
+	    }
+	  if (selfd.size() > 0)
+	    wret = arr;
+        }
+
+      if (! args(3).isempty())
+        {
+          const Array<double> d1 = args(3).vector_value();
+          std::vector<double> selfd;
+
+          for (octave_idx_type i = 0 ; i < d1.numel(); i++)
+          {
+            if (FD_ISSET((int)d1(i), efdsetp))
+	    {
+              selfd.push_back((int)d1(i));
+	    }
+          }
+          MArray<double> arr(dim_vector(1,selfd.size()));
+          for (octave_idx_type i = 0 ; i < (octave_idx_type)selfd.size(); i++)
+	    {
+              arr(i) = selfd[i]; 
+	    }
+
+	  if (selfd.size() > 0)
+	    eret = arr;
+        }
+    }
+
+  octave_value_list return_list;
+
+  return_list(0) = octave_value(result);
+  return_list(1) = octave_value(rret);
+  return_list(2) = octave_value(wret);
+  return_list(3) = octave_value(eret);
+
+  return return_list;
+}
+
+
 /*
 
 %!test
@@ -1280,5 +1524,76 @@ See the @command{setsockopt} man pages for further details.\n\
 %! assert (SO_REUSEADDR != 0)
 %! assert (SO_KEEPALIVE != 0)
 %! assert (SO_TYPE != 0)
+
+%!test
+%! ## select
+%! [ret, rdfs, wfds, efds] = select(0, [], [], [], 0);
+%! assert(ret, 0);
+%!
+%! start = tic;
+%! [ret, rdfs, wdfs, edfs] = select(0, [], [], [], 1);
+%! timeout = toc(start);
+%! assert(ret, 0);
+%! assert(rdfs, []);
+%! assert(wdfs, []);
+%! assert(edfs, []);
+%! assert(timeout, 1, 0.01);
+%!
+%! timeout = struct ("tv_sec", 2, "tv_usec", 0);
+%! start = tic;
+%! [ret, rdfs, wdfs, edfs] = select(0, [], [], [], timeout);
+%! timeout = toc(start);
+%! assert(ret, 0);
+%! assert(rdfs, []);
+%! assert(wdfs, []);
+%! assert(edfs, []);
+%! assert(timeout, 2, 0.01);
+%!
+%! sock = socket (AF_INET, SOCK_DGRAM, 0);
+%! assert (sock >= 0);
+%!
+%! rc = bind (sock, 9001);
+%! assert (rc, 0);
+%!
+%! [ret, rdfs, wdfs, edfs] = select(sock+1, [sock], [sock], [sock], 1);
+%! assert(ret, 1);
+%! assert(rdfs, []);
+%! # initial open
+%! assert(wdfs, [sock]);
+%! assert(edfs, []);
+%!
+%! start = tic;
+%! [ret, rdfs, wdfs, edfs] = select(sock+1, [sock], [], [], 1);
+%! timeout = toc(start);
+%! assert(ret, 0);
+%! assert(rdfs, []);
+%! assert(wdfs, []);
+%! assert(edfs, []);
+%! assert(timeout, 1, 0.01);
+%!
+%! msg = "Hello socket-land!";
+%! addrinfo = struct ("addr", "127.0.0.1", "port", 9001);
+%! rc = sendto (sock, msg, 0, addrinfo);
+%! assert (rc,length (msg));
+%! pause(1);
+%!
+%! [ret, rdfs, wdfs, edfs] = select(sock+1, [sock], [], [], .2);
+%! assert(ret, 1);
+%! assert(rdfs, [sock]);
+%! assert(wdfs, []);
+%! assert(edfs, []);
+%!
+%! [msg_c, len_c, addr_c] = recvfrom (sock, 100);
+%! assert (msg_c != -1);
+%! assert (len_c, length (msg));
+%! assert (addr_c.port, 9001);
+%!
+%! [ret, rdfs, wdfs, edfs] = select(sock+1, [sock], [], [], .1);
+%! assert(ret, 0);
+%! assert(rdfs, []);
+%! assert(wdfs, []);
+%! assert(edfs, []);
+%!
+%! assert (disconnect (sock), 0);
 */
 

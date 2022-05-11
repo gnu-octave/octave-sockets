@@ -5,6 +5,7 @@ Sockets functions
   connect
   disconnect
   accept
+  select
   send
   sendto
   recv
