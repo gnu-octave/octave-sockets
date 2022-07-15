@@ -42,7 +42,8 @@ archtests: $(TST_SOURCES)
 
 PHONY: cleanarchtests
 cleanarchtests:
-	rm -f $(TST_SOURCES)
+	-rm -f $(TST_SOURCES)
+	-test -e ../inst/$(ARCHDIR) && rmdir ../inst/$(ARCHDIR) || true
 
 ../inst/$(ARCHDIR):
 	@mkdir -p "$@"
@@ -57,6 +58,9 @@ check: $(OCT)
 
 clean: cleanarchtests
 	-rm -f *.o octave-core octave-workspace core *.oct *~ PKG_ADD
+
+PHONY: distclean
+distclean: clean
 
 #This creates a package for distribution. It requires the checked out hg
 #repo to be named sockets, or that a symlink of name sockets point to the
