@@ -6,7 +6,7 @@
 @c   LANGUAGE=en makeinfo --html --no-split dicom.texi
 
 @c %*** Start of HEADER
-@setfilename dicom.info
+@setfilename sockets.info
 @settitle Octave Sockets - Socket functions for GNU octave.
 @afourpaper
 @paragraphindent 0

@@ -18,6 +18,23 @@ GREP ?= grep
 CUT ?= cut
 TR ?= tr
 TEXI2PDF  ?= texi2pdf -q
+MAKEINFO  ?= makeinfo
+
+# work out a possible help generator
+ifeq ($(strip $(QHELPGENERATOR)),)
+  ifneq ($(shell qhelpgenerator-qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qhelpgenerator-qt5
+  else ifneq ($(shell qcollectiongenerator-qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qcollectiongenerator-qt5
+  #else ifneq ($(shell qhelpgenerator -qt5 -v 2>/dev/null),)
+  # v4 doesnt work
+  #  QHELPGENERATOR = qhelpgenerator -qt5
+  else ifneq ($(shell qcollectiongenerator -qt5 -v 2>/dev/null),)
+    QHELPGENERATOR = qcollectiongenerator -qt5
+  else
+    QHELPGENERATOR = true
+  endif
+endif
 
 ## Note the use of ':=' (immediate set) and not just '=' (lazy set).
 ## http://stackoverflow.com/a/448939/1609556
@@ -115,10 +132,13 @@ clean-tarballs:
 
 ## doc build rules
 .PHONY: docs
-docs: doc/$(package).pdf
+docs: doc/$(package).pdf doc/$(package).info doc/$(package).qhc doc/$(package).html
 
 .PHONY: clean-docs
 clean-docs:
+	$(RM) -f doc/$(package).html
+	$(RM) -f doc/$(package).qhc
+	$(RM) -f doc/$(package).qch
 	$(RM) -f doc/$(package).info
 	$(RM) -f doc/$(package).pdf
 	$(RM) -f doc/functions.texi
@@ -128,6 +148,17 @@ doc/$(package).pdf: doc/$(package).texi doc/functions.texi
 	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(TEXI2PDF) $(package).texi
 	# remove temp files
 	cd doc && $(RM) -f $(package).aux $(package).cp $(package).cps $(package).fn  $(package).fns $(package).log $(package).toc
+
+doc/$(package).html: doc/$(package).texi doc/functions.texi
+	cd doc && SOURCE_DATE_EPOCH=$(HG_TIMESTAMP) $(MAKEINFO) --html --css-ref=$(package).css  --no-split $(package).texi
+
+doc/$(package).qhc: doc/$(package).html
+	# try also create qch file if can
+	cd doc && ./mkqhcp.py $(package) && $(QHELPGENERATOR) $(package).qhcp -o $(package).qhc
+	cd doc && $(RM) -f $(package).qhcp $(package).qhp
+
+doc/$(package).info: doc/$(package).texi doc/functions.texi
+	cd doc && $(MAKEINFO) $(package).texi
 
 # mkdocfuns can find some of our #define socket constants
 CONST_DOC=DEFUN_DLD(\1,,,"\\\n-*- texinfo -*-\nSocket constant for \1\n")\n\{\n
@@ -176,6 +207,8 @@ endif
 ##
 	# build docs
 	$(MAKE) -C "$@" docs
+	# remove dev stuff
+	cd "$@" && $(RM) -rf "devel" && $(RM) -f doc/mkfuncdocs.py doc/mkqhcp.py
 	${FIX_PERMISSIONS} "$@"
 
 run_in_place = $(OCTAVE) --eval ' pkg ("local_list", "$(package_list)"); ' \
@@ -184,7 +217,8 @@ run_in_place = $(OCTAVE) --eval ' pkg ("local_list", "$(package_list)"); ' \
 #html_options = --eval 'options = get_html_options ("octave-forge");'
 ## Uncomment this for package documentation.
 html_options = --eval 'options = get_html_options ("octave-forge");' \
-               --eval 'options.package_doc = "$(package).texi";'
+               --eval 'options.package_doc = "$(package).texi";' \
+	       --eval 'options.package_doc_options = [options.package_doc_options " --css-include=$(package).css"];'
 $(html_dir): $(install_stamp)
 	$(RM) -r "$@";
 	$(run_in_place)                    \
