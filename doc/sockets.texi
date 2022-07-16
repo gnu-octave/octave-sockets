@@ -64,7 +64,7 @@ To download a copy of the @acronym{GNU} Octave Sockets package, please visit
 @ifnottex
 @node Top
 @top Introduction
-The SOckets toolkit is a set of socket routines for GNU Octave
+The Sockets toolkit is a set of socket routines for GNU Octave
 @end ifnottex
 
 @menu
@@ -123,7 +123,7 @@ The toolkit must be loaded on each @acronym{GNU} Octave session.
 @chapter Basic Usage Overview
 @cindex Basic Usage Overview
 
-The sockets tookkit attempts to use function names similar to the standard unix socket
+The sockets toolkit attempts to use function names similar to the standard UNIX socket
 function naming, so functions such as socket, connect, bind, read, write etc are
 available and in general would follow the same flow as if being programmed in C.
 
@@ -132,12 +132,12 @@ available and in general would follow the same flow as if being programmed in C.
 
 s = socket(AF_INET, SOCK_STREAM, 0);
 if s < 0
-  error ("Could not craete a socket")
+  error ("Could not create a socket")
 endif
 
 addr = struct("addr", "google.com", "port", 80);
 if connect(s, addr) < 0
-  error ("Could not craete a socket")
+  error ("Could not create a socket")
 endif
 
 # html request
