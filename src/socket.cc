@@ -17,6 +17,11 @@
 // You should have received a copy of the GNU General Public License along with
 // this program; if not, see <http://www.gnu.org/licenses/>.
 
+// eliminate some compiler warnings
+#ifdef __WIN32__
+#define _NO_SYS_GUID_OPERATOR_EQ_ 1
+#endif
+
 // Octave Includes
 #include <octave/oct.h>
 #include <octave/parse.h>
@@ -51,6 +56,15 @@ typedef int socklen_t;
 #endif
 #include <errno.h>
 #include <string.h>
+
+/*
+ * fixes for older octave
+ */
+#if (OCTAVE_MAJOR_VERSION<4) || ( (OCTAVE_MAJOR_VERSION==4) && (OCTAVE_MINOR_VERSION<4))
+  // changed for 4.4
+  #define isempty is_empty
+  #define isstruct is_map
+#endif
 
 /*
  * macro for defining all the socket constants as
@@ -1599,28 +1613,6 @@ See the @command{shutdown} man pages for further details.\n\
 
 %!test
 %! ## select
-%! [ret, rdfs, wfds, efds] = select(0, [], [], [], 0);
-%! assert(ret, 0);
-%!
-%! start = tic;
-%! [ret, rdfs, wdfs, edfs] = select(0, [], [], [], 1);
-%! timeout = toc(start);
-%! assert(ret, 0);
-%! assert(rdfs, []);
-%! assert(wdfs, []);
-%! assert(edfs, []);
-%! assert(timeout, 1, 0.01);
-%!
-%! timeout = struct ("tv_sec", 2, "tv_usec", 0);
-%! start = tic;
-%! [ret, rdfs, wdfs, edfs] = select(0, [], [], [], timeout);
-%! timeout = toc(start);
-%! assert(ret, 0);
-%! assert(rdfs, []);
-%! assert(wdfs, []);
-%! assert(edfs, []);
-%! assert(timeout, 2, 0.01);
-%!
 %! sock = socket (AF_INET, SOCK_DGRAM, 0);
 %! assert (sock >= 0);
 %!
@@ -1642,6 +1634,16 @@ See the @command{shutdown} man pages for further details.\n\
 %! assert(wdfs, []);
 %! assert(edfs, []);
 %! assert(timeout, 1, 0.01);
+%!
+%! timeout = struct ("tv_sec", 2, "tv_usec", 0);
+%! start = tic;
+%! [ret, rdfs, wdfs, edfs] = select(sock+1, [sock], [], [], timeout);
+%! timeout = toc(start);
+%! assert(ret, 0);
+%! assert(rdfs, []);
+%! assert(wdfs, []);
+%! assert(edfs, []);
+%! assert(timeout, 2, 0.01);
 %!
 %! msg = "Hello socket-land!";
 %! addrinfo = struct ("addr", "127.0.0.1", "port", 9001);
