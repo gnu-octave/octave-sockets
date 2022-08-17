@@ -1234,7 +1234,7 @@ See the @command{setsockopt} man pages for further details.\n\
 // function wait for data on a socket
 DEFUN_DLD(select,args,nargout, "\
 -*- texinfo -*-\n\
-@deftypefn {Loadable Function} {[@var{status}, @var{rfdset}, @var{wfdset}] =} select (@var{nfds}, @var{rfdset}, @var{wfdset}, @var{efdset}, @var{timeout})\n\
+@deftypefn {Loadable Function} {[@var{status}, @var{rfdset}, @var{wfdset}, @var{efdset}] =} select (@var{nfds}, @var{rfdset}, @var{wfdset}, @var{efdset}, @var{timeout})\n\
 Wait for socket activity on selected sockets.\n\
 \n\
 The fdsets are vectors of fds to check, for example [1 2 3]. Empty vectors equate to null.\n\
