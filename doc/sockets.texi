@@ -3,7 +3,7 @@
 @c Octave Sockets - Socket functions for GNU octave.
 
 @c For manually generating the documentation use
-@c   LANGUAGE=en makeinfo --html --no-split dicom.texi
+@c   LANGUAGE=en makeinfo --html --no-split sockets.texi
 
 @c %*** Start of HEADER
 @setfilename sockets.info
