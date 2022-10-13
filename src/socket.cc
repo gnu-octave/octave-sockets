@@ -203,10 +203,10 @@ static bool type_loaded = false;
 // Function to create a socket
 DEFUN_DLD(socket, args, , "\
 -*- texinfo -*-\n\
-@deftypefn  {Loadable Function} {} socket ()\n\
-@deftypefnx {Loadable Function} {} socket (@var{domain})\n\
-@deftypefnx {Loadable Function} {} socket (@var{domain}, @var{type})\n\
-@deftypefnx {Loadable Function} {} socket (@var{domain}, @var{type}, @var{protocol})\n\
+@deftypefn  {Loadable Function} {@var{sock} =} socket ()\n\
+@deftypefnx {Loadable Function} {@var{sock} =} socket (@var{domain})\n\
+@deftypefnx {Loadable Function} {@var{sock} =} socket (@var{domain}, @var{type})\n\
+@deftypefnx {Loadable Function} {@var{sock} =} socket (@var{domain}, @var{type}, @var{protocol})\n\
 Creates a socket.\n\
 \n\
 @var{domain} is an integer, where the value AF_INET\n\
@@ -446,7 +446,7 @@ function to disconnect the socket.\n\
 // function to get a host number from a host name
 DEFUN_DLD(gethostbyname, args, , "\
 -*- texinfo -*-\n\
-@deftypefn {Loadable Function} {} gethostbyname (@var{hostname})\n\
+@deftypefn {Loadable Function} {@var{ipaddres} =} gethostbyname (@var{hostname})\n\
 Return IP address for host name.\n\
 \n\
 For example:\n\
@@ -495,8 +495,8 @@ See the @command{gethostbyname} man pages for details.\n\
 // function to send data over a socket
 DEFUN_DLD(send, args, , "\
 -*- texinfo -*-\n\
-@deftypefn  {Loadable Function} {} send (@var{s}, @var{data})\n\
-@deftypefnx {Loadable Function} {} send (@var{s}, @var{data}, @var{flags})\n\
+@deftypefn  {Loadable Function} {@var{retval} =} send (@var{s}, @var{data})\n\
+@deftypefnx {Loadable Function} @var{retval} ={} send (@var{s}, @var{data}, @var{flags})\n\
 Send data on specified socket.\n\
 \n\
 Sends data on socket @var{s}.  @var{data} should be an uint8 array or\n\
@@ -821,8 +821,8 @@ See the @command{accept} man pages for further details.\n\
 // function to send data over a socket
 DEFUN_DLD(sendto, args, , "\
 -*- texinfo -*-\n\
-@deftypefn {Loadable Function} {} sendto (@var{s}, @var{data}, @var{dest_info})\n\
-@deftypefnx {Loadable Function} {} sendto (@var{s}, @var{data}, @var{flags}, @var{dest_info})\n\
+@deftypefn {Loadable Function} {@var{retval} =} sendto (@var{s}, @var{data}, @var{dest_info})\n\
+@deftypefnx {Loadable Function} {@var{retval} =} sendto (@var{s}, @var{data}, @var{flags}, @var{dest_info})\n\
 Send data on specified socket.\n\
 \n\
 Sends data on socket @var{s} to destination.  @var{data} should be an uint8 array or\n\
