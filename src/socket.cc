@@ -496,7 +496,7 @@ See the @command{gethostbyname} man pages for details.\n\
 DEFUN_DLD(send, args, , "\
 -*- texinfo -*-\n\
 @deftypefn  {Loadable Function} {@var{retval} =} send (@var{s}, @var{data})\n\
-@deftypefnx {Loadable Function} @var{retval} ={} send (@var{s}, @var{data}, @var{flags})\n\
+@deftypefnx {Loadable Function} {@var{retval} =} send (@var{s}, @var{data}, @var{flags})\n\
 Send data on specified socket.\n\
 \n\
 Sends data on socket @var{s}.  @var{data} should be an uint8 array or\n\
