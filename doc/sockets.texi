@@ -59,6 +59,11 @@ To download a copy of the @acronym{GNU} Octave Sockets package, please visit
 @end titlepage
 @c %*** End of TITLEPAGE
 
+@dircategory Math
+@direntry
+* Octave Sockets: (sockets).          Socket functions for GNU octave
+@end direntry
+
 @c %*** Start of BODY
 @contents
 @ifnottex
