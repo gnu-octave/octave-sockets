@@ -176,8 +176,17 @@ DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(SO_DONTROUTE );
 // PKG_DEL: try; autoload ("SO_BROADCAST", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(SO_BROADCAST );
 #else
-#define BROADCAST -1
+#define SO_BROADCAST -1
 DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(SO_BROADCAST );
+#endif
+
+#ifdef SO_DEBUG
+// PKG_ADD: autoload ("SO_DEBUG", which ("socket"));
+// PKG_DEL: try; autoload ("SO_DEBUG", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(SO_DEBUG );
+#else
+#define S_DEBUG -1
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(SO_DEBUG );
 #endif
 
 // PKG_ADD: autoload ("SHUT_RD", which ("socket"));
@@ -1114,7 +1123,8 @@ See the @command{getsockopt} man pages for further details.\n\
   DWORD ivalue = 0;
 #endif
 
-  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE || optname == SO_DONTROUTE || optname == SO_BROADCAST)
+  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE || 
+      optname == SO_DONTROUTE || optname == SO_BROADCAST || optname == SO_DEBUG)
     {
       optlen = sizeof(ivalue);
       optvalue = (SOCK_OPT_TYPE)&ivalue;
@@ -1131,7 +1141,8 @@ See the @command{getsockopt} man pages for further details.\n\
 
   if(result == 0)
     {
-      if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE || optname == SO_DONTROUTE || optname == SO_BROADCAST)
+      if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_TYPE ||
+          optname == SO_DONTROUTE || optname == SO_BROADCAST || optname == SO_DEBUG)
         value = octave_value(ivalue);
     }
 
@@ -1200,7 +1211,8 @@ See the @command{setsockopt} man pages for further details.\n\
   DWORD ivalue = 0;
 #endif
 
-  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_DONTROUTE || optname == SO_BROADCAST)
+  if (optname == SO_KEEPALIVE || optname == SO_REUSEADDR || optname == SO_DONTROUTE ||
+      optname == SO_BROADCAST || optname == SO_DEBUG)
     {
       if (! args(3).is_real_scalar ())
         {
