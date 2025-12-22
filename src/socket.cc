@@ -53,6 +53,7 @@
 typedef int socklen_t;
 #define SOCK_OPT_TYPE char*
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #endif
 #include <errno.h>
 #include <string.h>
@@ -615,8 +616,12 @@ See the @command{getaddrinfo} man pages for details.\n\
  
   freeaddrinfo(result); // free the linked-list
 
+  Cell cell(result_array.size(), 1);
+  for(octave_idx_type i=0; i<(octave_idx_type)result_array.size(); i++)
+    cell(i, 0) = result_array[i];
+    
   octave_value_list ret;
-  ret(0) = Cell(result_array);
+  ret(0) = cell;
   return ret;
 }
  
