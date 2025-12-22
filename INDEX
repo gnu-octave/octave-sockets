@@ -42,3 +42,8 @@ Socket constants
   SO_REUSEADDR
   SO_DONTROUTE
   SO_BROADCAST
+#! Socket protocol constants
+  IPPROTO_IP
+  IPPROTO_ICMP
+  IPPROTO_TCP
+  IPPROTO_UDP

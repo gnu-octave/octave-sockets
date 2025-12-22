@@ -201,6 +201,25 @@ DEFUN_DLD_SOCKET_CONSTANT_VALUE(SHUT_WR, 1);
 // PKG_DEL: try; autoload ("SHUT_RDWR", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT_VALUE(SHUT_RDWR, 2);
 
+// A few well known IPPROTO_ values
+
+// PKG_ADD: autoload ("IPPROTO_IP", which ("socket"));
+// PKG_DEL: try; autoload ("IPPROTO_IP", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(IPPROTO_IP);
+
+// PKG_ADD: autoload ("IPPROTO_ICMP", which ("socket"));
+// PKG_DEL: try; autoload ("IPPROTO_ICMP", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(IPPROTO_ICMP);
+
+// PKG_ADD: autoload ("IPPROTO_TCP", which ("socket"));
+// PKG_DEL: try; autoload ("IPPROTO_TCP", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(IPPROTO_TCP);
+
+// PKG_ADD: autoload ("IPPROTO_UDP", which ("socket"));
+// PKG_DEL: try; autoload ("IPPROTO_UDP", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(IPPROTO_UDP);
+
+
 //we need to keep track if sockets has been loaded, as it
 //requires initialization on windows platforms.
 #ifdef __WIN32__
