@@ -15,6 +15,7 @@ Sockets functions
   getsockopt
   setsockopt
   shutdown
+  getaddrinfo
 Socket constants
 #! Domain constants
   AF_LOCAL

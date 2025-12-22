@@ -450,12 +450,148 @@ function to disconnect the socket.\n\
   return octave_value (retval);
 }
 
+// PKG_ADD: autoload ("getaddrinfo", which ("socket"));
+// PKG_DEL: try; autoload ("getaddrinfo", which ("socket"), "remove"); ; catch; end;
+// function to get a host information from a host name/service
+DEFUN_DLD(getaddrinfo, args, , "\
+-*- texinfo -*-\n\
+@deftypefn {Loadable Function} {@var{addrinforesults} =} getaddrinfo (@var{hostname}, @var{service}, @var{hints})\n\
+Get addressinfo lookup for a a hostname/service.\n\
+\n\
+\n\
+See the @command{getaddrinfo} man pages for details.\n\
+\n\
+@end deftypefn")
+{
+  const int nargin = args.length ();
+
+  if (nargin < 2 || nargin > 3)
+    {
+      print_usage ();
+      return octave_value ();
+    }
+
+  if (! args(0).is_string ())
+    {
+      error ("getaddrinfo: HOSTNAME must be a string");
+      return octave_value ();
+    }
+  const std::string addr = args(0).string_value ();
+
+  if (! args(1).is_string ())
+    {
+      error ("getaddrinfo: SERVICE must be a string");
+      return octave_value ();
+    }
+
+  const std::string service = args(1).string_value ();
+ 
+
+  struct addrinfo hints;
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_INET;    /* ipv4 */
+  hints.ai_socktype = SOCK_STREAM; /* any type */
+  hints.ai_flags = 0; //AI_PASSIVE;    /* For wildcard IP address */
+  hints.ai_protocol = 0;          /* Any protocol */
+  hints.ai_canonname = NULL;
+  hints.ai_addr = NULL;
+  hints.ai_next = NULL;
+
+  if (nargin > 2 && !args(2).isempty())
+    {
+      const octave_scalar_map struct_hint_info = args(2).scalar_map_value ();
+      if (struct_hint_info.nfields () == 0)
+        {
+          error ("getaddrinfo: HINTS must be a struct");
+          return octave_value ();
+        }
+      // family, socktype, flags, protocol
+      if (struct_hint_info.contains ("family"))
+        {
+          if (struct_hint_info.getfield ("family").is_real_scalar ())
+            hints.ai_family = struct_hint_info.getfield ("family").int_value();
+	  else
+            {
+              error ("getaddrinfo: HINTS.family must be an integer value");
+              return octave_value ();
+            }
+        }
+
+      if (struct_hint_info.contains ("socktype"))
+        {
+          if (struct_hint_info.getfield ("socktype").is_real_scalar ())
+            hints.ai_socktype = struct_hint_info.getfield ("socktype").int_value();
+	  else
+            {
+              error ("getaddrinfo: HINTS.socktype must be an integer value");
+              return octave_value ();
+            }
+        }
+
+      if (struct_hint_info.contains ("flags"))
+        {
+          if (struct_hint_info.getfield ("flags").is_real_scalar ())
+            hints.ai_flags = struct_hint_info.getfield ("flags").int_value();
+	  else
+            {
+              error ("getaddrinfo: HINTS.flags must be an integer value");
+              return octave_value ();
+            }
+        }
+
+      if (struct_hint_info.contains ("protocol"))
+        {
+          if (struct_hint_info.getfield ("protocol").is_real_scalar ())
+            hints.ai_protocol = struct_hint_info.getfield ("protocol").int_value();
+	  else
+            {
+              error ("getaddrinfo: HINTS.protocol must be an integer value");
+              return octave_value ();
+            }
+        }
+    }
+
+  int status;
+  struct addrinfo *result, *rp;
+
+  if ((status = getaddrinfo (
+    addr.empty() ? NULL : addr.c_str(),
+    service.empty() ? NULL : service.c_str(),
+    &hints, &result)) != 0)
+    {
+      error ("getaddrinfo: Failed to get info - error %d", status);
+      return octave_value ();
+    }
+
+  std::vector<octave_value> result_array;
+  for (rp = result; rp != NULL; rp = rp->ai_next)
+    {
+      octave_scalar_map  client_info_map;
+      client_info_map.assign ("family", octave_value (rp->ai_family));
+      client_info_map.assign ("socktype", octave_value (rp->ai_socktype));
+      client_info_map.assign ("protocol", octave_value (rp->ai_protocol));
+
+      // there would normally be addr
+      // TODO: depend on family here
+      sockaddr_in * addr = (sockaddr_in*)rp->ai_addr;
+      client_info_map.assign ("port", octave_value (ntohs(addr->sin_port)));
+      client_info_map.assign ("addr", octave_value (inet_ntoa(addr->sin_addr)));
+      result_array.push_back(octave_value(client_info_map));
+    }
+ 
+  freeaddrinfo(result); // free the linked-list
+
+  octave_value_list ret;
+  ret(0) = Cell(result_array);
+  return ret;
+}
+ 
 // PKG_ADD: autoload ("gethostbyname", which ("socket"));
 // PKG_DEL: try; autoload ("gethostbyname", which ("socket"), "remove"); ; catch; end;
 // function to get a host number from a host name
 DEFUN_DLD(gethostbyname, args, , "\
 -*- texinfo -*-\n\
-@deftypefn {Loadable Function} {@var{ipaddres} =} gethostbyname (@var{hostname})\n\
+@deftypefn {Loadable Function} {@var{ipaddress} =} gethostbyname (@var{hostname})\n\
 Return IP address for host name.\n\
 \n\
 For example:\n\

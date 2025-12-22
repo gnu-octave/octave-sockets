@@ -316,10 +316,35 @@ check: $(install_stamp)
 
 .PHONY: clean
 
-clean: clean-tarballs clean-unpacked-release clean-install clean-docs
+clean: clean-tarballs clean-unpacked-release clean-install clean-docs clean-runinplace
 	test -e $(target_dir)/fntests.log && rm -f $(target_dir)/fntests.log || true
 	@echo "## Removing target directory (if empty)..."
 	test -e $(target_dir) && rmdir $(target_dir) || true
 	@echo
 	@echo "## Cleaning done"
 	@echo
+
+
+CC_SOURCES  := $(wildcard src/*.cc)
+M_SOURCES  := $(wildcard inst/*.m)
+PKG_ADD     := $(shell $(GREP) -sPho '(?<=(//|\#\#) PKG_ADD: ).*' \
+                         $(CC_SOURCES) $(M_SOURCES))
+
+ifneq (,$(wildcard $(TOPDIR)/src/Makefile))
+compile-inplace: src/Makefile
+	$(MAKE) -C src
+else
+compile-inplace:
+	# nothing to do ?
+endif
+
+runinplace: compile-inplace
+	$(OCTAVE) --no-gui --silent --persist --path "$(TOPDIR)/inst/" --path "$(TOPDIR)/src/" \
+	  --eval '$(PKG_ADD)'
+
+clean-runinplace:
+ifneq (,$(wildcard $(TOPDIR)/src/Makefile))
+	$(MAKE) -C src clean
+endif
+
+
