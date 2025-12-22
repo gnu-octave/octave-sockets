@@ -87,6 +87,10 @@ typedef int socklen_t;
   {    error (#name " is not supported on this platform.");   return octave_value(); };
 
 
+// PKG_ADD: autoload ("AF_UNSPEC", which ("socket"));
+// PKG_DEL: try; autoload ("AF_UNSPEC", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(AF_UNSPEC );
+
 // PKG_ADD: autoload ("AF_UNIX", which ("socket"));
 // PKG_DEL: try; autoload ("AF_UNIX", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(AF_UNIX );
@@ -220,6 +224,43 @@ DEFUN_DLD_SOCKET_CONSTANT(IPPROTO_TCP);
 // PKG_DEL: try; autoload ("IPPROTO_UDP", which ("socket"), "remove"); catch; end;
 DEFUN_DLD_SOCKET_CONSTANT(IPPROTO_UDP);
 
+// AI flags
+
+// PKG_ADD: autoload ("AI_PASSIVE", which ("socket"));
+// PKG_DEL: try; autoload ("AI_PASSIVE", which ("socket"), "remove"); catch; end;
+DEFUN_DLD_SOCKET_CONSTANT(AI_PASSIVE);
+
+// PKG_ADD: autoload ("AI_NUMERICSERV", which ("socket"));
+// PKG_DEL: try; autoload ("AI_NUMERICSERV", which ("socket"), "remove"); catch; end;
+#ifdef AI_NUMERICSERV
+DEFUN_DLD_SOCKET_CONSTANT(AI_NUMERICSERV);
+#else
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(AI_NUMERICSERV );
+#endif
+
+// PKG_ADD: autoload ("AI_V4MAPPED", which ("socket"));
+// PKG_DEL: try; autoload ("AI_V4MAPPED", which ("socket"), "remove"); catch; end;
+#ifdef AI_V4MAPPED
+DEFUN_DLD_SOCKET_CONSTANT(AI_V4MAPPED);
+#else
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(AI_V4MAPPED);
+#endif
+
+// PKG_ADD: autoload ("AI_ADDRCONFIG", which ("socket"));
+// PKG_DEL: try; autoload ("AI_ADDRCONFIG", which ("socket"), "remove"); catch; end;
+#ifdef AI_ADDRCONFIG
+DEFUN_DLD_SOCKET_CONSTANT(AI_ADDRCONFIG);
+#else
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(AI_ADDRCONFIG);
+#endif
+
+// PKG_ADD: autoload ("AI_ALL", which ("socket"));
+// PKG_DEL: try; autoload ("AI_ALL", which ("socket"), "remove"); catch; end;
+#ifdef AI_ALL
+DEFUN_DLD_SOCKET_CONSTANT(AI_ALL);
+#else
+DEFUN_DLD_UNIMPLMENTED_SOCKET_CONSTANT(AI_ALL);
+#endif
 
 //we need to keep track if sockets has been loaded, as it
 //requires initialization on windows platforms.
@@ -493,6 +534,20 @@ a string with the host name to send to\n\
 @item port\n\
 the port number to send to (an integer)\n\
 @end table\n\
+\n\
+hints is optional with one or more fields:\n\
+\n\
+@table @code\n\
+@item family\n\
+Integer family value\n\
+@item socktype\n\
+Integer socktype value\n\
+@item protocol\n\
+Integer protocol value\n\
+@item flags\n\
+a integer ai flags\n\
+@end table\n\
+\
 \n\
 See the @command{getaddrinfo} man pages for details.\n\
 \n\

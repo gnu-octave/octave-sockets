@@ -17,11 +17,12 @@ Sockets functions
   shutdown
   getaddrinfo
 Socket constants
-#! Domain constants
+#! Domain family constants
   AF_LOCAL
   AF_UNIX
   AF_INET
   AF_APPLETALK
+  AF_UNSPEC
 #! Socket Type constants
   SOCK_STREAM
   SOCK_DGRAM
@@ -47,3 +48,9 @@ Socket constants
   IPPROTO_ICMP
   IPPROTO_TCP
   IPPROTO_UDP
+#! Socket getaddrinfo flag constants
+  AI_PASSIVE
+  AI_NUMERICSERV
+  AI_V4MAPPED
+  AI_ADDRCONFIG
+  AI_ALL
