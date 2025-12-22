@@ -16,21 +16,26 @@ Sockets functions
   setsockopt
   shutdown
 Socket constants
+#! Domain constants
   AF_LOCAL
   AF_UNIX
   AF_INET
   AF_APPLETALK
+#! Socket Type constants
   SOCK_STREAM
   SOCK_DGRAM
   SOCK_SEQPACKET
   SOCK_RAW
   SOCK_RDM
+#! Send/Recv Flag constants
   MSG_PEEK
   MSG_DONTWAIT
   MSG_WAITALL
+#! Shutdown how constants
   SHUT_RD
   SHUT_RDWR
   SHUT_WR
+#! Set/getsockopt constants
   SOL_SOCKET
   SO_KEEPALIVE
   SO_REUSEADDR
