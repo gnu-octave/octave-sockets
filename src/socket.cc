@@ -475,8 +475,23 @@ function to disconnect the socket.\n\
 DEFUN_DLD(getaddrinfo, args, , "\
 -*- texinfo -*-\n\
 @deftypefn {Loadable Function} {@var{addrinforesults} =} getaddrinfo (@var{hostname}, @var{service}, @var{hints})\n\
-Get addressinfo lookup for a a hostname/service.\n\
+Get addressinfo lookup for a hostname/service.\n\
 \n\
+Returns an array of addressinfo structs with the following fields:\n\
+\n\
+@table @code\n\
+@item family\n\
+Integer family value\n\
+@item socktype\n\
+Integer socktype value\n\
+@item protocol\n\
+Integer protocol value\n\
+@item addr\n\
+a string with the host name to send to\n\
+\n\
+@item port\n\
+the port number to send to (an integer)\n\
+@end table\n\
 \n\
 See the @command{getaddrinfo} man pages for details.\n\
 \n\
