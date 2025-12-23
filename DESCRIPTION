@@ -10,3 +10,4 @@ Depends: octave (>= 3.6.0)
 License: GPLv3+
 Url: https://gnu-octave.github.io/octave-sockets/
 Repository: https://github.com/gnu-octave/octave-sockets/
+Tracker: https://github.com/gnu-octave/octave-sockets/issues
