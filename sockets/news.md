@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/news/"
 title: "Sockets Toolkit - News"
 pkg_name: "sockets"
-version: "1.4.1"
+version: "1.5.0"
 description: "Socket functions for networking from within octave."
 navigation:
 - id: "overview"
@@ -19,6 +19,15 @@ navigation:
   url: "/manual"
 ---
 <pre>
+Summary of important user-visible changes for sockets 1.5.0
+-------------------------------------------------------------------
+
+ ** Minor documentation updates
+
+ ** Added additional IPPROTO_ and AI_ constants
+
+ ** Added getaddrinfo function
+
 Summary of important user-visible changes for sockets 1.4.1
 -------------------------------------------------------------------
 

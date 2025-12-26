@@ -1,12 +1,12 @@
 ---
 layout: "default"
-permalink: "/functions/12_SOKEEPALIVE/"
+permalink: "/functions/12_IPPROTOICMP/"
 pkg_name: "sockets"
 pkg_version: "1.5.0"
 pkg_description: "Socket functions for networking from within octave."
-title: "Sockets Toolkit - SO_KEEPALIVE"
+title: "Sockets Toolkit - IPPROTO_ICMP"
 category: "Socket constants"
-func_name: "SO_KEEPALIVE"
+func_name: "IPPROTO_ICMP"
 navigation:
 - id: "overview"
   name: "Overview"

@@ -1,12 +1,12 @@
 ---
 layout: "default"
-permalink: "/functions/12_SOKEEPALIVE/"
+permalink: "/functions/6_AIALL/"
 pkg_name: "sockets"
 pkg_version: "1.5.0"
 pkg_description: "Socket functions for networking from within octave."
-title: "Sockets Toolkit - SO_KEEPALIVE"
+title: "Sockets Toolkit - AI_ALL"
 category: "Socket constants"
-func_name: "SO_KEEPALIVE"
+func_name: "AI_ALL"
 navigation:
 - id: "overview"
   name: "Overview"

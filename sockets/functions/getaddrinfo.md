@@ -1,12 +1,12 @@
 ---
 layout: "default"
-permalink: "/functions/12_SOKEEPALIVE/"
+permalink: "/functions/11_getaddrinfo/"
 pkg_name: "sockets"
 pkg_version: "1.5.0"
 pkg_description: "Socket functions for networking from within octave."
-title: "Sockets Toolkit - SO_KEEPALIVE"
+title: "Sockets Toolkit - getaddrinfo"
 category: "Socket constants"
-func_name: "SO_KEEPALIVE"
+func_name: "getaddrinfo"
 navigation:
 - id: "overview"
   name: "Overview"
@@ -50,4 +50,48 @@ navigation:
   name: "Manual"
   url: "/manual"
 ---
-<pre>socket constant</pre>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-getaddrinfo"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">addrinforesults</var> =</code> <strong class="def-name">getaddrinfo</strong> <code class="def-code-arguments">(<var class="var">hostname</var>, <var class="var">service</var>, <var class="var">hints</var>)</code><a class="copiable-link" href="#index-getaddrinfo"></a></span></dt>
+<dd><p>Get addressinfo lookup for a hostname/service.
+</p>
+<p>Returns an array of addressinfo structs with the following fields:
+</p>
+<dl class="table">
+<dt><code class="code">family</code></dt>
+<dd><p>Integer family value
+</p></dd>
+<dt><code class="code">socktype</code></dt>
+<dd><p>Integer socktype value
+</p></dd>
+<dt><code class="code">protocol</code></dt>
+<dd><p>Integer protocol value
+</p></dd>
+<dt><code class="code">addr</code></dt>
+<dd><p>a string with the host name to send to
+</p>
+</dd>
+<dt><code class="code">port</code></dt>
+<dd><p>the port number to send to (an integer)
+</p></dd>
+</dl>
+
+<p>hints is optional with one or more fields:
+</p>
+<dl class="table">
+<dt><code class="code">family</code></dt>
+<dd><p>Integer family value
+</p></dd>
+<dt><code class="code">socktype</code></dt>
+<dd><p>Integer socktype value
+</p></dd>
+<dt><code class="code">protocol</code></dt>
+<dd><p>Integer protocol value
+</p></dd>
+<dt><code class="code">flags</code></dt>
+<dd><p>a integer ai flags
+</p></dd>
+</dl>
+
+<p>See the <code class="command">getaddrinfo</code> man pages for details.
+</p>
+</dd></dl>

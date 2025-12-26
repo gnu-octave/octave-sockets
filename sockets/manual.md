@@ -3,7 +3,7 @@ layout: "default"
 permalink: "/manual/"
 title: "Sockets Toolkit - Manual"
 pkg_name: "sockets"
-version: "1.4.1"
+version: "1.5.0"
 description: "Socket functions for networking from within octave."
 navigation:
 - id: "overview"
@@ -28,79 +28,103 @@ navigation:
   url: "/manual/#Function-Reference-1"
 ---
 <div class="top-level-extent" id="Top">
-<div class="nav-panel">
-<p>
-Next: <a href="#Installing-and-loading" accesskey="n" rel="next">Installing and loading</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h1 class="top" id="Introduction">Introduction</h1>
 <p>The Sockets toolkit is a set of socket routines for GNU Octave
 </p>
-<div class="element-contents" id="SEC_Contents">
+<div class="region-contents" id="SEC_Contents">
 <h2 class="contents-heading">Table of Contents</h2>
 <div class="contents">
 <ul class="toc-numbered-mark">
-  <li><a id="toc-Installing-and-loading-1" href="#Installing-and-loading">1 Installing and loading</a>
+  <li><a id="toc-Installing-and-loading" href="#Installing-and-loading">1 Installing and loading</a>
   <ul class="toc-numbered-mark">
     <li><a id="toc-Online-Direct-install" href="#Online-Direct-install">1.1 Online Direct install</a></li>
     <li><a id="toc-Off_002dline-install" href="#Off_002dline-install">1.2 Off-line install</a></li>
     <li><a id="toc-Loading" href="#Loading">1.3 Loading</a></li>
   </ul></li>
-  <li><a id="toc-Basic-Usage-Overview-1" href="#Basic-Usage-Overview">2 Basic Usage Overview</a></li>
-  <li><a id="toc-Function-Reference-1" href="#Function-Reference">3 Function Reference</a>
+  <li><a id="toc-Basic-Usage-Overview" href="#Basic-Usage-Overview">2 Basic Usage Overview</a></li>
+  <li><a id="toc-Function-Reference" href="#Function-Reference">3 Function Reference</a>
   <ul class="toc-numbered-mark">
-    <li><a id="toc-Sockets-functions-1" href="#Sockets-functions">3.1 Sockets functions</a>
+    <li><a id="toc-Sockets-functions" href="#Sockets-functions">3.1 Sockets functions</a>
     <ul class="toc-numbered-mark">
       <li><a id="toc-accept" href="#accept">3.1.1 accept</a></li>
       <li><a id="toc-bind" href="#bind">3.1.2 bind</a></li>
       <li><a id="toc-connect" href="#connect">3.1.3 connect</a></li>
       <li><a id="toc-disconnect" href="#disconnect">3.1.4 disconnect</a></li>
-      <li><a id="toc-gethostbyname" href="#gethostbyname">3.1.5 gethostbyname</a></li>
-      <li><a id="toc-getsockopt" href="#getsockopt">3.1.6 getsockopt</a></li>
-      <li><a id="toc-listen" href="#listen">3.1.7 listen</a></li>
-      <li><a id="toc-recv" href="#recv">3.1.8 recv</a></li>
-      <li><a id="toc-recvfrom" href="#recvfrom">3.1.9 recvfrom</a></li>
-      <li><a id="toc-select" href="#select">3.1.10 select</a></li>
-      <li><a id="toc-send" href="#send">3.1.11 send</a></li>
-      <li><a id="toc-sendto" href="#sendto">3.1.12 sendto</a></li>
-      <li><a id="toc-setsockopt" href="#setsockopt">3.1.13 setsockopt</a></li>
-      <li><a id="toc-shutdown" href="#shutdown">3.1.14 shutdown</a></li>
-      <li><a id="toc-socket" href="#socket">3.1.15 socket</a></li>
+      <li><a id="toc-getaddrinfo" href="#getaddrinfo">3.1.5 getaddrinfo</a></li>
+      <li><a id="toc-gethostbyname" href="#gethostbyname">3.1.6 gethostbyname</a></li>
+      <li><a id="toc-getsockopt" href="#getsockopt">3.1.7 getsockopt</a></li>
+      <li><a id="toc-listen" href="#listen">3.1.8 listen</a></li>
+      <li><a id="toc-recv" href="#recv">3.1.9 recv</a></li>
+      <li><a id="toc-recvfrom" href="#recvfrom">3.1.10 recvfrom</a></li>
+      <li><a id="toc-select" href="#select">3.1.11 select</a></li>
+      <li><a id="toc-send" href="#send">3.1.12 send</a></li>
+      <li><a id="toc-sendto" href="#sendto">3.1.13 sendto</a></li>
+      <li><a id="toc-setsockopt" href="#setsockopt">3.1.14 setsockopt</a></li>
+      <li><a id="toc-shutdown" href="#shutdown">3.1.15 shutdown</a></li>
+      <li><a id="toc-socket" href="#socket">3.1.16 socket</a></li>
     </ul></li>
-    <li><a id="toc-Socket-constants-1" href="#Socket-constants">3.2 Socket constants</a>
+    <li><a id="toc-Socket-constants" href="#Socket-constants">3.2 Socket constants</a>
     <ul class="toc-numbered-mark">
-      <li><a id="toc-AF_005fAPPLETALK" href="#AF_005fAPPLETALK">3.2.1 AF_APPLETALK</a></li>
-      <li><a id="toc-AF_005fINET" href="#AF_005fINET">3.2.2 AF_INET</a></li>
-      <li><a id="toc-AF_005fLOCAL" href="#AF_005fLOCAL">3.2.3 AF_LOCAL</a></li>
-      <li><a id="toc-AF_005fUNIX" href="#AF_005fUNIX">3.2.4 AF_UNIX</a></li>
-      <li><a id="toc-MSG_005fDONTWAIT" href="#MSG_005fDONTWAIT">3.2.5 MSG_DONTWAIT</a></li>
-      <li><a id="toc-MSG_005fPEEK" href="#MSG_005fPEEK">3.2.6 MSG_PEEK</a></li>
-      <li><a id="toc-MSG_005fWAITALL" href="#MSG_005fWAITALL">3.2.7 MSG_WAITALL</a></li>
-      <li><a id="toc-SHUT_005fRD" href="#SHUT_005fRD">3.2.8 SHUT_RD</a></li>
-      <li><a id="toc-SHUT_005fRDWR" href="#SHUT_005fRDWR">3.2.9 SHUT_RDWR</a></li>
-      <li><a id="toc-SHUT_005fWR" href="#SHUT_005fWR">3.2.10 SHUT_WR</a></li>
-      <li><a id="toc-SOCK_005fDGRAM" href="#SOCK_005fDGRAM">3.2.11 SOCK_DGRAM</a></li>
-      <li><a id="toc-SOCK_005fRAW" href="#SOCK_005fRAW">3.2.12 SOCK_RAW</a></li>
-      <li><a id="toc-SOCK_005fRDM" href="#SOCK_005fRDM">3.2.13 SOCK_RDM</a></li>
-      <li><a id="toc-SOCK_005fSEQPACKET" href="#SOCK_005fSEQPACKET">3.2.14 SOCK_SEQPACKET</a></li>
-      <li><a id="toc-SOCK_005fSTREAM" href="#SOCK_005fSTREAM">3.2.15 SOCK_STREAM</a></li>
-      <li><a id="toc-SOL_005fSOCKET" href="#SOL_005fSOCKET">3.2.16 SOL_SOCKET</a></li>
-      <li><a id="toc-SO_005fBROADCAST" href="#SO_005fBROADCAST">3.2.17 SO_BROADCAST</a></li>
-      <li><a id="toc-SO_005fDONTROUTE" href="#SO_005fDONTROUTE">3.2.18 SO_DONTROUTE</a></li>
-      <li><a id="toc-SO_005fKEEPALIVE" href="#SO_005fKEEPALIVE">3.2.19 SO_KEEPALIVE</a></li>
-      <li><a id="toc-SO_005fREUSEADDR" href="#SO_005fREUSEADDR">3.2.20 SO_REUSEADDR</a></li>
+      <li><a id="toc-Domain-family-constants" href="#Socket-constants-_002d-Domain-family-constants">3.2.1 Domain family constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-AF_005fAPPLETALK" href="#AF_005fAPPLETALK">3.2.1.1 AF_APPLETALK</a></li>
+        <li><a id="toc-AF_005fINET" href="#AF_005fINET">3.2.1.2 AF_INET</a></li>
+        <li><a id="toc-AF_005fLOCAL" href="#AF_005fLOCAL">3.2.1.3 AF_LOCAL</a></li>
+        <li><a id="toc-AF_005fUNIX" href="#AF_005fUNIX">3.2.1.4 AF_UNIX</a></li>
+        <li><a id="toc-AF_005fUNSPEC" href="#AF_005fUNSPEC">3.2.1.5 AF_UNSPEC</a></li>
+      </ul></li>
+      <li><a id="toc-Socket-Type-constants" href="#Socket-constants-_002d-Socket-Type-constants">3.2.2 Socket Type constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-SOCK_005fDGRAM" href="#SOCK_005fDGRAM">3.2.2.1 SOCK_DGRAM</a></li>
+        <li><a id="toc-SOCK_005fRAW" href="#SOCK_005fRAW">3.2.2.2 SOCK_RAW</a></li>
+        <li><a id="toc-SOCK_005fRDM" href="#SOCK_005fRDM">3.2.2.3 SOCK_RDM</a></li>
+        <li><a id="toc-SOCK_005fSEQPACKET" href="#SOCK_005fSEQPACKET">3.2.2.4 SOCK_SEQPACKET</a></li>
+        <li><a id="toc-SOCK_005fSTREAM" href="#SOCK_005fSTREAM">3.2.2.5 SOCK_STREAM</a></li>
+      </ul></li>
+      <li><a id="toc-Send_002fRecv-Flag-constants" href="#Socket-constants-_002d-Send_002fRecv-Flag-constants">3.2.3 Send/Recv Flag constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-MSG_005fDONTWAIT" href="#MSG_005fDONTWAIT">3.2.3.1 MSG_DONTWAIT</a></li>
+        <li><a id="toc-MSG_005fPEEK" href="#MSG_005fPEEK">3.2.3.2 MSG_PEEK</a></li>
+        <li><a id="toc-MSG_005fWAITALL" href="#MSG_005fWAITALL">3.2.3.3 MSG_WAITALL</a></li>
+      </ul></li>
+      <li><a id="toc-Shutdown-how-constants" href="#Socket-constants-_002d-Shutdown-how-constants">3.2.4 Shutdown how constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-SHUT_005fRD" href="#SHUT_005fRD">3.2.4.1 SHUT_RD</a></li>
+        <li><a id="toc-SHUT_005fRDWR" href="#SHUT_005fRDWR">3.2.4.2 SHUT_RDWR</a></li>
+        <li><a id="toc-SHUT_005fWR" href="#SHUT_005fWR">3.2.4.3 SHUT_WR</a></li>
+      </ul></li>
+      <li><a id="toc-Set_002fgetsockopt-constants" href="#Socket-constants-_002d-Set_002fgetsockopt-constants">3.2.5 Set/getsockopt constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-SOL_005fSOCKET" href="#SOL_005fSOCKET">3.2.5.1 SOL_SOCKET</a></li>
+        <li><a id="toc-SO_005fBROADCAST" href="#SO_005fBROADCAST">3.2.5.2 SO_BROADCAST</a></li>
+        <li><a id="toc-SO_005fDONTROUTE" href="#SO_005fDONTROUTE">3.2.5.3 SO_DONTROUTE</a></li>
+        <li><a id="toc-SO_005fKEEPALIVE" href="#SO_005fKEEPALIVE">3.2.5.4 SO_KEEPALIVE</a></li>
+        <li><a id="toc-SO_005fREUSEADDR" href="#SO_005fREUSEADDR">3.2.5.5 SO_REUSEADDR</a></li>
+      </ul></li>
+      <li><a id="toc-Socket-protocol-constants" href="#Socket-constants-_002d-Socket-protocol-constants">3.2.6 Socket protocol constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-IPPROTO_005fICMP" href="#IPPROTO_005fICMP">3.2.6.1 IPPROTO_ICMP</a></li>
+        <li><a id="toc-IPPROTO_005fIP" href="#IPPROTO_005fIP">3.2.6.2 IPPROTO_IP</a></li>
+        <li><a id="toc-IPPROTO_005fTCP" href="#IPPROTO_005fTCP">3.2.6.3 IPPROTO_TCP</a></li>
+        <li><a id="toc-IPPROTO_005fUDP" href="#IPPROTO_005fUDP">3.2.6.4 IPPROTO_UDP</a></li>
+      </ul></li>
+      <li><a id="toc-Socket-getaddrinfo-flag-constants" href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">3.2.7 Socket getaddrinfo flag constants</a>
+      <ul class="toc-numbered-mark">
+        <li><a id="toc-AI_005fADDRCONFIG" href="#AI_005fADDRCONFIG">3.2.7.1 AI_ADDRCONFIG</a></li>
+        <li><a id="toc-AI_005fALL" href="#AI_005fALL">3.2.7.2 AI_ALL</a></li>
+        <li><a id="toc-AI_005fNUMERICSERV" href="#AI_005fNUMERICSERV">3.2.7.3 AI_NUMERICSERV</a></li>
+        <li><a id="toc-AI_005fPASSIVE" href="#AI_005fPASSIVE">3.2.7.4 AI_PASSIVE</a></li>
+        <li><a id="toc-AI_005fV4MAPPED" href="#AI_005fV4MAPPED">3.2.7.5 AI_V4MAPPED</a></li>
+      </ul></li>
     </ul></li>
   </ul></li>
   <li><a id="toc-GNU-General-Public-License" href="#Copying">Appendix A GNU General Public License</a></li>
-  <li><a id="toc-Index-1" href="#Index" rel="index">Index</a></li>
+  <li><a id="toc-Index" href="#Index" rel="index">Index</a></li>
 </ul>
 </div>
 </div>
 <hr>
 <div class="chapter-level-extent" id="Installing-and-loading">
-<div class="nav-panel">
-<p>
-Next: <a href="#Basic-Usage-Overview" accesskey="n" rel="next">Basic Usage Overview</a>, Previous: <a href="#Top" accesskey="p" rel="prev">Introduction</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="chapter" id="Installing-and-loading-1">1 Installing and loading</h2>
 <a class="index-entry-id" id="index-Installing-and-loading"></a>
 <p>The Sockets toolkit must be installed and then loaded to be used.
@@ -110,11 +134,6 @@ or can be installed in an off-line mode via a downloaded tarball.
 </p>
 <p>The toolkit must be then be loaded once per each <abbr class="acronym">GNU</abbr> Octave session in order to use its functionality.
 </p>
-<ul class="mini-toc">
-<li><a href="#Online-Direct-install" accesskey="1">Online Direct install</a></li>
-<li><a href="#Off_002dline-install" accesskey="2">Off-line install</a></li>
-<li><a href="#Loading" accesskey="3">Loading</a></li>
-</ul>
 <div class="section-level-extent" id="Online-Direct-install">
 <h3 class="section">1.1 Online Direct install</h3>
 <a class="index-entry-id" id="index-Online-install"></a>
@@ -134,7 +153,7 @@ octave-forge using the following command within <abbr class="acronym">GNU</abbr>
 <abbr class="acronym">GNU</abbr> Octave, the package can be installed using the following command within <abbr class="acronym">GNU</abbr> Octave:
 </p>
 <div class="example">
-<pre class="example-preformatted">pkg install sockets-1.4.1.tar.gz
+<pre class="example-preformatted">pkg install sockets-1.5.0.tar.gz
 </pre></div>
 </div>
 <div class="section-level-extent" id="Loading">
@@ -152,10 +171,6 @@ the toolkit must be loaded using the pkg load command:
 </div>
 </div>
 <div class="chapter-level-extent" id="Basic-Usage-Overview">
-<div class="nav-panel">
-<p>
-Next: <a href="#Function-Reference" accesskey="n" rel="next">Function Reference</a>, Previous: <a href="#Installing-and-loading" accesskey="p" rel="prev">Installing and loading</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="chapter" id="Basic-Usage-Overview-1">2 Basic Usage Overview</h2>
 <a class="index-entry-id" id="index-Basic-Usage-Overview"></a>
 <p>The sockets toolkit attempts to use function names similar to the standard UNIX socket
@@ -187,48 +202,19 @@ disconnect(s);
 <hr>
 </div>
 <div class="chapter-level-extent" id="Function-Reference">
-<div class="nav-panel">
-<p>
-Next: <a href="#Copying" accesskey="n" rel="next">GNU General Public License</a>, Previous: <a href="#Basic-Usage-Overview" accesskey="p" rel="prev">Basic Usage Overview</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="chapter" id="Function-Reference-1">3 Function Reference</h2>
 <a class="index-entry-id" id="index-Function-Reference"></a>
 <p>The functions currently available in the Dicom toolkit are described below;
 </p>
-<ul class="mini-toc">
-<li><a href="#Sockets-functions" accesskey="1">Sockets functions</a></li>
-<li><a href="#Socket-constants" accesskey="2">Socket constants</a></li>
-</ul>
 <hr>
 <div class="section-level-extent" id="Sockets-functions">
-<div class="nav-panel">
-<p>
-Next: <a href="#Socket-constants" accesskey="n" rel="next">Socket constants</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Sockets-functions-1">3.1 Sockets functions</h3>
 <a class="index-entry-id" id="index-Sockets-functions"></a>
-<ul class="mini-toc">
-<li><a href="#accept" accesskey="1">accept</a></li>
-<li><a href="#bind" accesskey="2">bind</a></li>
-<li><a href="#connect" accesskey="3">connect</a></li>
-<li><a href="#disconnect" accesskey="4">disconnect</a></li>
-<li><a href="#gethostbyname" accesskey="5">gethostbyname</a></li>
-<li><a href="#getsockopt" accesskey="6">getsockopt</a></li>
-<li><a href="#listen" accesskey="7">listen</a></li>
-<li><a href="#recv" accesskey="8">recv</a></li>
-<li><a href="#recvfrom" accesskey="9">recvfrom</a></li>
-<li><a href="#select">select</a></li>
-<li><a href="#send">send</a></li>
-<li><a href="#sendto">sendto</a></li>
-<li><a href="#setsockopt">setsockopt</a></li>
-<li><a href="#shutdown">shutdown</a></li>
-<li><a href="#socket">socket</a></li>
-</ul>
 <div class="subsection-level-extent" id="accept">
 <h4 class="subsection">3.1.1 accept</h4>
 <a class="index-entry-id" id="index-accept"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-accept-1"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">client</var>, <var class="var">info</var>] =</code> <strong class="def-name">accept</strong> <code class="def-code-arguments">(<var class="var">s</var>)</code><a class="copiable-link" href='#index-accept-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-accept-1"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">client</var>, <var class="var">info</var>] =</code> <strong class="def-name">accept</strong> <code class="def-code-arguments">(<var class="var">s</var>)</code></dt>
 <dd><p>Accept incoming connection on specified socket.
 </p>
 <p>Accepts an incoming connection on the socket <var class="var">s</var>.
@@ -242,8 +228,8 @@ associated information in a struct info.
 <div class="subsection-level-extent" id="bind">
 <h4 class="subsection">3.1.2 bind</h4>
 <a class="index-entry-id" id="index-bind"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-bind-1"><span class="category-def">Loadable Function: </span><span><strong class="def-name">bind</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">portnumber</var>)</code><a class="copiable-link" href='#index-bind-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-bind-1"><span class="category-def">Loadable Function: </span><strong class="def-name">bind</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">portnumber</var>)</code></dt>
 <dd><p>Bind specific socket to port number.
 </p>
 <p>See the <code class="command">bind</code> man pages for further details.
@@ -253,8 +239,8 @@ associated information in a struct info.
 <div class="subsection-level-extent" id="connect">
 <h4 class="subsection">3.1.3 connect</h4>
 <a class="index-entry-id" id="index-connect"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-connect-1"><span class="category-def">Loadable Function: </span><span><strong class="def-name">connect</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">serverinfo</var>)</code><a class="copiable-link" href='#index-connect-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-connect-1"><span class="category-def">Loadable Function: </span><strong class="def-name">connect</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">serverinfo</var>)</code></dt>
 <dd><p>Connect socket.
 </p>
 <p>Connects the socket <var class="var">s</var> following the information
@@ -278,8 +264,8 @@ following fields:
 <div class="subsection-level-extent" id="disconnect">
 <h4 class="subsection">3.1.4 disconnect</h4>
 <a class="index-entry-id" id="index-disconnect"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-disconnect-1"><span class="category-def">Loadable Function: </span><span><strong class="def-name">disconnect</strong> <code class="def-code-arguments">(<var class="var">s</var>)</code><a class="copiable-link" href='#index-disconnect-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-disconnect-1"><span class="category-def">Loadable Function: </span><strong class="def-name">disconnect</strong> <code class="def-code-arguments">(<var class="var">s</var>)</code></dt>
 <dd><p>Disconnect socket.
 </p>
 <p>Disconnects the socket <var class="var">s</var>.  If successful, <code class="code">disconnect</code> returns 0,
@@ -290,11 +276,58 @@ function to disconnect the socket.
 </p>
 </dd></dl>
 </div>
+<div class="subsection-level-extent" id="getaddrinfo">
+<h4 class="subsection">3.1.5 getaddrinfo</h4>
+<a class="index-entry-id" id="index-getaddrinfo"></a>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-getaddrinfo-1"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">addrinforesults</var> =</code> <strong class="def-name">getaddrinfo</strong> <code class="def-code-arguments">(<var class="var">hostname</var>, <var class="var">service</var>, <var class="var">hints</var>)</code></dt>
+<dd><p>Get addressinfo lookup for a hostname/service.
+</p>
+<p>Returns an array of addressinfo structs with the following fields:
+</p>
+<dl class="table">
+<dt><code class="code">family</code></dt>
+<dd><p>Integer family value
+</p></dd>
+<dt><code class="code">socktype</code></dt>
+<dd><p>Integer socktype value
+</p></dd>
+<dt><code class="code">protocol</code></dt>
+<dd><p>Integer protocol value
+</p></dd>
+<dt><code class="code">addr</code></dt>
+<dd><p>a string with the host name to send to
+</p>
+</dd>
+<dt><code class="code">port</code></dt>
+<dd><p>the port number to send to (an integer)
+</p></dd>
+</dl>
+<p>hints is optional with one or more fields:
+</p>
+<dl class="table">
+<dt><code class="code">family</code></dt>
+<dd><p>Integer family value
+</p></dd>
+<dt><code class="code">socktype</code></dt>
+<dd><p>Integer socktype value
+</p></dd>
+<dt><code class="code">protocol</code></dt>
+<dd><p>Integer protocol value
+</p></dd>
+<dt><code class="code">flags</code></dt>
+<dd><p>a integer ai flags
+</p></dd>
+</dl>
+<p>See the <code class="command">getaddrinfo</code> man pages for details.
+</p>
+</dd></dl>
+</div>
 <div class="subsection-level-extent" id="gethostbyname">
-<h4 class="subsection">3.1.5 gethostbyname</h4>
+<h4 class="subsection">3.1.6 gethostbyname</h4>
 <a class="index-entry-id" id="index-gethostbyname"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-gethostbyname-1"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">ipaddres</var> =</code> <strong class="def-name">gethostbyname</strong> <code class="def-code-arguments">(<var class="var">hostname</var>)</code><a class="copiable-link" href='#index-gethostbyname-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-gethostbyname-1"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">ipaddress</var> =</code> <strong class="def-name">gethostbyname</strong> <code class="def-code-arguments">(<var class="var">hostname</var>)</code></dt>
 <dd><p>Return IP address for host name.
 </p>
 <p>For example:
@@ -308,10 +341,10 @@ function to disconnect the socket.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="getsockopt">
-<h4 class="subsection">3.1.6 getsockopt</h4>
+<h4 class="subsection">3.1.7 getsockopt</h4>
 <a class="index-entry-id" id="index-getsockopt"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-getsockopt-1"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">data</var>, <var class="var">status</var>] =</code> <strong class="def-name">getsockopt</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">level</var>, <var class="var">optname</var>)</code><a class="copiable-link" href='#index-getsockopt-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-getsockopt-1"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">data</var>, <var class="var">status</var>] =</code> <strong class="def-name">getsockopt</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">level</var>, <var class="var">optname</var>)</code></dt>
 <dd><p>Get a socket option value from a socket.
 </p>
 <p>Returns the value of <var class="var">level</var> <var class="var">optname</var> from the socket <var class="var">s</var>.
@@ -323,10 +356,10 @@ function to disconnect the socket.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="listen">
-<h4 class="subsection">3.1.7 listen</h4>
+<h4 class="subsection">3.1.8 listen</h4>
 <a class="index-entry-id" id="index-listen"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-listen-1"><span class="category-def">Loadable Function: </span><span><strong class="def-name">listen</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">backlog</var>)</code><a class="copiable-link" href='#index-listen-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-listen-1"><span class="category-def">Loadable Function: </span><strong class="def-name">listen</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">backlog</var>)</code></dt>
 <dd><p>Listen on socket for connections.
 </p>
 <p>Listens on socket <var class="var">s</var> for connections.  <var class="var">backlog</var> specifies
@@ -340,11 +373,11 @@ grow.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="recv">
-<h4 class="subsection">3.1.8 recv</h4>
+<h4 class="subsection">3.1.9 recv</h4>
 <a class="index-entry-id" id="index-recv"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-recv-1"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>] =</code> <strong class="def-name">recv</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>)</code><a class="copiable-link" href='#index-recv-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-recv-2"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>] =</code> <strong class="def-name">recv</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>, <var class="var">flags</var>)</code><a class="copiable-link" href='#index-recv-2'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-recv-1"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>] =</code> <strong class="def-name">recv</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-recv-2"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>] =</code> <strong class="def-name">recv</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>, <var class="var">flags</var>)</code></dt>
 <dd><p>Read data from specified socket.
 </p>
 <p>Requests reading <var class="var">len</var> bytes from the socket <var class="var">s</var>.
@@ -363,11 +396,11 @@ data, -1 is returned in count.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="recvfrom">
-<h4 class="subsection">3.1.9 recvfrom</h4>
+<h4 class="subsection">3.1.10 recvfrom</h4>
 <a class="index-entry-id" id="index-recvfrom"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-recvfrom-1"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>, <var class="var">src_info</var>] =</code> <strong class="def-name">recvfrom</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>)</code><a class="copiable-link" href='#index-recvfrom-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-recvfrom-2"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>, <var class="var">src_info</var>] =</code> <strong class="def-name">recvfrom</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>, <var class="var">flags</var>)</code><a class="copiable-link" href='#index-recvfrom-2'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-recvfrom-1"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>, <var class="var">src_info</var>] =</code> <strong class="def-name">recvfrom</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-recvfrom-2"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">data</var>, <var class="var">count</var>, <var class="var">src_info</var>] =</code> <strong class="def-name">recvfrom</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">len</var>, <var class="var">flags</var>)</code></dt>
 <dd><p>Read data from specified socket.
 </p>
 <p>Requests reading <var class="var">len</var> bytes from the socket <var class="var">s</var>.
@@ -387,10 +420,10 @@ data, -1 is returned in count.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="select">
-<h4 class="subsection">3.1.10 select</h4>
+<h4 class="subsection">3.1.11 select</h4>
 <a class="index-entry-id" id="index-select"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-select-1"><span class="category-def">Loadable Function: </span><span><code class="def-type">[<var class="var">status</var>, <var class="var">rfdset</var>, <var class="var">wfdset</var>, <var class="var">efdset</var>] =</code> <strong class="def-name">select</strong> <code class="def-code-arguments">(<var class="var">nfds</var>, <var class="var">rfdset</var>, <var class="var">wfdset</var>, <var class="var">efdset</var>, <var class="var">timeout</var>)</code><a class="copiable-link" href='#index-select-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-select-1"><span class="category-def">Loadable Function: </span><code class="def-type">[<var class="var">status</var>, <var class="var">rfdset</var>, <var class="var">wfdset</var>, <var class="var">efdset</var>] =</code> <strong class="def-name">select</strong> <code class="def-code-arguments">(<var class="var">nfds</var>, <var class="var">rfdset</var>, <var class="var">wfdset</var>, <var class="var">efdset</var>, <var class="var">timeout</var>)</code></dt>
 <dd><p>Wait for socket activity on selected sockets.
 </p>
 <p>The fdsets are vectors of fds to check, for example [1 2 3]. Empty vectors equate to null.
@@ -406,11 +439,11 @@ data, -1 is returned in count.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="send">
-<h4 class="subsection">3.1.11 send</h4>
+<h4 class="subsection">3.1.12 send</h4>
 <a class="index-entry-id" id="index-send"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-send-1"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">send</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>)</code><a class="copiable-link" href='#index-send-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-send-2"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">send</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>, <var class="var">flags</var>)</code><a class="copiable-link" href='#index-send-2'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-send-1"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">send</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-send-2"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">send</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>, <var class="var">flags</var>)</code></dt>
 <dd><p>Send data on specified socket.
 </p>
 <p>Sends data on socket <var class="var">s</var>.  <var class="var">data</var> should be an uint8 array or
@@ -421,11 +454,11 @@ a string.
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="sendto">
-<h4 class="subsection">3.1.12 sendto</h4>
+<h4 class="subsection">3.1.13 sendto</h4>
 <a class="index-entry-id" id="index-sendto"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-sendto-1"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">sendto</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>, <var class="var">dest_info</var>)</code><a class="copiable-link" href='#index-sendto-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-sendto-2"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">sendto</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>, <var class="var">flags</var>, <var class="var">dest_info</var>)</code><a class="copiable-link" href='#index-sendto-2'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-sendto-1"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">sendto</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>, <var class="var">dest_info</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-sendto-2"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">retval</var> =</code> <strong class="def-name">sendto</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">data</var>, <var class="var">flags</var>, <var class="var">dest_info</var>)</code></dt>
 <dd><p>Send data on specified socket.
 </p>
 <p>Sends data on socket <var class="var">s</var> to destination.  <var class="var">data</var> should be an uint8 array or
@@ -448,10 +481,10 @@ following fields:
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="setsockopt">
-<h4 class="subsection">3.1.13 setsockopt</h4>
+<h4 class="subsection">3.1.14 setsockopt</h4>
 <a class="index-entry-id" id="index-setsockopt"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-setsockopt-1"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">status</var> =</code> <strong class="def-name">setsockopt</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">level</var>, <var class="var">optname</var>, <var class="var">optvalue</var>)</code><a class="copiable-link" href='#index-setsockopt-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-setsockopt-1"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">status</var> =</code> <strong class="def-name">setsockopt</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">level</var>, <var class="var">optname</var>, <var class="var">optvalue</var>)</code></dt>
 <dd><p>Set a socket option value on a socket.
 </p>
 <p><var class="var">status</var> returns as  0 if no error.
@@ -461,10 +494,10 @@ following fields:
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="shutdown">
-<h4 class="subsection">3.1.14 shutdown</h4>
+<h4 class="subsection">3.1.15 shutdown</h4>
 <a class="index-entry-id" id="index-shutdown"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-shutdown-1"><span class="category-def">Loadable Function: </span><span><strong class="def-name">shutdown</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">how</var>)</code><a class="copiable-link" href='#index-shutdown-1'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-shutdown-1"><span class="category-def">Loadable Function: </span><strong class="def-name">shutdown</strong> <code class="def-code-arguments">(<var class="var">s</var>, <var class="var">how</var>)</code></dt>
 <dd><p>Shutdown all or part of a connection of a socket.
 </p>
 <p>On success, zero is returned.
@@ -474,13 +507,13 @@ following fields:
 </dd></dl>
 </div>
 <div class="subsection-level-extent" id="socket">
-<h4 class="subsection">3.1.15 socket</h4>
+<h4 class="subsection">3.1.16 socket</h4>
 <a class="index-entry-id" id="index-socket"></a>
-<dl class="first-deftypefn">
-<dt class="deftypefn" id="index-socket-1"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">()</code><a class="copiable-link" href='#index-socket-1'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-socket-2"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">(<var class="var">domain</var>)</code><a class="copiable-link" href='#index-socket-2'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-socket-3"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">(<var class="var">domain</var>, <var class="var">type</var>)</code><a class="copiable-link" href='#index-socket-3'></a></span></dt>
-<dt class="deftypefnx def-cmd-deftypefn" id="index-socket-4"><span class="category-def">Loadable Function: </span><span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">(<var class="var">domain</var>, <var class="var">type</var>, <var class="var">protocol</var>)</code><a class="copiable-link" href='#index-socket-4'></a></span></dt>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-socket-1"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">()</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-socket-2"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">(<var class="var">domain</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-socket-3"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">(<var class="var">domain</var>, <var class="var">type</var>)</code></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-socket-4"><span class="category-def">Loadable Function: </span><code class="def-type"><var class="var">sock</var> =</code> <strong class="def-name">socket</strong> <code class="def-code-arguments">(<var class="var">domain</var>, <var class="var">type</var>, <var class="var">protocol</var>)</code></dt>
 <dd><p>Creates a socket.
 </p>
 <p><var class="var">domain</var> is an integer, where the value AF_INET
@@ -500,162 +533,227 @@ SOCK_STREAM are used.
 </div>
 </div>
 <div class="section-level-extent" id="Socket-constants">
-<div class="nav-panel">
-<p>
-Previous: <a href="#Sockets-functions" accesskey="p" rel="prev">Sockets functions</a>, Up: <a href="#Function-Reference" accesskey="u" rel="up">Function Reference</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h3 class="section" id="Socket-constants-1">3.2 Socket constants</h3>
 <a class="index-entry-id" id="index-Socket-constants"></a>
-<ul class="mini-toc">
-<li><a href="#AF_005fAPPLETALK" accesskey="1">AF_APPLETALK</a></li>
-<li><a href="#AF_005fINET" accesskey="2">AF_INET</a></li>
-<li><a href="#AF_005fLOCAL" accesskey="3">AF_LOCAL</a></li>
-<li><a href="#AF_005fUNIX" accesskey="4">AF_UNIX</a></li>
-<li><a href="#MSG_005fDONTWAIT" accesskey="5">MSG_DONTWAIT</a></li>
-<li><a href="#MSG_005fPEEK" accesskey="6">MSG_PEEK</a></li>
-<li><a href="#MSG_005fWAITALL" accesskey="7">MSG_WAITALL</a></li>
-<li><a href="#SHUT_005fRD" accesskey="8">SHUT_RD</a></li>
-<li><a href="#SHUT_005fRDWR" accesskey="9">SHUT_RDWR</a></li>
-<li><a href="#SHUT_005fWR">SHUT_WR</a></li>
-<li><a href="#SOCK_005fDGRAM">SOCK_DGRAM</a></li>
-<li><a href="#SOCK_005fRAW">SOCK_RAW</a></li>
-<li><a href="#SOCK_005fRDM">SOCK_RDM</a></li>
-<li><a href="#SOCK_005fSEQPACKET">SOCK_SEQPACKET</a></li>
-<li><a href="#SOCK_005fSTREAM">SOCK_STREAM</a></li>
-<li><a href="#SOL_005fSOCKET">SOL_SOCKET</a></li>
-<li><a href="#SO_005fBROADCAST">SO_BROADCAST</a></li>
-<li><a href="#SO_005fDONTROUTE">SO_DONTROUTE</a></li>
-<li><a href="#SO_005fKEEPALIVE">SO_KEEPALIVE</a></li>
-<li><a href="#SO_005fREUSEADDR">SO_REUSEADDR</a></li>
-</ul>
-<div class="subsection-level-extent" id="AF_005fAPPLETALK">
-<h4 class="subsection">3.2.1 AF_APPLETALK</h4>
+<hr>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Domain-family-constants">
+<h4 class="subsection" id="Domain-family-constants">3.2.1 Domain family constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Domain-family-constants"></a>
+<div class="subsubsection-level-extent" id="AF_005fAPPLETALK">
+<h4 class="subsubsection">3.2.1.1 AF_APPLETALK</h4>
 <a class="index-entry-id" id="index-AF_005fAPPLETALK"></a>
 <p>Socket constant for AF_APPLETALK
 </p>
 </div>
-<div class="subsection-level-extent" id="AF_005fINET">
-<h4 class="subsection">3.2.2 AF_INET</h4>
+<div class="subsubsection-level-extent" id="AF_005fINET">
+<h4 class="subsubsection">3.2.1.2 AF_INET</h4>
 <a class="index-entry-id" id="index-AF_005fINET"></a>
 <p>Socket constant for AF_INET
 </p>
 </div>
-<div class="subsection-level-extent" id="AF_005fLOCAL">
-<h4 class="subsection">3.2.3 AF_LOCAL</h4>
+<div class="subsubsection-level-extent" id="AF_005fLOCAL">
+<h4 class="subsubsection">3.2.1.3 AF_LOCAL</h4>
 <a class="index-entry-id" id="index-AF_005fLOCAL"></a>
 <p>Socket constant for AF_LOCAL
 </p>
 </div>
-<div class="subsection-level-extent" id="AF_005fUNIX">
-<h4 class="subsection">3.2.4 AF_UNIX</h4>
+<div class="subsubsection-level-extent" id="AF_005fUNIX">
+<h4 class="subsubsection">3.2.1.4 AF_UNIX</h4>
 <a class="index-entry-id" id="index-AF_005fUNIX"></a>
 <p>Socket constant for AF_UNIX
 </p>
 </div>
-<div class="subsection-level-extent" id="MSG_005fDONTWAIT">
-<h4 class="subsection">3.2.5 MSG_DONTWAIT</h4>
-<a class="index-entry-id" id="index-MSG_005fDONTWAIT"></a>
-<p>Socket constant for MSG_DONTWAIT
+<div class="subsubsection-level-extent" id="AF_005fUNSPEC">
+<h4 class="subsubsection">3.2.1.5 AF_UNSPEC</h4>
+<a class="index-entry-id" id="index-AF_005fUNSPEC"></a>
+<p>Socket constant for AF_UNSPEC
 </p>
+<hr>
 </div>
-<div class="subsection-level-extent" id="MSG_005fPEEK">
-<h4 class="subsection">3.2.6 MSG_PEEK</h4>
-<a class="index-entry-id" id="index-MSG_005fPEEK"></a>
-<p>Socket constant for MSG_PEEK
-</p>
 </div>
-<div class="subsection-level-extent" id="MSG_005fWAITALL">
-<h4 class="subsection">3.2.7 MSG_WAITALL</h4>
-<a class="index-entry-id" id="index-MSG_005fWAITALL"></a>
-<p>Socket constant for MSG_WAITALL
-</p>
-</div>
-<div class="subsection-level-extent" id="SHUT_005fRD">
-<h4 class="subsection">3.2.8 SHUT_RD</h4>
-<a class="index-entry-id" id="index-SHUT_005fRD"></a>
-<p>Socket constant for SHUT_RD
-</p>
-</div>
-<div class="subsection-level-extent" id="SHUT_005fRDWR">
-<h4 class="subsection">3.2.9 SHUT_RDWR</h4>
-<a class="index-entry-id" id="index-SHUT_005fRDWR"></a>
-<p>Socket constant for SHUT_RDWR
-</p>
-</div>
-<div class="subsection-level-extent" id="SHUT_005fWR">
-<h4 class="subsection">3.2.10 SHUT_WR</h4>
-<a class="index-entry-id" id="index-SHUT_005fWR"></a>
-<p>Socket constant for SHUT_WR
-</p>
-</div>
-<div class="subsection-level-extent" id="SOCK_005fDGRAM">
-<h4 class="subsection">3.2.11 SOCK_DGRAM</h4>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Socket-Type-constants">
+<h4 class="subsection" id="Socket-Type-constants">3.2.2 Socket Type constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Socket-Type-constants"></a>
+<div class="subsubsection-level-extent" id="SOCK_005fDGRAM">
+<h4 class="subsubsection">3.2.2.1 SOCK_DGRAM</h4>
 <a class="index-entry-id" id="index-SOCK_005fDGRAM"></a>
 <p>Socket constant for SOCK_DGRAM
 </p>
 </div>
-<div class="subsection-level-extent" id="SOCK_005fRAW">
-<h4 class="subsection">3.2.12 SOCK_RAW</h4>
+<div class="subsubsection-level-extent" id="SOCK_005fRAW">
+<h4 class="subsubsection">3.2.2.2 SOCK_RAW</h4>
 <a class="index-entry-id" id="index-SOCK_005fRAW"></a>
 <p>Socket constant for SOCK_RAW
 </p>
 </div>
-<div class="subsection-level-extent" id="SOCK_005fRDM">
-<h4 class="subsection">3.2.13 SOCK_RDM</h4>
+<div class="subsubsection-level-extent" id="SOCK_005fRDM">
+<h4 class="subsubsection">3.2.2.3 SOCK_RDM</h4>
 <a class="index-entry-id" id="index-SOCK_005fRDM"></a>
 <p>Socket constant for SOCK_RDM
 </p>
 </div>
-<div class="subsection-level-extent" id="SOCK_005fSEQPACKET">
-<h4 class="subsection">3.2.14 SOCK_SEQPACKET</h4>
+<div class="subsubsection-level-extent" id="SOCK_005fSEQPACKET">
+<h4 class="subsubsection">3.2.2.4 SOCK_SEQPACKET</h4>
 <a class="index-entry-id" id="index-SOCK_005fSEQPACKET"></a>
 <p>Socket constant for SOCK_SEQPACKET
 </p>
 </div>
-<div class="subsection-level-extent" id="SOCK_005fSTREAM">
-<h4 class="subsection">3.2.15 SOCK_STREAM</h4>
+<div class="subsubsection-level-extent" id="SOCK_005fSTREAM">
+<h4 class="subsubsection">3.2.2.5 SOCK_STREAM</h4>
 <a class="index-entry-id" id="index-SOCK_005fSTREAM"></a>
 <p>Socket constant for SOCK_STREAM
 </p>
+<hr>
 </div>
-<div class="subsection-level-extent" id="SOL_005fSOCKET">
-<h4 class="subsection">3.2.16 SOL_SOCKET</h4>
+</div>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Send_002fRecv-Flag-constants">
+<h4 class="subsection" id="Send_002fRecv-Flag-constants">3.2.3 Send/Recv Flag constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Send_002fRecv-Flag-constants"></a>
+<div class="subsubsection-level-extent" id="MSG_005fDONTWAIT">
+<h4 class="subsubsection">3.2.3.1 MSG_DONTWAIT</h4>
+<a class="index-entry-id" id="index-MSG_005fDONTWAIT"></a>
+<p>Socket constant for MSG_DONTWAIT
+</p>
+</div>
+<div class="subsubsection-level-extent" id="MSG_005fPEEK">
+<h4 class="subsubsection">3.2.3.2 MSG_PEEK</h4>
+<a class="index-entry-id" id="index-MSG_005fPEEK"></a>
+<p>Socket constant for MSG_PEEK
+</p>
+</div>
+<div class="subsubsection-level-extent" id="MSG_005fWAITALL">
+<h4 class="subsubsection">3.2.3.3 MSG_WAITALL</h4>
+<a class="index-entry-id" id="index-MSG_005fWAITALL"></a>
+<p>Socket constant for MSG_WAITALL
+</p>
+<hr>
+</div>
+</div>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Shutdown-how-constants">
+<h4 class="subsection" id="Shutdown-how-constants">3.2.4 Shutdown how constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Shutdown-how-constants"></a>
+<div class="subsubsection-level-extent" id="SHUT_005fRD">
+<h4 class="subsubsection">3.2.4.1 SHUT_RD</h4>
+<a class="index-entry-id" id="index-SHUT_005fRD"></a>
+<p>Socket constant for SHUT_RD
+</p>
+</div>
+<div class="subsubsection-level-extent" id="SHUT_005fRDWR">
+<h4 class="subsubsection">3.2.4.2 SHUT_RDWR</h4>
+<a class="index-entry-id" id="index-SHUT_005fRDWR"></a>
+<p>Socket constant for SHUT_RDWR
+</p>
+</div>
+<div class="subsubsection-level-extent" id="SHUT_005fWR">
+<h4 class="subsubsection">3.2.4.3 SHUT_WR</h4>
+<a class="index-entry-id" id="index-SHUT_005fWR"></a>
+<p>Socket constant for SHUT_WR
+</p>
+<hr>
+</div>
+</div>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Set_002fgetsockopt-constants">
+<h4 class="subsection" id="Set_002fgetsockopt-constants">3.2.5 Set/getsockopt constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Set_002fgetsockopt-constants"></a>
+<div class="subsubsection-level-extent" id="SOL_005fSOCKET">
+<h4 class="subsubsection">3.2.5.1 SOL_SOCKET</h4>
 <a class="index-entry-id" id="index-SOL_005fSOCKET"></a>
 <p>Socket constant for SOL_SOCKET
 </p>
 </div>
-<div class="subsection-level-extent" id="SO_005fBROADCAST">
-<h4 class="subsection">3.2.17 SO_BROADCAST</h4>
+<div class="subsubsection-level-extent" id="SO_005fBROADCAST">
+<h4 class="subsubsection">3.2.5.2 SO_BROADCAST</h4>
 <a class="index-entry-id" id="index-SO_005fBROADCAST"></a>
 <p>Socket constant for SO_BROADCAST
 </p>
 </div>
-<div class="subsection-level-extent" id="SO_005fDONTROUTE">
-<h4 class="subsection">3.2.18 SO_DONTROUTE</h4>
+<div class="subsubsection-level-extent" id="SO_005fDONTROUTE">
+<h4 class="subsubsection">3.2.5.3 SO_DONTROUTE</h4>
 <a class="index-entry-id" id="index-SO_005fDONTROUTE"></a>
 <p>Socket constant for SO_DONTROUTE
 </p>
 </div>
-<div class="subsection-level-extent" id="SO_005fKEEPALIVE">
-<h4 class="subsection">3.2.19 SO_KEEPALIVE</h4>
+<div class="subsubsection-level-extent" id="SO_005fKEEPALIVE">
+<h4 class="subsubsection">3.2.5.4 SO_KEEPALIVE</h4>
 <a class="index-entry-id" id="index-SO_005fKEEPALIVE"></a>
 <p>Socket constant for SO_KEEPALIVE
 </p>
 </div>
-<div class="subsection-level-extent" id="SO_005fREUSEADDR">
-<h4 class="subsection">3.2.20 SO_REUSEADDR</h4>
+<div class="subsubsection-level-extent" id="SO_005fREUSEADDR">
+<h4 class="subsubsection">3.2.5.5 SO_REUSEADDR</h4>
 <a class="index-entry-id" id="index-SO_005fREUSEADDR"></a>
 <p>Socket constant for SO_REUSEADDR
 </p>
 <hr>
 </div>
 </div>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Socket-protocol-constants">
+<h4 class="subsection" id="Socket-protocol-constants">3.2.6 Socket protocol constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Socket-protocol-constants"></a>
+<div class="subsubsection-level-extent" id="IPPROTO_005fICMP">
+<h4 class="subsubsection">3.2.6.1 IPPROTO_ICMP</h4>
+<a class="index-entry-id" id="index-IPPROTO_005fICMP"></a>
+<p>Socket constant for IPPROTO_ICMP
+</p>
+</div>
+<div class="subsubsection-level-extent" id="IPPROTO_005fIP">
+<h4 class="subsubsection">3.2.6.2 IPPROTO_IP</h4>
+<a class="index-entry-id" id="index-IPPROTO_005fIP"></a>
+<p>Socket constant for IPPROTO_IP
+</p>
+</div>
+<div class="subsubsection-level-extent" id="IPPROTO_005fTCP">
+<h4 class="subsubsection">3.2.6.3 IPPROTO_TCP</h4>
+<a class="index-entry-id" id="index-IPPROTO_005fTCP"></a>
+<p>Socket constant for IPPROTO_TCP
+</p>
+</div>
+<div class="subsubsection-level-extent" id="IPPROTO_005fUDP">
+<h4 class="subsubsection">3.2.6.4 IPPROTO_UDP</h4>
+<a class="index-entry-id" id="index-IPPROTO_005fUDP"></a>
+<p>Socket constant for IPPROTO_UDP
+</p>
+<hr>
+</div>
+</div>
+<div class="subsection-level-extent" id="Socket-constants-_002d-Socket-getaddrinfo-flag-constants">
+<h4 class="subsection" id="Socket-getaddrinfo-flag-constants">3.2.7 Socket getaddrinfo flag constants</h4>
+<a class="index-entry-id" id="index-Socket-constants-_002d-Socket-getaddrinfo-flag-constants"></a>
+<div class="subsubsection-level-extent" id="AI_005fADDRCONFIG">
+<h4 class="subsubsection">3.2.7.1 AI_ADDRCONFIG</h4>
+<a class="index-entry-id" id="index-AI_005fADDRCONFIG"></a>
+<p>Socket constant for AI_ADDRCONFIG
+</p>
+</div>
+<div class="subsubsection-level-extent" id="AI_005fALL">
+<h4 class="subsubsection">3.2.7.2 AI_ALL</h4>
+<a class="index-entry-id" id="index-AI_005fALL"></a>
+<p>Socket constant for AI_ALL
+</p>
+</div>
+<div class="subsubsection-level-extent" id="AI_005fNUMERICSERV">
+<h4 class="subsubsection">3.2.7.3 AI_NUMERICSERV</h4>
+<a class="index-entry-id" id="index-AI_005fNUMERICSERV"></a>
+<p>Socket constant for AI_NUMERICSERV
+</p>
+</div>
+<div class="subsubsection-level-extent" id="AI_005fPASSIVE">
+<h4 class="subsubsection">3.2.7.4 AI_PASSIVE</h4>
+<a class="index-entry-id" id="index-AI_005fPASSIVE"></a>
+<p>Socket constant for AI_PASSIVE
+</p>
+</div>
+<div class="subsubsection-level-extent" id="AI_005fV4MAPPED">
+<h4 class="subsubsection">3.2.7.5 AI_V4MAPPED</h4>
+<a class="index-entry-id" id="index-AI_005fV4MAPPED"></a>
+<p>Socket constant for AI_V4MAPPED
+</p>
+<hr>
+</div>
+</div>
+</div>
 </div>
 <div class="appendix-level-extent" id="Copying">
-<div class="nav-panel">
-<p>
-Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Function-Reference" accesskey="p" rel="prev">Function Reference</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="appendix" id="GNU-General-Public-License">Appendix A GNU General Public License</h2>
 <a class="index-entry-id" id="index-warranty"></a>
 <a class="index-entry-id" id="index-copyright"></a>
@@ -1315,10 +1413,6 @@ first, please read <a class="url" href="http://www.gnu.org/philosophy/why-not-lg
 <hr>
 </div>
 <div class="unnumbered-level-extent" id="Index">
-<div class="nav-panel">
-<p>
-Previous: <a href="#Copying" accesskey="p" rel="prev">GNU General Public License</a>, Up: <a href="#Top" accesskey="u" rel="up">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Index" title="Index" rel="index">Index</a>]</p>
-</div>
 <h2 class="unnumbered" id="Index-1">Index</h2>
  
 <div class="printindex cp-printindex">
@@ -1349,80 +1443,98 @@ Previous: <a href="#Copying" accesskey="p" rel="prev">GNU General Public License
 <a class="summary-letter-printindex" href="#Index_cp_letter-W"><b>W</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="cp-entries-printindex" border="0">
-<tr><td></td><th class="entries-header-printindex">Index Entry</th><td>&nbsp;</td><th class="sections-header-printindex"> Section</th></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-A">A</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-accept">accept</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fAPPLETALK">AF_APPLETALK</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fINET">AF_INET</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fLOCAL">AF_LOCAL</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fUNIX">AF_UNIX</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-B">B</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Basic-Usage-Overview">Basic Usage Overview</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-bind">bind</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-C">C</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-connect">connect</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-copyright">copyright</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-D">D</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-disconnect">disconnect</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-F">F</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Function-Reference">Function Reference</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Function-Reference">Function Reference</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-G">G</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-gethostbyname">gethostbyname</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-getsockopt">getsockopt</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-I">I</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Installing-and-loading">Installing and loading</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-L">L</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-listen">listen</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Loading">Loading</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-M">M</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-MSG_005fDONTWAIT">MSG_DONTWAIT</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-MSG_005fPEEK">MSG_PEEK</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-MSG_005fWAITALL">MSG_WAITALL</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-O">O</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Off_002dline-install">Off-line install</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Online-install">Online install</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-R">R</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-recv">recv</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-recvfrom">recvfrom</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-S">S</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-select">select</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-send">send</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-sendto">sendto</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-setsockopt">setsockopt</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-shutdown">shutdown</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SHUT_005fRD">SHUT_RD</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SHUT_005fRDWR">SHUT_RDWR</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SHUT_005fWR">SHUT_WR</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-socket">socket</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants">Socket constants</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-Sockets-functions">Sockets functions</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fDGRAM">SOCK_DGRAM</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fRAW">SOCK_RAW</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fRDM">SOCK_RDM</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fSEQPACKET">SOCK_SEQPACKET</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fSTREAM">SOCK_STREAM</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SOL_005fSOCKET">SOL_SOCKET</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fBROADCAST">SO_BROADCAST</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fDONTROUTE">SO_DONTROUTE</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fKEEPALIVE">SO_KEEPALIVE</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fREUSEADDR">SO_REUSEADDR</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
-<tr><th id="Index_cp_letter-W">W</th><td></td><td></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-warranty">warranty</a>:</td><td>&nbsp;</td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
-<tr><td colspan="4"> <hr></td></tr>
+<table class="cp-entries-printindex">
+<tr><td></td><th class="entries-header-printindex">Index Entry</th><th class="sections-header-printindex">Section</th></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-A">A</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-accept">accept</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fAPPLETALK">AF_APPLETALK</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fINET">AF_INET</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fLOCAL">AF_LOCAL</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fUNIX">AF_UNIX</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AF_005fUNSPEC">AF_UNSPEC</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AI_005fADDRCONFIG">AI_ADDRCONFIG</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AI_005fALL">AI_ALL</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AI_005fNUMERICSERV">AI_NUMERICSERV</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AI_005fPASSIVE">AI_PASSIVE</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-AI_005fV4MAPPED">AI_V4MAPPED</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-B">B</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Basic-Usage-Overview">Basic Usage Overview</a></td><td class="printindex-index-section"><a href="#Basic-Usage-Overview">Basic Usage Overview</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-bind">bind</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-C">C</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-connect">connect</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-copyright">copyright</a></td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-D">D</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-disconnect">disconnect</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-F">F</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Function-Reference">Function Reference</a></td><td class="printindex-index-section"><a href="#Function-Reference">Function Reference</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-G">G</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getaddrinfo">getaddrinfo</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-gethostbyname">gethostbyname</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-getsockopt">getsockopt</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-I">I</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Installing-and-loading">Installing and loading</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-IPPROTO_005fICMP">IPPROTO_ICMP</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-protocol-constants">Socket constants - Socket protocol constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-IPPROTO_005fIP">IPPROTO_IP</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-protocol-constants">Socket constants - Socket protocol constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-IPPROTO_005fTCP">IPPROTO_TCP</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-protocol-constants">Socket constants - Socket protocol constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-IPPROTO_005fUDP">IPPROTO_UDP</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-protocol-constants">Socket constants - Socket protocol constants</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-L">L</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-listen">listen</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Loading">Loading</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-M">M</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-MSG_005fDONTWAIT">MSG_DONTWAIT</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Send_002fRecv-Flag-constants">Socket constants - Send/Recv Flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-MSG_005fPEEK">MSG_PEEK</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Send_002fRecv-Flag-constants">Socket constants - Send/Recv Flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-MSG_005fWAITALL">MSG_WAITALL</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Send_002fRecv-Flag-constants">Socket constants - Send/Recv Flag constants</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-O">O</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Off_002dline-install">Off-line install</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Online-install">Online install</a></td><td class="printindex-index-section"><a href="#Installing-and-loading">Installing and loading</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-R">R</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-recv">recv</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-recvfrom">recvfrom</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-S">S</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-select">select</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-send">send</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-sendto">sendto</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-setsockopt">setsockopt</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SHUT_005fRD">SHUT_RD</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Shutdown-how-constants">Socket constants - Shutdown how constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SHUT_005fRDWR">SHUT_RDWR</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Shutdown-how-constants">Socket constants - Shutdown how constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SHUT_005fWR">SHUT_WR</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Shutdown-how-constants">Socket constants - Shutdown how constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-shutdown">shutdown</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fBROADCAST">SO_BROADCAST</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fDONTROUTE">SO_DONTROUTE</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fKEEPALIVE">SO_KEEPALIVE</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SO_005fREUSEADDR">SO_REUSEADDR</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fDGRAM">SOCK_DGRAM</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fRAW">SOCK_RAW</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fRDM">SOCK_RDM</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fSEQPACKET">SOCK_SEQPACKET</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SOCK_005fSTREAM">SOCK_STREAM</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-socket">socket</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants">Socket constants</a></td><td class="printindex-index-section"><a href="#Socket-constants">Socket constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Domain-family-constants">Socket constants - Domain family constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Send_002fRecv-Flag-constants">Socket constants - Send/Recv Flag constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Send_002fRecv-Flag-constants">Socket constants - Send/Recv Flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Shutdown-how-constants">Socket constants - Shutdown how constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Shutdown-how-constants">Socket constants - Shutdown how constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-getaddrinfo-flag-constants">Socket constants - Socket getaddrinfo flag constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Socket-protocol-constants">Socket constants - Socket protocol constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-protocol-constants">Socket constants - Socket protocol constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Socket-Type-constants">Socket constants - Socket Type constants</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Sockets-functions">Sockets functions</a></td><td class="printindex-index-section"><a href="#Sockets-functions">Sockets functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-SOL_005fSOCKET">SOL_SOCKET</a></td><td class="printindex-index-section"><a href="#Socket-constants-_002d-Set_002fgetsockopt-constants">Socket constants - Set/getsockopt constants</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-W">W</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-warranty">warranty</a></td><td class="printindex-index-section"><a href="#Copying">Copying</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
 </table>
 <table class="cp-letters-footer-printindex"><tr><th>Jump to: &nbsp; </th><td><a class="summary-letter-printindex" href="#Index_cp_letter-A"><b>A</b></a>
  &nbsp; 
