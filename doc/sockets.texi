@@ -167,7 +167,7 @@ disconnect(s);
 @chapter Function Reference
 @cindex Function Reference
 
-The functions currently available in the Dicom toolkit are described below;
+The functions currently available in the toolkit are described below;
 
 @include functions.texi
 
