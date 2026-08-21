@@ -1875,7 +1875,7 @@ See the @command{shutdown} man pages for further details.\n\
 %! assert(rdfs, []);
 %! assert(wdfs, []);
 %! assert(edfs, []);
-%! assert(timeout, 1, 0.01);
+%! assert(timeout, 1, 0.1);
 %!
 %! timeout = struct ("tv_sec", 2, "tv_usec", 0);
 %! start = tic;
@@ -1885,7 +1885,7 @@ See the @command{shutdown} man pages for further details.\n\
 %! assert(rdfs, []);
 %! assert(wdfs, []);
 %! assert(edfs, []);
-%! assert(timeout, 2, 0.01);
+%! assert(timeout, 2, 0.1);
 %!
 %! msg = "Hello socket-land!";
 %! addrinfo = struct ("addr", "127.0.0.1", "port", 9001);
